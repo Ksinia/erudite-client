@@ -1,0 +1,21 @@
+table {
+  margin: auto;
+}
+td {
+  border: 0.5px solid lightgrey;
+  width: 25px;
+  height: 25px;
+  margin: 0;
+}
+.w3 {
+  background-color: salmon;
+}
+.w2 {
+  background-color: darkorange;
+}
+.l3 {
+  background-color: royalblue;
+}
+.l2 {
+  background-color: yellowgreen;
+}
