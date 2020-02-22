@@ -1,0 +1,28 @@
+.toolbar {
+  display: flex;
+  width: 100%;
+  background-color: whitesmoke;
+  flex-flow: wrap;
+  justify-content: space-evenly;
+  padding: 0.8rem 0;
+  position: fixed;
+  top: 0px;
+  z-index: 999;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.toolbar > * {
+  min-width: 20%;
+}
+
+a {
+  color: black;
+}
+.logout {
+  cursor: pointer;
+}
+.toolbar a {
+  text-decoration: none;
+  cursor: pointer;
+}

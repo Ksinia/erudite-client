@@ -1,0 +1,27 @@
+.room-tile {
+  padding: 1em;
+  margin: 1em;
+  color: black;
+  text-align: left;
+  height: 100%;
+  display: flex;
+  flex-flow: row wrap;
+}
+a {
+  text-decoration: none;
+}
+.title {
+  font-weight: bold;
+}
+
+.description {
+  margin-right: 1em;
+}
+.rooms {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+}
+.room {
+  margin: auto;
+}
