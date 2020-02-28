@@ -2,62 +2,105 @@ import React, { Component } from "react";
 // import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import superagent from "superagent";
-import { url } from "../url";
 import "./Game.css";
 import Game from "./Game";
+import { url } from "../url";
 
 class GameContainer extends Component {
-  roomId = this.props.match.params.room;
+  roomId = this.props.roomId;
+  gameId = this.props.gameId;
+  // gameId = this.props.match.params.game;
 
-  onClick = async event => {
-    // when button name is join, we send current room id,
-    // when button name is exit, we send room is as null
-    let newRoomId = null;
-    console.log(this.roomId);
-    if (event.target.name === "join") {
-      newRoomId = this.roomId;
-    }
-    if (event.target.name === "start") {
-      console.log("request test: ", { roomId: this.roomId });
-      try {
-        const response = await superagent
-          .put(`${url}/start`)
-          .set("Authorization", `Bearer ${this.props.user.jwt}`)
-          .send({ roomId: this.roomId });
-        console.log("response test: ", response);
-      } catch (error) {
-        console.warn("error test:", error);
-      }
+  gameStream = new EventSource(`${url}/game/${this.gameId}`);
+
+  state = {
+    chosenLetterIndex: null,
+    board: [],
+    userLetters: []
+  };
+  // if this.props.game != nil {
+  //   state.board= this.props.game.board,
+  //   state.userLetters= this.props.game.letters[this.props.user.id]
+  // }
+
+  clickBoard = event => {};
+  clickLetter = event => {
+    console.log("clicked letter", parseInt(event.target.dataset.index));
+    if (this.state.chosenLetterIndex === null) {
+      this.setState({
+        ...this.state,
+        chosenLetterIndex: parseInt(event.target.dataset.index)
+      });
+      console.log(
+        "new state chosen letter index",
+        this.state.chosenLetterIndex
+      );
     } else {
-      try {
-        const response = await superagent
-          .put(`${url}/join`)
-          .set("Authorization", `Bearer ${this.props.user.jwt}`)
-          .send({ newRoomId });
-        console.log("response test: ", response);
-      } catch (error) {
-        console.warn("error test:", error);
-      }
+      const updatedUserLetters = [...this.state.userLetters];
+      const oldIndex = this.state.chosenLetterIndex;
+      const newIndex = parseInt(event.target.dataset.index);
+      [updatedUserLetters[oldIndex], updatedUserLetters[newIndex]] = [
+        updatedUserLetters[newIndex],
+        updatedUserLetters[oldIndex]
+      ];
+      this.setState({
+        ...this.state,
+        chosenLetterIndex: null,
+        userLetters: updatedUserLetters
+      });
     }
   };
+
+  componentDidMount() {
+    this.gameStream.onmessage = event => {
+      const { data } = event;
+      const action = JSON.parse(data);
+      this.props.dispatch(action);
+      console.log(action);
+    };
+    //будет ли это всегда работать?
+    // if (this.props.game) {
+    //   const userLetters = this.props.game.letters[this.props.user.id];
+    //   const board = this.props.game.board;
+    //   this.setState({ ...this.state, userLetters, board });
+    // }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props != prevProps && this.props.games) {
+      const userLetters = this.props.games[this.gameId].letters[
+        this.props.user.id
+      ];
+      const board = this.props.games[this.gameId].board;
+      this.setState({ ...this.state, userLetters: userLetters, board: board });
+    }
+  }
+
   render() {
-    const room = this.props.rooms.find(el => {
-      return el.id == this.roomId;
-    });
-
-    //   this.props.user &&
-    //   room.users.find(user => {
-    //     return user.id == room.turn;
-    //   });
-
-    return <Game room={room} onClick={this.onClick} user={this.props.user} />;
+    return (
+      <div>
+        {/* {this.props.game && this.props.user ? ( */}
+        <Game
+          game={this.props.games[this.gameId]}
+          userLetters={this.state.userLetters}
+          chosenLetterIndex={this.state.chosenLetterIndex}
+          board={this.state.board}
+          user={this.props.user}
+          clickBoard={this.clickBoard}
+          clickLetter={this.clickLetter}
+        />
+        {/* ) : ( */}
+        {/* "Loading Game Container" */}
+        {/* )} */}
+      </div>
+    );
   }
 }
+
 function MapStateToProps(state) {
   return {
     user: state.user,
-    rooms: state.lobby
+    games: state.games
   };
 }
 export default connect(MapStateToProps)(GameContainer);
