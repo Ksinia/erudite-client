@@ -9,6 +9,8 @@ import Room from "./Room";
 class RoomContainer extends Component {
   roomId = this.props.match.params.room;
 
+  state = null;
+
   onClick = async event => {
     let newRoomId = null;
     if (event.target.name === "join") {
@@ -21,6 +23,9 @@ class RoomContainer extends Component {
           .set("Authorization", `Bearer ${this.props.user.jwt}`)
           .send({ roomId: this.roomId });
         console.log("response test: ", response);
+        const gameId = response.body.id;
+        console.log(gameId);
+        this.props.history.push(`/game/${gameId}`);
       } catch (error) {
         console.warn("error test:", error);
       }
@@ -37,18 +42,33 @@ class RoomContainer extends Component {
     }
   };
 
+  componentDidMount() {
+    let room = null;
+    if (this.props.rooms && this.props.rooms.length > 0) {
+      room = this.props.rooms.find(el => el.id == this.roomId);
+      this.setState(room);
+      if (room.games.length > 0) {
+        this.props.history.push(`/game/${room.games[0].id}`);
+      }
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.rooms !== prevProps.rooms) {
+      let room = null;
+      if (this.props.rooms && this.props.rooms.length > 0) {
+        room = this.props.rooms.find(el => el.id == this.roomId);
+        this.setState(room);
+        if (room.games.length > 0) {
+          this.props.history.push(`/game/${room.games[0].id}`);
+        }
+      }
+    }
+  }
+
   render() {
     return (
       <div>
-        {/* {this.props.rooms && this.props.user ? ( */}
-        <Room
-          room={this.props.rooms.find(room => room.id == this.roomId)}
-          onClick={this.onClick}
-          user={this.props.user}
-        />
-        {/* // ) : (
-        //   "Loading Room Container"
-        // )} */}
+        <Room room={this.state} onClick={this.onClick} user={this.props.user} />
       </div>
     );
   }

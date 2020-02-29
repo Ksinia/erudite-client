@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import "./Game.css";
@@ -7,9 +6,7 @@ import Game from "./Game";
 import { url } from "../url";
 
 class GameContainer extends Component {
-  roomId = this.props.roomId;
-  gameId = this.props.gameId;
-  // gameId = this.props.match.params.game;
+  gameId = this.props.match.params.game;
 
   gameStream = new EventSource(`${url}/game/${this.gameId}`);
 
@@ -18,10 +15,6 @@ class GameContainer extends Component {
     board: [],
     userLetters: []
   };
-  // if this.props.game != nil {
-  //   state.board= this.props.game.board,
-  //   state.userLetters= this.props.game.letters[this.props.user.id]
-  // }
 
   clickBoard = event => {};
   clickLetter = event => {
@@ -58,28 +51,27 @@ class GameContainer extends Component {
       this.props.dispatch(action);
       console.log(action);
     };
-    //будет ли это всегда работать?
-    // if (this.props.game) {
-    //   const userLetters = this.props.game.letters[this.props.user.id];
-    //   const board = this.props.game.board;
-    //   this.setState({ ...this.state, userLetters, board });
-    // }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props != prevProps && this.props.games) {
-      const userLetters = this.props.games[this.gameId].letters[
-        this.props.user.id
-      ];
+    if (this.props.games != prevProps.games) {
+      console.log("change props");
+      let userLetters = [];
+      if (this.props.user) {
+        userLetters = this.props.games[this.gameId].letters[this.props.user.id];
+      }
       const board = this.props.games[this.gameId].board;
       this.setState({ ...this.state, userLetters: userLetters, board: board });
     }
   }
 
+  componentWillUnmount() {
+    this.gameStream.close();
+  }
+
   render() {
     return (
       <div>
-        {/* {this.props.game && this.props.user ? ( */}
         <Game
           game={this.props.games[this.gameId]}
           userLetters={this.state.userLetters}
@@ -89,9 +81,6 @@ class GameContainer extends Component {
           clickBoard={this.clickBoard}
           clickLetter={this.clickLetter}
         />
-        {/* ) : ( */}
-        {/* "Loading Game Container" */}
-        {/* )} */}
       </div>
     );
   }

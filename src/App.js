@@ -8,8 +8,8 @@ import SignupContainer from "./components/SignupContainer";
 import Toolbar from "./components/Toolbar";
 import Footer from "./components/Footer";
 import LobbyContainer from "./components/LobbyContainer";
+import RoomContainer from "./components/RoomContainer";
 import GameContainer from "./components/GameContainer";
-// import Board from "./components/Board";
 import { getProfileFetch } from "./actions/authorization.js";
 import { url } from "./url";
 
@@ -37,7 +37,8 @@ class App extends Component {
         <Switch>
           <Route path="/signup" component={SignupContainer} />
           <Route path="/login" component={LoginContainer} />
-          <Route path="/room/:room" component={GameContainer} />
+          <Route path="/room/:room" component={RoomContainer} />
+          <Route path="/game/:game" component={GameContainer} />
           <Route path="/" component={LobbyContainer} />
         </Switch>
       </div>,
