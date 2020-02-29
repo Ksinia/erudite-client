@@ -1,31 +1,8 @@
-.details {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-evenly;
-}
-.others {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-}
-.someone {
-  margin: auto 1em;
-}
-img {
-  max-width: 20vw;
-  max-height: 28vh;
-  width: auto;
-  height: auto;
-}
-.not-my-card {
-  max-width: 10vw;
-  max-height: 20vh;
-}
 .table {
   margin: auto 2em;
 }
-.game {
-  margin: auto;
+#game {
+  margin: 1rem auto;
 }
 .players2 {
   display: flex;
@@ -68,4 +45,14 @@ button {
 }
 .description2 p {
   margin: auto 1em;
+}
+
+.letter {
+  border: 0.5px solid lightgray;
+  border-radius: 5px;
+  padding: 3px 6px;
+}
+
+#letters {
+  margin: 1rem;
 }
