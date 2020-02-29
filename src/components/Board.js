@@ -3,7 +3,8 @@ import "./Board.css";
 
 class Board extends Component {
   cell = {
-    letter: null,
+    letter: {},
+    userLetter: {},
     multiplyLetter: 1,
     multiplyWord: 1,
     className: "ordinary"
@@ -39,84 +40,37 @@ class Board extends Component {
     });
   });
 
-  //   markedBoard = this.emptyBoard.map((row, y) => {
-  //     return row.map((cell, x) => {
-  //       const newCell = { ...cell };
-  //       if (y === 0 || y === 14) {
-  //         if (x === 0 || x === 7 || x === 14) {
-  //           newCell.multiplyWord = 3;
-  //           newCell.className = "w3";
-  //         }
-  //       }
-  //       if (y === 7) {
-  //         if (x === 0 || x === 14) {
-  //           newCell.multiplyWord = 3;
-  //           newCell.className = "w3";
-  //         }
-  //       }
-  //       if (
-  //         ((x > 0 && x < 5) || (x > 9 && x < 14)) &&
-  //         (y === x || y === 14 - x)
-  //       ) {
-  //         newCell.multiplyLetter = 3;
-  //         newCell.className = "l3";
-  //       }
-  //       if ((x === 1 || x === 13) && (y === 5 || y === 9)) {
-  //         newCell.multiplyWord = 2;
-  //         newCell.className = "w2";
-  //       }
-  //       if ((y === 1 || y === 13) && (x === 5 || x === 9)) {
-  //         newCell.multiplyWord = 2;
-  //         newCell.className = "w2";
-  //       }
-  //       if ((x === 3 || x === 11) && (y === 0 || y === 7 || y === 14)) {
-  //         newCell.multiplyLetter = 2;
-  //         newCell.className = "l2";
-  //       }
-  //       if ((y === 3 || y === 11) && (x === 0 || x === 7 || x === 14)) {
-  //         newCell.multiplyLetter = 2;
-  //         newCell.className = "l2";
-  //       }
-  //       if ((x === 2 || x === 12) && (y === 6 || y === 8)) {
-  //         newCell.multiplyLetter = 2;
-  //         newCell.className = "l2";
-  //       }
-  //       if ((y === 2 || y === 12) && (x === 6 || x === 8)) {
-  //         newCell.multiplyLetter = 2;
-  //         newCell.className = "l2";
-  //       }
-  //       if ((x === 6 || x === 8) && (y === 6 || y === 8)) {
-  //         newCell.multiplyLetter = 2;
-  //         newCell.className = "l2";
-  //       }
-  //       return newCell;
-  //     });
-  //   });
   initialState = { board: this.boardWithBonuses };
 
   state = this.initialState;
 
   render() {
-    console.log(this.state);
     return (
       <div>
-        <table>
-          <tbody>
-            {this.state.board.map((row, index) => {
-              return (
-                <tr key={index}>
-                  {row.map((cell, i) => {
-                    return (
-                      <td key={i} className={cell.className}>
-                        {cell.letter}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {this.props.board && this.props.board.length > 0 ? (
+          <table>
+            <tbody>
+              {this.state.board.map((row, index) => {
+                return (
+                  <tr key={index}>
+                    {row.map((cell, i) => {
+                      cell.letter =
+                        this.props.board[index][i] &&
+                        this.props.board[index][i];
+                      return (
+                        <td key={`${index}_${i}`} className={cell.className}>
+                          {cell.letter && cell.letter.char && cell.letter.char}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        ) : (
+          "Loading Board"
+        )}
       </div>
     );
   }
