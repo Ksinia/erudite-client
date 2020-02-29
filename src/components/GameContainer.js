@@ -13,21 +13,72 @@ class GameContainer extends Component {
   state = {
     chosenLetterIndex: null,
     board: [],
-    userLetters: []
+    userLetters: [],
+    userBoard: Array(15)
+      .fill(null)
+      .map(line => Array(15).fill(null))
   };
 
-  clickBoard = event => {};
+  clickBoard = event => {
+    console.log("clickBoard", this.state.userBoard);
+    const x = parseInt(event.target.dataset.x);
+    const y = parseInt(event.target.dataset.y);
+    console.log("clicked cell x index", x);
+    console.log("clicked cell y index", y);
+    if (JSON.parse(event.target.dataset.letter)) {
+      console.log("letter: ", JSON.parse(event.target.dataset.letter).char);
+    }
+    // if the cell is occupied by letter
+    // do nothing
+    // if cell is empty (no letter from server) and chosenLetterIndex is not null
+    // put letter into userBoard and remove letter from userLetters. If there is userLetter, put it back into userLetters
+    let updatedUserBoard = [...this.state.userBoard];
+    let updUserLetters = [...this.state.userLetters];
+    if (
+      this.state.board[y][x] === null &&
+      this.state.chosenLetterIndex !== null
+    ) {
+      const putLetter = updUserLetters.splice(
+        this.state.chosenLetterIndex,
+        1
+      )[0];
+      if (this.state.userBoard[y][x]) {
+        updUserLetters.push(this.state.userBoard[y][x]);
+      }
+      updatedUserBoard[y][x] = putLetter;
+      this.setState({
+        ...this.state,
+        chosenLetterIndex: null,
+        userLetters: updUserLetters,
+        userBoard: updatedUserBoard
+      });
+    } else if (
+      // if cell has user letter and there is no chosen letter, return letter from board to userLetters
+      this.state.board[y][x] === null &&
+      this.state.chosenLetterIndex === null
+    ) {
+      if (this.state.userBoard[y][x]) {
+        updUserLetters.push(this.state.userBoard[y][x]);
+        updatedUserBoard[y][x] = null;
+        this.setState({
+          ...this.state,
+          userLetters: updUserLetters,
+          userBoard: updatedUserBoard
+        });
+      }
+    }
+  };
+
   clickLetter = event => {
-    console.log("clicked letter", parseInt(event.target.dataset.index));
+    if (!event.target.dataset.index) {
+      this.setState({ ...this.state, chosenLetterIndex: null });
+      return;
+    }
     if (this.state.chosenLetterIndex === null) {
       this.setState({
         ...this.state,
         chosenLetterIndex: parseInt(event.target.dataset.index)
       });
-      console.log(
-        "new state chosen letter index",
-        this.state.chosenLetterIndex
-      );
     } else {
       const updatedUserLetters = [...this.state.userLetters];
       const oldIndex = this.state.chosenLetterIndex;
@@ -57,7 +108,12 @@ class GameContainer extends Component {
     if (this.props.games != prevProps.games) {
       console.log("change props");
       let userLetters = [];
-      if (this.props.user) {
+      if (
+        this.props.user &&
+        this.props.games[this.gameId].users.find(
+          user => user.id == this.props.user.id
+        )
+      ) {
         userLetters = this.props.games[this.gameId].letters[this.props.user.id];
       }
       const board = this.props.games[this.gameId].board;
@@ -77,6 +133,7 @@ class GameContainer extends Component {
           userLetters={this.state.userLetters}
           chosenLetterIndex={this.state.chosenLetterIndex}
           board={this.state.board}
+          userBoard={this.state.userBoard}
           user={this.props.user}
           clickBoard={this.clickBoard}
           clickLetter={this.clickLetter}
