@@ -22,11 +22,11 @@ function Game(props) {
                 <span
                   className="letter"
                   key={index}
-                  data-letter={JSON.stringify(letter)}
+                  data-letter={letter}
                   data-index={index}
                   style={style}
                 >
-                  {letter.char}
+                  {letter}
                 </span>
               );
             })}

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import superagent from "superagent";
 
 import "./Game.css";
 import Game from "./Game";
@@ -25,9 +26,7 @@ class GameContainer extends Component {
     const y = parseInt(event.target.dataset.y);
     console.log("clicked cell x index", x);
     console.log("clicked cell y index", y);
-    if (JSON.parse(event.target.dataset.letter)) {
-      console.log("letter: ", JSON.parse(event.target.dataset.letter).char);
-    }
+
     // if the cell is occupied by letter
     // do nothing
     // if cell is empty (no letter from server) and chosenLetterIndex is not null
@@ -95,6 +94,19 @@ class GameContainer extends Component {
     }
   };
 
+  confirmTurn = async () => {
+    console.log("comfirm clicked");
+    try {
+      const response = await superagent
+        .post(`${url}/game/${this.gameId}/turn`)
+        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .send({ userBoard: this.state.userBoard });
+      console.log("response test: ", response);
+    } catch (error) {
+      console.warn("error test:", error);
+    }
+  };
+
   componentDidMount() {
     this.gameStream.onmessage = event => {
       const { data } = event;
@@ -137,6 +149,7 @@ class GameContainer extends Component {
           user={this.props.user}
           clickBoard={this.clickBoard}
           clickLetter={this.clickLetter}
+          confirmTurn={this.confirmTurn}
         />
       </div>
     );

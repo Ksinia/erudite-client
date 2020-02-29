@@ -24,7 +24,6 @@ class App extends Component {
       const { data } = event;
       const action = JSON.parse(data);
       this.props.dispatch(action);
-      console.log(action);
     };
   }
 

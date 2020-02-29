@@ -61,16 +61,15 @@ class Board extends Component {
                         this.props.board[yIndex][xIndex];
                       return (
                         <td
-                          data-letter={JSON.stringify(cell.letter)}
+                          data-letter={cell.letter}
                           data-x={xIndex}
                           data-y={yIndex}
                           key={`${yIndex}_${xIndex}`}
                           className={cell.className}
                           onClick={this.props.clickBoard}
                         >
-                          {cell.letter && cell.letter.char && cell.letter.char}
-                          {this.props.userBoard[yIndex][xIndex] &&
-                            this.props.userBoard[yIndex][xIndex].char}
+                          {cell.letter && cell.letter}
+                          {this.props.userBoard[yIndex][xIndex]}
                         </td>
                       );
                     })}
