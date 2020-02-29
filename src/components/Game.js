@@ -15,6 +15,7 @@ function Game(props) {
               }
               return (
                 <span
+                  className="letter"
                   key={index}
                   data-letter={JSON.stringify(letter)}
                   data-index={index}
