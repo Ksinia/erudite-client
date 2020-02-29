@@ -9,7 +9,9 @@ class Board extends Component {
     multiplyWord: 1,
     className: "ordinary"
   };
-  emptyBoard = new Array(15).fill(new Array(15).fill(this.cell));
+  emptyBoard = Array(15)
+    .fill(null)
+    .map(line => Array(15).fill(this.cell));
   boardBonuses = {
     0: { 0: "w3", 3: "l2", 7: "w3" },
     1: { 1: "l3", 5: "w2" },
@@ -50,16 +52,25 @@ class Board extends Component {
         {this.props.board && this.props.board.length > 0 ? (
           <table>
             <tbody>
-              {this.state.board.map((row, index) => {
+              {this.state.board.map((row, yIndex) => {
                 return (
-                  <tr key={index}>
-                    {row.map((cell, i) => {
+                  <tr key={yIndex}>
+                    {row.map((cell, xIndex) => {
                       cell.letter =
-                        this.props.board[index][i] &&
-                        this.props.board[index][i];
+                        this.props.board[yIndex][xIndex] &&
+                        this.props.board[yIndex][xIndex];
                       return (
-                        <td key={`${index}_${i}`} className={cell.className}>
+                        <td
+                          data-letter={JSON.stringify(cell.letter)}
+                          data-x={xIndex}
+                          data-y={yIndex}
+                          key={`${yIndex}_${xIndex}`}
+                          className={cell.className}
+                          onClick={this.props.clickBoard}
+                        >
                           {cell.letter && cell.letter.char && cell.letter.char}
+                          {this.props.userBoard[yIndex][xIndex] &&
+                            this.props.userBoard[yIndex][xIndex].char}
                         </td>
                       );
                     })}
