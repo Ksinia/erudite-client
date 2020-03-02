@@ -11,7 +11,7 @@ class GameContainer extends Component {
 
   gameStream = new EventSource(`${url}/game/${this.gameId}`);
 
-  state = {
+  initialState = {
     chosenLetterIndex: null,
     board: [],
     userLetters: [],
@@ -19,6 +19,7 @@ class GameContainer extends Component {
       .fill(null)
       .map(line => Array(15).fill(null))
   };
+  state = this.initialState;
 
   clickBoard = event => {
     console.log("clickBoard", this.state.userBoard);
@@ -106,6 +107,23 @@ class GameContainer extends Component {
       console.warn("error test:", error);
     }
   };
+  approveTurn = async () => {
+    console.log("approve clicked");
+    try {
+      const response = await superagent
+        .post(`${url}/game/${this.gameId}/approve`)
+        .set("Authorization", `Bearer ${this.props.user.jwt}`);
+      // .send({ userBoard: this.state.userBoard });
+      console.log("response test: ", response);
+    } catch (error) {
+      console.warn("error test:", error);
+    }
+  };
+
+  getNextTurn = game => {
+    const index = (game.turn + 1) % game.turnOrder.length;
+    return game.turnOrder[index];
+  };
 
   componentDidMount() {
     this.gameStream.onmessage = event => {
@@ -117,19 +135,37 @@ class GameContainer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.games != prevProps.games) {
+    if (
+      this.props.games &&
+      this.props.user &&
+      this.props.games[this.gameId] &&
+      JSON.stringify(this.props) !== JSON.stringify(prevProps)
+      // this.props !== prevProps
+    ) {
       console.log("change props");
-      let userLetters = [];
-      if (
-        this.props.user &&
-        this.props.games[this.gameId].users.find(
-          user => user.id == this.props.user.id
-        )
-      ) {
-        userLetters = this.props.games[this.gameId].letters[this.props.user.id];
-      }
+      //TODO: write function to check how to update state of the component
+      // depending on the length of the updated user hand and other conditions
+      // let userLetters = [];
+      // if (
+      //   this.props.user &&
+      //   this.props.games[this.gameId].turnOrder.includes(this.props.user.id)
+      // ) {
+      //   userLetters = this.props.games[this.gameId].letters[this.props.user.id];
+      // }
+      // const board = this.props.games[this.gameId].board;
+      // this.setState({ ...this.state, userLetters: userLetters, board: board });
+      // if (this.props.games[this.gameId].letters[this.props.user.id] < 7) {
+      const userLetters = this.props.games[this.gameId].letters[
+        this.props.user.id
+      ];
       const board = this.props.games[this.gameId].board;
-      this.setState({ ...this.state, userLetters: userLetters, board: board });
+      this.setState({
+        ...this.state,
+        userLetters: userLetters,
+        board: board,
+        userBoard: this.initialState.userBoard
+      });
+      // }
     }
   }
 
@@ -150,6 +186,8 @@ class GameContainer extends Component {
           clickBoard={this.clickBoard}
           clickLetter={this.clickLetter}
           confirmTurn={this.confirmTurn}
+          approveTurn={this.approveTurn}
+          getNextTurn={this.getNextTurn}
         />
       </div>
     );
