@@ -11,22 +11,41 @@ class GameContainer extends Component {
 
   gameStream = new EventSource(`${url}/game/${this.gameId}`);
 
-  initialState = {
+  emptyUserBoard = Array(15)
+    .fill(null)
+    .map(line => Array(15).fill(null));
+
+  state = {
     chosenLetterIndex: null,
     board: [],
     userLetters: [],
-    userBoard: Array(15)
-      .fill(null)
-      .map(line => Array(15).fill(null))
+    userBoard: this.emptyUserBoard
   };
-  state = this.initialState;
+
+  // extract added letters from whole new hand
+  extract = (oldHand, newHand) => {
+    const oldLetters = [...oldHand].sort();
+    const newLetters = [...newHand].sort();
+    return newLetters.reduce(
+      (acc, letter) => {
+        if (acc.i === oldLetters.length) {
+          acc.letters.push(letter);
+          return acc;
+        }
+        if (letter === oldLetters[acc.i]) {
+          acc.i++;
+          return acc;
+        }
+        acc.letters.push(letter);
+        return acc;
+      },
+      { i: 0, letters: [] }
+    ).letters;
+  };
 
   clickBoard = event => {
-    console.log("clickBoard", this.state.userBoard);
     const x = parseInt(event.target.dataset.x);
     const y = parseInt(event.target.dataset.y);
-    console.log("clicked cell x index", x);
-    console.log("clicked cell y index", y);
 
     // if the cell is occupied by letter
     // do nothing
@@ -96,7 +115,6 @@ class GameContainer extends Component {
   };
 
   confirmTurn = async () => {
-    console.log("comfirm clicked");
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/turn`)
@@ -108,12 +126,10 @@ class GameContainer extends Component {
     }
   };
   approveTurn = async () => {
-    console.log("approve clicked");
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/approve`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`);
-      // .send({ userBoard: this.state.userBoard });
       console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
@@ -121,8 +137,14 @@ class GameContainer extends Component {
   };
 
   getNextTurn = game => {
-    const index = (game.turn + 1) % game.turnOrder.length;
-    return game.turnOrder[index];
+    return (game.turn + 1) % game.turnOrder.length;
+  };
+  getPrevTurn = game => {
+    const index = game.turn - 1;
+    if (index < 0) {
+      return index + game.turnOrder.length;
+    }
+    return index;
   };
 
   componentDidMount() {
@@ -130,42 +152,130 @@ class GameContainer extends Component {
       const { data } = event;
       const action = JSON.parse(data);
       this.props.dispatch(action);
-      console.log(action);
     };
   }
 
   componentDidUpdate(prevProps) {
     if (
       this.props.games &&
-      this.props.user &&
       this.props.games[this.gameId] &&
       JSON.stringify(this.props) !== JSON.stringify(prevProps)
-      // this.props !== prevProps
     ) {
       console.log("change props");
-      //TODO: write function to check how to update state of the component
+
+      //update state of the component
       // depending on the length of the updated user hand and other conditions
-      // let userLetters = [];
-      // if (
-      //   this.props.user &&
-      //   this.props.games[this.gameId].turnOrder.includes(this.props.user.id)
-      // ) {
-      //   userLetters = this.props.games[this.gameId].letters[this.props.user.id];
-      // }
-      // const board = this.props.games[this.gameId].board;
-      // this.setState({ ...this.state, userLetters: userLetters, board: board });
-      // if (this.props.games[this.gameId].letters[this.props.user.id] < 7) {
-      const userLetters = this.props.games[this.gameId].letters[
-        this.props.user.id
-      ];
-      const board = this.props.games[this.gameId].board;
-      this.setState({
-        ...this.state,
-        userLetters: userLetters,
-        board: board,
-        userBoard: this.initialState.userBoard
-      });
-      // }
+
+      const game = this.props.games[this.gameId];
+      const board = game.board;
+
+      // все случаи:
+
+      if (!this.props.game && !this.props.user) {
+      }
+      // пользователь не залогинен
+      else if (!this.props.user) {
+        this.setState({
+          ...this.state,
+          board: board
+        });
+      }
+      // игра только началась
+      else if (
+        game.phase === "turn" &&
+        !board.some(row => row.some(cell => cell))
+      ) {
+        console.log("начало игры");
+        const userLetters = game.letters[this.props.user.id];
+        this.setState({
+          ...this.state,
+          userLetters: userLetters,
+          board: board,
+          userBoard: Array(15)
+            .fill(null)
+            .map(line => Array(15).fill(null))
+        });
+      }
+
+      // я сделала ход - после этого надо
+      else if (
+        game.phase === "validation" &&
+        game.turnOrder[game.turn] === this.props.user.id
+      ) {
+        console.log("я сделала ход - после этого надо");
+        const userLetters = game.letters[this.props.user.id];
+        this.setState({
+          ...this.state,
+          userLetters: userLetters,
+          board: board,
+          userBoard: Array(15)
+            .fill(null)
+            .map(line => Array(15).fill(null))
+        });
+
+        // я получила подтверждение своего хода - мне придут новые буквы, так что надо не обновлять юзер боард,
+        // но добавить к моим буквам только новые буквы
+      } else if (
+        game.phase === "turn" &&
+        // проверить, что моя очередь была предыдущей
+        game.turnOrder[this.getPrevTurn(game)] === this.props.user.id
+      ) {
+        console.log(
+          "я получила подтверждение своего хода - мне придут новые буквы, так что надо не обновлять юзер боард, но добавить к моим буквам только новые буквы"
+        );
+        // найти предыдущие буквы
+        const putLetters = this.state.userBoard.reduce((acc, row) => {
+          return acc.concat(row.filter(letter => letter !== null));
+        }, []);
+        const prevLetters = this.state.userLetters.concat(putLetters);
+        const addedLetters = this.extract(
+          prevLetters,
+          game.letters[this.props.user.id]
+        );
+        const updatedUserLetters = this.state.userLetters.concat(addedLetters);
+
+        this.setState({
+          ...this.state,
+          board: board,
+          userLetters: updatedUserLetters
+        });
+
+        // другой игрок сделал ход - не надо (надо только если его буквы попали на мои)
+        // ход другого игрока подтвержден -  - после этого не надо
+      } else {
+        console.log("остальные случаи");
+        console.log("state before update:", this.state);
+        if (
+          this.state.userLetters.length === 0 &&
+          !this.state.userBoard.some(row => row.some(cell => cell))
+        ) {
+          const updatedUserLetters = game.letters[this.props.user.id];
+          this.setState({
+            ...this.state,
+            board: board,
+            userLetters: updatedUserLetters
+          });
+        } else {
+          const updatedUserLetters = [...this.state.userLetters];
+
+          const updatedUserBoard = this.state.userBoard.map((line, yIndex) =>
+            line.map((cell, xIndex) => {
+              if (cell && board[yIndex][xIndex] !== null) {
+                updatedUserLetters.push(cell);
+                return null;
+              } else {
+                return cell;
+              }
+            })
+          );
+          this.setState({
+            ...this.state,
+            board: board,
+            userLetters: updatedUserLetters,
+            userBoard: updatedUserBoard
+          });
+        }
+      }
     }
   }
 

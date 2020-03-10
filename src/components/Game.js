@@ -32,25 +32,34 @@ function Game(props) {
             })}
           </div>
           {props.user &&
-            props.game.turn === props.user.id &&
+            props.game.turnOrder[props.game.turn] === props.user.id &&
             props.game.phase == "turn" && (
               <button onClick={props.confirmTurn}>Confirm</button>
             )}
           {/* next player validates: */}
           {props.user &&
             props.game.turnOrder.includes(props.user.id) &&
-            props.user.id === props.getNextTurn(props.game) &&
+            props.user.id ===
+              props.game.turnOrder[props.getNextTurn(props.game)] &&
             props.game.phase == "validation" && (
               <button onClick={props.approveTurn}>
                 I confirm{" "}
-                {props.game.users.find(user => user.id == props.game.turn).name}
+                {
+                  props.game.users.find(
+                    user => user.id == props.game.turnOrder[props.game.turn]
+                  ).name
+                }
                 's turn
               </button>
             )}
+          <p>Game phase: {props.game.phase}</p>
           <p>
-            Now is{" "}
-            {props.game.users.find(user => user.id == props.game.turn).name}'s
-            turn
+            {
+              props.game.users.find(
+                user => user.id == props.game.turnOrder[props.game.turn]
+              ).name
+            }
+            's turn
           </p>
           <p>Letters left in the bag: {props.game.letters.pot.length}</p>
         </div>
