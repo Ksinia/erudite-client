@@ -1,32 +1,14 @@
-.table {
-  margin: auto 2em;
-}
-#game {
+.game {
   margin: 1rem auto;
-}
-.players2 {
-  display: flex;
-  flex-direction: row;
-}
-.player-name {
-  margin: 1em;
-}
-.tableAndInfo {
-  border-top: 0.5px solid gainsboro;
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
-  padding: 0 2em;
-}
-.table {
-  margin-top: 1em;
-}
-.info {
-  text-align: center;
-  display: flex;
-  flex-flow: column;
   justify-content: center;
-  margin: 2em;
+}
+.board {
+  padding: 2em;
+}
+.game div {
+  margin: auto;
 }
 .chosen {
   -webkit-box-shadow: 3px 3px 11px 3px rgba(13, 13, 13, 0.28);
@@ -39,20 +21,13 @@ button {
   border-radius: 3px;
   font-size: medium;
 }
-.description2 {
-  display: flex;
-  flex-direction: row;
-}
-.description2 p {
-  margin: auto 1em;
-}
-
 .letter {
   border: 0.5px solid lightgray;
   border-radius: 5px;
-  padding: 3px 6px;
+  padding: 6px 10px;
+  margin: 0.2em;
 }
 
-#letters {
-  margin: 1rem;
+.letters {
+  margin: 2em;
 }
