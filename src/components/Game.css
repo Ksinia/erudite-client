@@ -10,6 +10,9 @@
 .game div {
   margin: auto;
 }
+.controls {
+  min-width: 50%;
+}
 .chosen {
   -webkit-box-shadow: 3px 3px 11px 3px rgba(13, 13, 13, 0.28);
   -moz-box-shadow: 3px 3px 11px 3px rgba(13, 13, 13, 0.28);
@@ -26,8 +29,23 @@ button {
   border-radius: 5px;
   padding: 6px 10px;
   margin: 0.2em;
+  width: 40px;
+  height: 40px;
+  line-height: 2rem;
+  font-size: xx-large;
+  position: relative;
 }
 
 .letters {
   margin: 2em;
+  display: flex;
+  flex-direction: row;
+  max-width: fit-content;
+}
+.value-in-hand {
+  position: absolute;
+  font-size: xx-small;
+  z-index: 100;
+  top: -1.5em;
+  right: 0.5em;
 }

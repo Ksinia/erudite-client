@@ -1,5 +1,6 @@
 import React from "react";
 import Board from "./Board";
+import letterValues from "../letterValues";
 
 function Game(props) {
   return (
@@ -23,21 +24,22 @@ function Game(props) {
                   style = { background: "whitesmoke" };
                 }
                 return (
-                  <span
+                  <div
                     className="letter"
                     key={index}
                     data-letter={letter}
                     data-index={index}
                     style={style}
                   >
+                    <p className="value-in-hand">{letterValues[letter]}</p>
                     {letter}
-                  </span>
+                  </div>
                 );
               })}
             </div>
             {props.user &&
               props.game.turnOrder[props.game.turn] === props.user.id &&
-              props.game.phase == "turn" && (
+              props.game.phase === "turn" && (
                 <button onClick={props.confirmTurn}>Confirm</button>
               )}
             {/* next player validates: */}
@@ -45,12 +47,12 @@ function Game(props) {
               props.game.turnOrder.includes(props.user.id) &&
               props.user.id ===
                 props.game.turnOrder[props.getNextTurn(props.game)] &&
-              props.game.phase == "validation" && (
+              props.game.phase === "validation" && (
                 <button onClick={props.approveTurn}>
                   I confirm{" "}
                   {
                     props.game.users.find(
-                      user => user.id == props.game.turnOrder[props.game.turn]
+                      user => user.id === props.game.turnOrder[props.game.turn]
                     ).name
                   }
                   's turn
@@ -59,14 +61,14 @@ function Game(props) {
             <p>Game phase: {props.game.phase}</p>
             {Object.keys(props.game.score).map(key => (
               <p key={key}>
-                {props.game.users.find(user => user.id == key).name}:{" "}
+                {props.game.users.find(user => user.id === parseInt(key)).name}:{" "}
                 {props.game.score[key]}
               </p>
             ))}
             <p>
               {
                 props.game.users.find(
-                  user => user.id == props.game.turnOrder[props.game.turn]
+                  user => user.id === props.game.turnOrder[props.game.turn]
                 ).name
               }
               's turn

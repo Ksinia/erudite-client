@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Board.css";
+import letterValues from "../letterValues";
 
 class Board extends Component {
   cell = {
@@ -13,29 +14,45 @@ class Board extends Component {
     .fill(null)
     .map(line => Array(15).fill(this.cell));
   boardBonuses = {
-    0: { 0: "w3", 3: "l2", 7: "w3" },
-    1: { 1: "l3", 5: "w2" },
-    2: { 2: "l3", 6: "l2" },
-    3: { 0: "l2", 3: "l3", 7: "l2" },
-    4: { 4: "l3" },
-    5: { 1: "w2" },
-    6: { 2: "l2", 6: "l2" },
-    7: { 0: "w3", 3: "l2" }
+    0: {
+      0: ["w3", "x3", "слово"],
+      3: ["l2", "x2", "буква"],
+      7: ["w3", "x3", "слово"]
+    },
+    1: { 1: ["l3", "x3", "буква"], 5: ["w2", "x2", "слово"] },
+    2: { 2: ["l3", "x3", "буква"], 6: ["l2", "x2", "буква"] },
+    3: {
+      0: ["l2", "x2", "буква"],
+      3: ["l3", "x3", "буква"],
+      7: ["l2", "x2", "буква"]
+    },
+    4: { 4: ["l3", "x3", "буква"] },
+    5: { 1: ["w2", "x2", "слово"] },
+    6: { 2: ["l2", "x2", "буква"], 6: ["l2", "x2", "буква"] },
+    7: { 0: ["w3", "x3", "слово"], 3: ["l2", "x2", "буква"] }
   };
   boardWithBonuses = this.emptyBoard.map((row, y) => {
     return row.map((cell, x) => {
       const newCell = { ...cell };
       if (y in this.boardBonuses) {
         if (x in this.boardBonuses[y]) {
-          newCell.className = this.boardBonuses[y][x];
+          newCell.className = this.boardBonuses[y][x][0];
+          newCell.multiply = this.boardBonuses[y][x][1];
+          newCell.unit = this.boardBonuses[y][x][2];
         } else if (14 - x in this.boardBonuses[y]) {
-          newCell.className = this.boardBonuses[y][14 - x];
+          newCell.className = this.boardBonuses[y][14 - x][0];
+          newCell.multiply = this.boardBonuses[y][14 - x][1];
+          newCell.unit = this.boardBonuses[y][14 - x][2];
         }
       } else if (14 - y in this.boardBonuses) {
         if (14 - x in this.boardBonuses[14 - y]) {
-          newCell.className = this.boardBonuses[14 - y][14 - x];
+          newCell.className = this.boardBonuses[14 - y][14 - x][0];
+          newCell.multiply = this.boardBonuses[14 - y][14 - x][1];
+          newCell.unit = this.boardBonuses[14 - y][14 - x][2];
         } else if (x in this.boardBonuses[14 - y]) {
-          newCell.className = this.boardBonuses[14 - y][x];
+          newCell.className = this.boardBonuses[14 - y][x][0];
+          newCell.multiply = this.boardBonuses[14 - y][x][1];
+          newCell.unit = this.boardBonuses[14 - y][x][2];
         }
       }
       return newCell;
@@ -65,11 +82,22 @@ class Board extends Component {
                           data-x={xIndex}
                           data-y={yIndex}
                           key={`${yIndex}_${xIndex}`}
-                          className={cell.className}
                           onClick={this.props.clickBoard}
                         >
-                          {cell.letter && cell.letter}
-                          {this.props.userBoard[yIndex][xIndex]}
+                          <div className={`cell ${cell.className}`}>
+                            <p className="multiply">{cell.multiply}</p>
+                            <p className="unit">{cell.unit}</p>
+                            <p className="value-on-board">
+                              {cell.letter && letterValues[cell.letter]}
+                              {
+                                letterValues[
+                                  this.props.userBoard[yIndex][xIndex]
+                                ]
+                              }
+                            </p>
+                            {cell.letter && cell.letter}
+                            {this.props.userBoard[yIndex][xIndex]}
+                          </div>
                         </td>
                       );
                     })}
