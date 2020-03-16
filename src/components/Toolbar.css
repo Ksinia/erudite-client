@@ -4,7 +4,7 @@
   background-color: whitesmoke;
   flex-flow: wrap;
   justify-content: space-evenly;
-  padding: 0.8rem 0;
+  padding: 0.5rem 0;
   position: fixed;
   top: 0px;
   z-index: 999;

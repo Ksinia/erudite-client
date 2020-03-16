@@ -1,8 +1,8 @@
 table {
-  margin: auto;
+  margin: 1em auto;
   border-collapse: collapse;
-  max-width: 31.5rem;
-  max-height: 31.5rem;
+  width: 31.5rem;
+  height: 31.5rem;
 }
 
 td {
@@ -64,12 +64,13 @@ td {
 }
 @media screen and (max-width: 670px) {
   table {
-    width: 90vw;
-    height: 90vw;
+    width: 90vmin;
+    height: 90vmin;
+    table-layout: fixed;
   }
   td {
-    width: 1.3rem;
-    height: 1.3rem;
+    width: 6vmin;
+    height: 6vmin;
   }
   .cell {
     font-size: 1.1rem;
@@ -81,7 +82,6 @@ td {
     font-size: 0.1rem;
   }
   .value-on-board {
-    /* font-size: 0.rem; */
     font-weight: 300;
     top: -0.7rem;
     right: -0.05rem;
