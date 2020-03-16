@@ -7,7 +7,7 @@ import "./Game.css";
 import Room from "./Room";
 
 class RoomContainer extends Component {
-  roomId = this.props.match.params.room;
+  roomId = parseInt(this.props.match.params.room);
 
   state = null;
 
@@ -45,7 +45,7 @@ class RoomContainer extends Component {
   componentDidMount() {
     let room = null;
     if (this.props.rooms && this.props.rooms.length > 0) {
-      room = this.props.rooms.find(el => el.id == this.roomId);
+      room = this.props.rooms.find(el => el.id === this.roomId);
       this.setState(room);
       if (room.games.length > 0) {
         this.props.history.push(`/game/${room.games[0].id}`);
@@ -56,7 +56,7 @@ class RoomContainer extends Component {
     if (this.props.rooms !== prevProps.rooms) {
       let room = null;
       if (this.props.rooms && this.props.rooms.length > 0) {
-        room = this.props.rooms.find(el => el.id == this.roomId);
+        room = this.props.rooms.find(el => el.id === this.roomId);
         this.setState(room);
         if (room.games.length > 0) {
           this.props.history.push(`/game/${room.games[0].id}`);
