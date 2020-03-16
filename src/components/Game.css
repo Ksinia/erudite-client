@@ -49,3 +49,7 @@ button {
   top: -1.5em;
   right: 0.5em;
 }
+footer {
+  text-align: center;
+  margin-bottom: 1rem;
+}

@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import GithubCorner from "react-github-corner";
 import { Switch, Route } from "react-router-dom";
 
 import LoginContainer from "./components/LoginContainer";
 import SignupContainer from "./components/SignupContainer";
 import Toolbar from "./components/Toolbar";
-import Footer from "./components/Footer";
 import LobbyContainer from "./components/LobbyContainer";
 import RoomContainer from "./components/RoomContainer";
 import GameContainer from "./components/GameContainer";
@@ -30,7 +28,7 @@ class App extends Component {
   render() {
     return [
       <div className="App" key="app">
-        <GithubCorner href="https://github.com/Ksinia/erudit-client" />
+        {/* <GithubCorner href="https://github.com/Ksinia/erudit-client" /> */}
 
         <Toolbar />
         <Switch>
@@ -41,7 +39,11 @@ class App extends Component {
           <Route path="/" component={LobbyContainer} />
         </Switch>
       </div>,
-      <Footer key="footer" />
+      <footer>
+        {"Copyright © "}
+        <a href="https://ksinia.net/cv/">Ksenia Gulyaeva</a>{" "}
+        {new Date().getFullYear()}
+      </footer>
     ];
   }
 }

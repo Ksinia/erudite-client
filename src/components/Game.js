@@ -59,12 +59,6 @@ function Game(props) {
                 </button>
               )}
             <p>Game phase: {props.game.phase}</p>
-            {Object.keys(props.game.score).map(key => (
-              <p key={key}>
-                {props.game.users.find(user => user.id === parseInt(key)).name}:{" "}
-                {props.game.score[key]}
-              </p>
-            ))}
             <p>
               {
                 props.game.users.find(
@@ -73,6 +67,13 @@ function Game(props) {
               }
               's turn
             </p>
+            <p>Score:</p>
+            {Object.keys(props.game.score).map(key => (
+              <p key={key}>
+                {props.game.users.find(user => user.id === parseInt(key)).name}:{" "}
+                {props.game.score[key]}
+              </p>
+            ))}
             <p>Letters left in the bag: {props.game.letters.pot.length}</p>
           </div>
         </div>

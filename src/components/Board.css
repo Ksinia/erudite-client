@@ -1,8 +1,8 @@
 table {
   margin: auto;
   border-collapse: collapse;
-  width: 31.5rem;
-  height: 31.5rem;
+  max-width: 31.5rem;
+  max-height: 31.5rem;
 }
 
 td {
@@ -47,18 +47,43 @@ td {
 
 .multiply {
   position: absolute;
-  font-size: medium;
+  font-size: 1.5rem;
   color: whitesmoke;
-  top: -1em;
-  left: 0.2em;
+  top: -1.2em;
+  left: 0.2rem;
   z-index: -2;
   font-weight: lighter;
 }
 .unit {
   position: absolute;
-  font-size: x-small;
+  font-size: 0.7rem;
   color: whitesmoke;
   bottom: -1em;
   z-index: -3;
   font-weight: medium;
+}
+@media screen and (max-width: 670px) {
+  table {
+    width: 90vw;
+    height: 90vw;
+  }
+  td {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+  .cell {
+    font-size: 1.1rem;
+  }
+  .multiply {
+    font-size: 0.9rem;
+  }
+  .unit {
+    font-size: 0.1rem;
+  }
+  .value-on-board {
+    /* font-size: 0.rem; */
+    font-weight: 300;
+    top: -0.7rem;
+    right: -0.05rem;
+  }
 }
