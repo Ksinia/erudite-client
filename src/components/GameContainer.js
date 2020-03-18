@@ -159,33 +159,26 @@ class GameContainer extends Component {
     if (
       this.props.games &&
       this.props.games[this.gameId] &&
-      JSON.stringify(this.props) !== JSON.stringify(prevProps)
+      this.props !== prevProps
     ) {
-      console.log("change props");
-
       //update state of the component
       // depending on the length of the updated user hand and other conditions
 
       const game = this.props.games[this.gameId];
       const board = game.board;
 
-      // все случаи:
-
-      if (!this.props.game && !this.props.user) {
-      }
-      // пользователь не залогинен
-      else if (!this.props.user) {
+      // user is not logged in or user is not playing this game
+      if (!this.props.user || !game.turnOrder.includes(this.props.user.id)) {
         this.setState({
           ...this.state,
           board: board
         });
       }
-      // игра только началась
+      // the very beginning of the game
       else if (
         game.phase === "turn" &&
         !board.some(row => row.some(cell => cell))
       ) {
-        console.log("начало игры");
         const userLetters = game.letters[this.props.user.id];
         this.setState({
           ...this.state,
@@ -197,12 +190,11 @@ class GameContainer extends Component {
         });
       }
 
-      // я сделала ход - после этого надо
+      // logged in user made a move
       else if (
         game.phase === "validation" &&
         game.turnOrder[game.turn] === this.props.user.id
       ) {
-        console.log("я сделала ход - после этого надо");
         const userLetters = game.letters[this.props.user.id];
         this.setState({
           ...this.state,
@@ -213,17 +205,15 @@ class GameContainer extends Component {
             .map(line => Array(15).fill(null))
         });
 
-        // я получила подтверждение своего хода - мне придут новые буквы, так что надо не обновлять юзер боард,
-        // но добавить к моим буквам только новые буквы
+        // logged in user's turn was validated, user receives new letters,
+        // no need to update user board,
+        // add only new letters to user letters
       } else if (
         game.phase === "turn" &&
-        // проверить, что моя очередь была предыдущей
+        // check if the previous turn was a turn of logged in user
         game.turnOrder[this.getPrevTurn(game)] === this.props.user.id
       ) {
-        console.log(
-          "я получила подтверждение своего хода - мне придут новые буквы, так что надо не обновлять юзер боард, но добавить к моим буквам только новые буквы"
-        );
-        // найти предыдущие буквы
+        // find user's previous letters (before turn)
         const putLetters = this.state.userBoard.reduce((acc, row) => {
           return acc.concat(row.filter(letter => letter !== null));
         }, []);
@@ -239,12 +229,11 @@ class GameContainer extends Component {
           board: board,
           userLetters: updatedUserLetters
         });
-
-        // другой игрок сделал ход - не надо (надо только если его буквы попали на мои)
-        // ход другого игрока подтвержден -  - после этого не надо
+        // other cases including:
+        // - other player's move was validated;
+        // - other player made a move, check if current user's letters preliminary put on the
+        // board should be returned to current user (if they are covered with last turn's letters)
       } else {
-        console.log("остальные случаи");
-        console.log("state before update:", this.state);
         if (
           this.state.userLetters.length === 0 &&
           !this.state.userBoard.some(row => row.some(cell => cell))
