@@ -19,7 +19,7 @@ class GameContainer extends Component {
     chosenLetterIndex: null,
     board: [],
     userLetters: [],
-    userBoard: this.emptyUserBoard
+    userBoard: this.emptyUserBoard.map(row => row.slice())
   };
 
   // extract added letters from whole new hand
@@ -112,6 +112,18 @@ class GameContainer extends Component {
         userLetters: updatedUserLetters
       });
     }
+  };
+
+  returnLetters = () => {
+    const updatedUserLetters = [...this.state.userLetters];
+    this.state.userBoard.forEach(row =>
+      row.forEach(cell => cell && updatedUserLetters.push(cell))
+    );
+    this.setState({
+      ...this.state,
+      userBoard: this.emptyUserBoard.map(row => row.slice()),
+      userLetters: updatedUserLetters
+    });
   };
 
   confirmTurn = async () => {
@@ -287,6 +299,7 @@ class GameContainer extends Component {
           confirmTurn={this.confirmTurn}
           approveTurn={this.approveTurn}
           getNextTurn={this.getNextTurn}
+          returnLetters={this.returnLetters}
         />
       </div>
     );

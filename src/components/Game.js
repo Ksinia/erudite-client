@@ -40,8 +40,15 @@ function Game(props) {
             {props.user &&
               props.game.turnOrder[props.game.turn] === props.user.id &&
               props.game.phase === "turn" && (
-                <button onClick={props.confirmTurn}>Confirm</button>
+                <button key="confirm" onClick={props.confirmTurn}>
+                  Confirm
+                </button>
               )}
+            {props.user && props.game.turnOrder.includes(props.user.id) && (
+              <button key="return" onClick={props.returnLetters}>
+                Return letters
+              </button>
+            )}
             {/* next player validates: */}
             {props.user &&
               props.game.turnOrder.includes(props.user.id) &&

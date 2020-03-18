@@ -84,7 +84,13 @@ class Board extends Component {
                           key={`${yIndex}_${xIndex}`}
                           onClick={this.props.clickBoard}
                         >
-                          <div className={`cell ${cell.className}`}>
+                          <div
+                            className={`cell ${
+                              cell.className
+                            } user-letter-${!!this.props.userBoard[yIndex][
+                              xIndex
+                            ]}`}
+                          >
                             <p className="multiply">{cell.multiply}</p>
                             <p className="unit">{cell.unit}</p>
                             <p className="value-on-board">
