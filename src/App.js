@@ -39,7 +39,7 @@ class App extends Component {
           <Route path="/" component={LobbyContainer} />
         </Switch>
       </div>,
-      <footer>
+      <footer key="footer">
         {"Copyright © "}
         <a href="https://ksinia.net/cv/">Ksenia Gulyaeva</a>{" "}
         {new Date().getFullYear()}
