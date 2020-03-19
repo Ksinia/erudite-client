@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 
 class LobbyContainer extends Component {
   state = {
-    name: this.props.user ? this.props.user.name : "", //`${this.props.user.name}'s room`,
     maxPlayers: 2
   };
 

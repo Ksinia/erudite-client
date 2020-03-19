@@ -18,18 +18,9 @@ function Lobby(props) {
 
   return (
     <div>
-      <h1>The lobby</h1>
       <p>Please create a new room or enter existing room.</p>
       {props.user && (
         <form onSubmit={props.onSubmit}>
-          <label htmlFor="name">Please give your room a name: </label>
-          <input
-            id="name"
-            type="text"
-            name="name"
-            onChange={props.onChange}
-            value={props.values.name}
-          ></input>
           <label htmlFor="maxPlayers">
             {" "}
             Please specify the quantity of players (from 2 to 4):{" "}
@@ -38,7 +29,7 @@ function Lobby(props) {
             id="maxPlayers"
             type="number"
             min="2"
-            max="4"
+            max="8"
             name="maxPlayers"
             onChange={props.onChange}
             value={props.values.maxPlayers}
