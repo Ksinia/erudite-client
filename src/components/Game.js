@@ -65,8 +65,8 @@ function Game(props) {
                   's turn
                 </button>
               )}
-            <p>Game phase: {props.game.phase}</p>
             <p>
+              {props.game.phase === "validation" && "validation of "}
               {
                 props.game.users.find(
                   user => user.id === props.game.turnOrder[props.game.turn]
@@ -82,6 +82,11 @@ function Game(props) {
               </p>
             ))}
             <p>Letters left in the bag: {props.game.letters.pot.length}</p>
+            {props.game.phase === "finished" && (
+              <button onClick={props.returnToRoom}>
+                Play again with the same players
+              </button>
+            )}
           </div>
         </div>
       ) : (
