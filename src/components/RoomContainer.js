@@ -47,8 +47,9 @@ class RoomContainer extends Component {
     if (this.props.rooms && this.props.rooms.length > 0) {
       room = this.props.rooms.find(el => el.id === this.roomId);
       this.setState(room);
-      if (room.games.length > 0) {
-        this.props.history.push(`/game/${room.games[0].id}`);
+      const unfinishedGame = room.games.find(game => game.phase !== "finished");
+      if (room.phase === "started") {
+        this.props.history.push(`/game/${unfinishedGame.id}`);
       }
     }
   }
@@ -58,8 +59,11 @@ class RoomContainer extends Component {
       if (this.props.rooms && this.props.rooms.length > 0) {
         room = this.props.rooms.find(el => el.id === this.roomId);
         this.setState(room);
-        if (room.games.length > 0) {
-          this.props.history.push(`/game/${room.games[0].id}`);
+        const unfinishedGame = room.games.find(
+          game => game.phase !== "finished"
+        );
+        if (room.phase === "started") {
+          this.props.history.push(`/game/${unfinishedGame.id}`);
         }
       }
     }
