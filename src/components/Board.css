@@ -1,11 +1,11 @@
-table {
+.table-board {
   margin: 1em auto;
   border-collapse: collapse;
   width: 31.5rem;
   height: 31.5rem;
 }
 
-td {
+.board-table-cell {
   border: 0.5px solid lightgrey;
   width: 2.1rem;
   height: 2.1rem;
@@ -66,12 +66,12 @@ td {
   font-weight: medium;
 }
 @media screen and (max-width: 670px) {
-  table {
+  #board {
     width: 90vmin;
     height: 90vmin;
     table-layout: fixed;
   }
-  td {
+  .board-table-cell {
     width: 6vmin;
     height: 6vmin;
   }

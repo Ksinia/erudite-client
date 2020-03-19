@@ -67,7 +67,7 @@ class Board extends Component {
     return (
       <div>
         {this.props.board && this.props.board.length > 0 ? (
-          <table>
+          <table className="table-board">
             <tbody>
               {this.state.board.map((row, yIndex) => {
                 return (
@@ -78,6 +78,7 @@ class Board extends Component {
                         this.props.board[yIndex][xIndex];
                       return (
                         <td
+                          className="board-table-cell"
                           data-letter={cell.letter}
                           data-x={xIndex}
                           data-y={yIndex}
