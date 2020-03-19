@@ -159,6 +159,9 @@ class GameContainer extends Component {
     return index;
   };
 
+  returnToRoom = () => {
+    this.props.history.push(`/room/${this.props.games[this.gameId].roomId}`);
+  };
   componentDidMount() {
     this.gameStream.onmessage = event => {
       const { data } = event;
@@ -300,6 +303,7 @@ class GameContainer extends Component {
           approveTurn={this.approveTurn}
           getNextTurn={this.getNextTurn}
           returnLetters={this.returnLetters}
+          returnToRoom={this.returnToRoom}
         />
       </div>
     );
