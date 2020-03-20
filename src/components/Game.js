@@ -37,6 +37,11 @@ function Game(props) {
                 );
               })}
             </div>
+            {props.game.phase === "finished" && (
+              <button onClick={props.returnToRoom}>
+                Play again with the same players
+              </button>
+            )}
             {props.user &&
               props.game.turnOrder[props.game.turn] === props.user.id &&
               props.game.phase === "turn" && (
@@ -44,11 +49,13 @@ function Game(props) {
                   Confirm
                 </button>
               )}
-            {props.user && props.game.turnOrder.includes(props.user.id) && (
-              <button key="return" onClick={props.returnLetters}>
-                Return letters
-              </button>
-            )}
+            {props.user &&
+              props.game.turnOrder.includes(props.user.id) &&
+              props.game.phase !== "finished" && (
+                <button key="return" onClick={props.returnLetters}>
+                  Return letters
+                </button>
+              )}
             {/* next player validates: */}
             {props.user &&
               props.game.turnOrder.includes(props.user.id) &&
@@ -99,15 +106,19 @@ function Game(props) {
                     </button>
                   )
               ]}
-            <p>
-              {props.game.phase === "validation" && "Validation of "}
-              {
-                props.game.users.find(
-                  user => user.id === props.game.turnOrder[props.game.turn]
-                ).name
-              }
-              's turn
-            </p>
+            {props.game.phase !== "finished" ? (
+              <p>
+                {props.game.phase === "validation" && "Validation of "}
+                {
+                  props.game.users.find(
+                    user => user.id === props.game.turnOrder[props.game.turn]
+                  ).name
+                }
+                's turn
+              </p>
+            ) : (
+              <p>Game over</p>
+            )}
             <table className="table-score">
               <thead>
                 <tr>
@@ -130,11 +141,6 @@ function Game(props) {
               </tbody>
             </table>
             <p>Letters left in the bag: {props.game.letters.pot.length}</p>
-            {props.game.phase === "finished" && (
-              <button onClick={props.returnToRoom}>
-                Play again with the same players
-              </button>
-            )}
           </div>
         </div>
       ) : (
