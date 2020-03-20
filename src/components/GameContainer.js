@@ -137,11 +137,15 @@ class GameContainer extends Component {
       console.warn("error test:", error);
     }
   };
-  approveTurn = async () => {
+  validateTurn = async event => {
+    console.log("event");
+    const validation = event.target.name;
+    console.log(validation);
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/approve`)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`);
+        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .send({ validation });
       console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
@@ -162,6 +166,18 @@ class GameContainer extends Component {
   returnToRoom = () => {
     this.props.history.push(`/room/${this.props.games[this.gameId].roomId}`);
   };
+
+  undo = async () => {
+    try {
+      const response = await superagent
+        .post(`${url}/game/${this.gameId}/undo`)
+        .set("Authorization", `Bearer ${this.props.user.jwt}`);
+      console.log("response test: ", response);
+    } catch (error) {
+      console.warn("error test:", error);
+    }
+  };
+
   componentDidMount() {
     this.gameStream.onmessage = event => {
       const { data } = event;
@@ -199,15 +215,14 @@ class GameContainer extends Component {
           ...this.state,
           userLetters: userLetters,
           board: board,
-          userBoard: Array(15)
-            .fill(null)
-            .map(line => Array(15).fill(null))
+          userBoard: this.emptyUserBoard.map(row => row.slice())
         });
       }
 
       // logged in user made a move
       else if (
         game.phase === "validation" &&
+        game.validated === "unknown" &&
         game.turnOrder[game.turn] === this.props.user.id
       ) {
         const userLetters = game.letters[this.props.user.id];
@@ -215,15 +230,36 @@ class GameContainer extends Component {
           ...this.state,
           userLetters: userLetters,
           board: board,
-          userBoard: Array(15)
-            .fill(null)
-            .map(line => Array(15).fill(null))
+          userBoard: this.emptyUserBoard.map(row => row.slice())
         });
-
-        // logged in user's turn was validated, user receives new letters,
-        // no need to update user board,
-        // add only new letters to user letters
-      } else if (
+      }
+      // user's turn was not confirmed
+      else if (
+        game.phase === "validation" &&
+        game.validated === "no" &&
+        game.turnOrder[game.turn] === this.props.user.id
+      ) {
+        if (
+          this.state.userLetters.length === 0 &&
+          !this.state.userBoard.some(row => row.some(cell => cell))
+        ) {
+          const updatedUserLetters = game.letters[this.props.user.id];
+          this.setState({
+            ...this.state,
+            board: board,
+            userLetters: updatedUserLetters
+          });
+        } else {
+          this.setState({
+            ...this.state,
+            board: board
+          });
+        }
+      }
+      // logged in user's turn was validated, user receives new letters,
+      // no need to update user board,
+      // add only new letters to user letters
+      else if (
         game.phase === "turn" &&
         // check if the previous turn was a turn of logged in user
         game.turnOrder[this.getPrevTurn(game)] === this.props.user.id
@@ -244,11 +280,27 @@ class GameContainer extends Component {
           board: board,
           userLetters: updatedUserLetters
         });
-        // other cases including:
-        // - other player's move was validated;
-        // - other player made a move, check if current user's letters preliminary put on the
-        // board should be returned to current user (if they are covered with last turn's letters)
-      } else {
+      }
+      // user pressed undo
+      else if (
+        game.phase === "turn" &&
+        game.turnOrder[game.turn] === this.props.user.id &&
+        game.validated === "no"
+      ) {
+        console.log("user pressed undo");
+        this.setState({
+          ...this.state,
+          board: board,
+          userLetters: game.letters[this.props.user.id],
+          putLetters: [],
+          userBoard: this.emptyUserBoard.map(row => row.slice())
+        });
+      }
+      // other cases including:
+      // - other player's move was validated;
+      // - other player made a move, check if current user's letters preliminary put on the
+      // board should be returned to current user (if they are covered with last turn's letters)
+      else {
         if (
           this.state.userLetters.length === 0 &&
           !this.state.userBoard.some(row => row.some(cell => cell))
@@ -300,10 +352,11 @@ class GameContainer extends Component {
           clickBoard={this.clickBoard}
           clickLetter={this.clickLetter}
           confirmTurn={this.confirmTurn}
-          approveTurn={this.approveTurn}
+          validateTurn={this.validateTurn}
           getNextTurn={this.getNextTurn}
           returnLetters={this.returnLetters}
           returnToRoom={this.returnToRoom}
+          undo={this.undo}
         />
       </div>
     );

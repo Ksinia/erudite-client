@@ -63,7 +63,8 @@ footer a {
   border: 0.5px solid lightgrey;
   padding: 0.2em 1em;
 }
-.table-score thead td {
+.table-score thead tr th {
   border: 0.5px solid lightgrey;
   padding: 0.2em 1em;
+  font-weight: normal;
 }

@@ -54,8 +54,8 @@ function Game(props) {
               props.game.turnOrder.includes(props.user.id) &&
               props.user.id ===
                 props.game.turnOrder[props.getNextTurn(props.game)] &&
-              props.game.phase === "validation" && (
-                <button onClick={props.approveTurn}>
+              props.game.phase === "validation" && [
+                <button key="yes" name="yes" onClick={props.validateTurn}>
                   I confirm{" "}
                   {
                     props.game.users.find(
@@ -63,10 +63,44 @@ function Game(props) {
                     ).name
                   }
                   's turn
+                </button>,
+                <button key="no" name="no" onClick={props.validateTurn}>
+                  I disagree with the last{" "}
+                  {
+                    props.game.users.find(
+                      user => user.id === props.game.turnOrder[props.game.turn]
+                    ).name
+                  }
+                  's turn
                 </button>
-              )}
+              ]}
+            {props.game.phase === "validation" &&
+              props.game.validated === "no" && [
+                <p key="disagree">
+                  {
+                    props.game.users.find(
+                      user =>
+                        user.id ===
+                        props.game.turnOrder[props.getNextTurn(props.game)]
+                    ).name
+                  }{" "}
+                  disagree with{" "}
+                  {
+                    props.game.users.find(
+                      user => user.id === props.game.turnOrder[props.game.turn]
+                    ).name
+                  }
+                  's last turn
+                </p>,
+                props.user &&
+                  props.user.id === props.game.turnOrder[props.game.turn] && (
+                    <button key="undo" onClick={props.undo}>
+                      Undo my last turn
+                    </button>
+                  )
+              ]}
             <p>
-              {props.game.phase === "validation" && "validation of "}
+              {props.game.phase === "validation" && "Validation of "}
               {
                 props.game.users.find(
                   user => user.id === props.game.turnOrder[props.game.turn]
@@ -76,8 +110,10 @@ function Game(props) {
             </p>
             <table className="table-score">
               <thead>
-                <td>Player</td>
-                <td>Score</td>
+                <tr>
+                  <th>Player</th>
+                  <th>Score</th>
+                </tr>
               </thead>
               <tbody>
                 {Object.keys(props.game.score).map(key => (
