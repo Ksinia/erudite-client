@@ -70,16 +70,22 @@ function Lobby(props) {
         </form>
       )}
       {rooms.currentStarted.length > 0 && [
-        <p>Your current games:</p>,
-        <div className="rooms">{rooms.currentStarted}</div>
+        <p key="currentStartedTitle">Your current games:</p>,
+        <div key="currentStarted" className="rooms">
+          {rooms.currentStarted}
+        </div>
       ]}
       {rooms.currentWaiting.length > 0 && [
-        <p>Your rooms</p>,
-        <div className="rooms">{rooms.currentWaiting}</div>
+        <p key="currentWaitingTitle">Your rooms</p>,
+        <div key="currentWaiting" className="rooms">
+          {rooms.currentWaiting}
+        </div>
       ]}
       {rooms.other.length > 0 && [
-        <p>Other rooms</p>,
-        <div className="rooms">{rooms.other}</div>
+        <p key="otherTitle">Other rooms</p>,
+        <div key="other" className="rooms">
+          {rooms.other}
+        </div>
       ]}
     </div>
   );
