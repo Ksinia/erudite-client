@@ -66,7 +66,7 @@ class Board extends Component {
   render() {
     return (
       <div>
-        {this.props.board && this.props.board.length > 0 ? (
+        {this.props.board && this.props.previousBoard ? (
           <table className="table-board">
             <tbody>
               {this.state.board.map((row, yIndex) => {
@@ -90,7 +90,9 @@ class Board extends Component {
                               cell.className
                             } user-letter-${!!this.props.userBoard[yIndex][
                               xIndex
-                            ]}`}
+                            ]} new-letter-${!!this.props.board[yIndex][
+                              xIndex
+                            ] && !this.props.previousBoard[yIndex][xIndex]}`}
                           >
                             <p className="multiply">{cell.multiply}</p>
                             <p className="unit">{cell.unit}</p>

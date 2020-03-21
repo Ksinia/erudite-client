@@ -12,6 +12,7 @@ function Game(props) {
               key="board"
               clickBoard={props.clickBoard}
               board={props.game.board}
+              previousBoard={props.game.previousBoard}
               userBoard={props.userBoard}
             />
           </div>

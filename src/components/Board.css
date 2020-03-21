@@ -31,6 +31,9 @@
 .user-letter-true {
   color: rgb(221, 43, 43);
 }
+.new-letter-true {
+  color: rgb(43, 160, 43);
+}
 .value-on-board {
   position: absolute;
   font-size: xx-small;
