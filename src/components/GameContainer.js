@@ -17,7 +17,6 @@ class GameContainer extends Component {
 
   state = {
     chosenLetterIndex: null,
-    board: [],
     userLetters: [],
     userBoard: this.emptyUserBoard.map(row => row.slice())
   };
@@ -54,7 +53,7 @@ class GameContainer extends Component {
     let updatedUserBoard = [...this.state.userBoard];
     let updUserLetters = [...this.state.userLetters];
     if (
-      this.state.board[y][x] === null &&
+      this.props.games[this.gameId].board[y][x] === null &&
       this.state.chosenLetterIndex !== null
     ) {
       const putLetter = updUserLetters.splice(
@@ -73,7 +72,7 @@ class GameContainer extends Component {
       });
     } else if (
       // if cell has user letter and there is no chosen letter, return letter from board to userLetters
-      this.state.board[y][x] === null &&
+      this.props.games[this.gameId].board[y][x] === null &&
       this.state.chosenLetterIndex === null
     ) {
       if (this.state.userBoard[y][x]) {
@@ -190,31 +189,23 @@ class GameContainer extends Component {
     if (
       this.props.games &&
       this.props.games[this.gameId] &&
-      this.props !== prevProps
+      this.props !== prevProps &&
+      this.props.user &&
+      this.props.games[this.gameId].turnOrder.includes(this.props.user.id)
     ) {
-      //update state of the component
+      // update state of the component
       // depending on the length of the updated user hand and other conditions
 
       const game = this.props.games[this.gameId];
-      const board = game.board;
-
-      // user is not logged in or user is not playing this game
-      if (!this.props.user || !game.turnOrder.includes(this.props.user.id)) {
-        this.setState({
-          ...this.state,
-          board: board
-        });
-      }
       // the very beginning of the game
-      else if (
+      if (
         game.phase === "turn" &&
-        !board.some(row => row.some(cell => cell))
+        !game.board.some(row => row.some(cell => cell))
       ) {
         const userLetters = game.letters[this.props.user.id];
         this.setState({
           ...this.state,
           userLetters: userLetters,
-          board: board,
           userBoard: this.emptyUserBoard.map(row => row.slice())
         });
       }
@@ -229,7 +220,6 @@ class GameContainer extends Component {
         this.setState({
           ...this.state,
           userLetters: userLetters,
-          board: board,
           userBoard: this.emptyUserBoard.map(row => row.slice())
         });
       }
@@ -237,24 +227,15 @@ class GameContainer extends Component {
       else if (
         game.phase === "validation" &&
         game.validated === "no" &&
-        game.turnOrder[game.turn] === this.props.user.id
+        game.turnOrder[game.turn] === this.props.user.id &&
+        this.state.userLetters.length === 0 &&
+        !this.state.userBoard.some(row => row.some(cell => cell))
       ) {
-        if (
-          this.state.userLetters.length === 0 &&
-          !this.state.userBoard.some(row => row.some(cell => cell))
-        ) {
-          const updatedUserLetters = game.letters[this.props.user.id];
-          this.setState({
-            ...this.state,
-            board: board,
-            userLetters: updatedUserLetters
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            board: board
-          });
-        }
+        const updatedUserLetters = game.letters[this.props.user.id];
+        this.setState({
+          ...this.state,
+          userLetters: updatedUserLetters
+        });
       }
       // logged in user's turn was validated, user receives new letters,
       // no need to update user board,
@@ -277,7 +258,6 @@ class GameContainer extends Component {
 
         this.setState({
           ...this.state,
-          board: board,
           userLetters: updatedUserLetters
         });
       }
@@ -290,9 +270,7 @@ class GameContainer extends Component {
         console.log("user pressed undo");
         this.setState({
           ...this.state,
-          board: board,
           userLetters: game.letters[this.props.user.id],
-          putLetters: [],
           userBoard: this.emptyUserBoard.map(row => row.slice())
         });
       }
@@ -308,7 +286,6 @@ class GameContainer extends Component {
           const updatedUserLetters = game.letters[this.props.user.id];
           this.setState({
             ...this.state,
-            board: board,
             userLetters: updatedUserLetters
           });
         } else {
@@ -316,7 +293,7 @@ class GameContainer extends Component {
 
           const updatedUserBoard = this.state.userBoard.map((line, yIndex) =>
             line.map((cell, xIndex) => {
-              if (cell && board[yIndex][xIndex] !== null) {
+              if (cell && game.board[yIndex][xIndex] !== null) {
                 updatedUserLetters.push(cell);
                 return null;
               } else {
@@ -326,7 +303,6 @@ class GameContainer extends Component {
           );
           this.setState({
             ...this.state,
-            board: board,
             userLetters: updatedUserLetters,
             userBoard: updatedUserBoard
           });
@@ -346,7 +322,6 @@ class GameContainer extends Component {
           game={this.props.games[this.gameId]}
           userLetters={this.state.userLetters}
           chosenLetterIndex={this.state.chosenLetterIndex}
-          board={this.state.board}
           userBoard={this.state.userBoard}
           user={this.props.user}
           clickBoard={this.clickBoard}

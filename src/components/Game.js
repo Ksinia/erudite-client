@@ -11,7 +11,7 @@ function Game(props) {
             <Board
               key="board"
               clickBoard={props.clickBoard}
-              board={props.board}
+              board={props.game.board}
               userBoard={props.userBoard}
             />
           </div>

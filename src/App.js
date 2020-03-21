@@ -28,8 +28,6 @@ class App extends Component {
   render() {
     return [
       <div className="App" key="app">
-        {/* <GithubCorner href="https://github.com/Ksinia/erudit-client" /> */}
-
         <Toolbar />
         <Switch>
           <Route path="/signup" component={SignupContainer} />
