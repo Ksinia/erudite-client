@@ -13,7 +13,7 @@ class Toolbar extends Component {
   render() {
     return (
       <div className="toolbar">
-        <Link to="/">Back to the list of games</Link>
+        <Link to="/">List of games</Link>
         {!this.props.user && <Link to="/signup">Sign up</Link>}
 
         {this.props.user && <span>Welcome {this.props.user.name}!</span>}
