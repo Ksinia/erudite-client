@@ -128,7 +128,7 @@ function Game(props) {
                 </tr>
               </thead>
               <tbody>
-                {Object.keys(props.game.score).map(key => (
+                {props.game.turnOrder.map(key => (
                   <tr key={key}>
                     <td>
                       {
