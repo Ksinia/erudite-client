@@ -4,7 +4,7 @@ import "./RoomTile.css";
 
 class RoomTile extends Component {
   render() {
-    const { id, maxPlayers, users, phase } = this.props.room;
+    const { id, maxPlayers, users, phase, game } = this.props.room;
     return (
       <Link
         to={
@@ -20,6 +20,19 @@ class RoomTile extends Component {
             ) : (
               <p className="title">Game {this.props.room.game.id}</p>
             )}
+            {phase === "started" &&
+              this.props.user &&
+              game.phase === "turn" &&
+              this.props.user.id === game.turnOrder[game.turn] && (
+                <h3>It's your turn!</h3>
+              )}
+            {phase === "started" &&
+              this.props.user &&
+              game.phase === "validation" &&
+              this.props.user.id ===
+                game.turnOrder[(game.turn + 1) % game.turnOrder.length] && (
+                <h3>It's your turn!</h3>
+              )}
             {phase === "waiting" && <p>Waiting for players</p>}
             {phase === "ready" && <p>Ready for the game</p>}
             {phase === "started" && <p>Game started</p>}

@@ -12,6 +12,7 @@ function Lobby(props) {
             <RoomTile
               style={{ background: colors[room.id % colors.length] }}
               room={room}
+              user={props.user}
             />
           </div>
         );
