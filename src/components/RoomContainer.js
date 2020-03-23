@@ -47,23 +47,21 @@ class RoomContainer extends Component {
     if (this.props.rooms && this.props.rooms.length > 0) {
       room = this.props.rooms.find(el => el.id === this.roomId);
       this.setState(room);
-      const unfinishedGame = room.games.find(game => game.phase !== "finished");
       if (room.phase === "started") {
-        this.props.history.push(`/game/${unfinishedGame.id}`);
+        // backend sends only unfinished game from db
+        this.props.history.push(`/game/${room.game.id}`);
       }
     }
   }
   componentDidUpdate(prevProps) {
+    console.log("update room");
     if (this.props.rooms !== prevProps.rooms) {
       let room = null;
       if (this.props.rooms && this.props.rooms.length > 0) {
         room = this.props.rooms.find(el => el.id === this.roomId);
         this.setState(room);
-        const unfinishedGame = room.games.find(
-          game => game.phase !== "finished"
-        );
         if (room.phase === "started") {
-          this.props.history.push(`/game/${unfinishedGame.id}`);
+          this.props.history.push(`/game/${room.game.id}`);
         }
       }
     }
