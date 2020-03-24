@@ -137,9 +137,7 @@ class GameContainer extends Component {
     }
   };
   validateTurn = async event => {
-    console.log("event");
     const validation = event.target.name;
-    console.log(validation);
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/approve`)
