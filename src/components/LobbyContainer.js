@@ -17,6 +17,7 @@ class LobbyContainer extends Component {
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send(this.state);
       console.log("response test: ", response);
+      this.props.history.push(`/room/${response.body.id}`);
     } catch (error) {
       console.warn("error test:", error);
     }
