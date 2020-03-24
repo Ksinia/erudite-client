@@ -1,11 +1,14 @@
 .room-tile {
-  padding: 1em;
+  padding: 0.5em;
   margin: 1em;
   color: black;
   text-align: left;
   height: 100%;
   display: flex;
   flex-flow: row wrap;
+  justify-content: space-evenly;
+  min-height: 100px;
+  min-width: 250px;
 }
 .room a {
   text-decoration: none;
@@ -15,12 +18,21 @@
 }
 
 .description {
-  margin-right: 1em;
+  /* margin-right: 1em; */
+  /* margin: 1em auto; */
+  text-align: center;
+  /* width: 50%; */
+}
+
+.players {
+  text-align: center;
+  /* margin: auto; */
+  /* width: 50%; */
+  /* margin: 1em auto; */
 }
 .rooms {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-evenly;
 }
 .room {
   margin: auto;

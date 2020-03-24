@@ -35,7 +35,6 @@ class RoomTile extends Component {
               )}
             {phase === "waiting" && <p>Waiting for players</p>}
             {phase === "ready" && <p>Ready for the game</p>}
-            {phase === "started" && <p>Game started</p>}
             <p>
               {phase === "waiting" &&
                 `${users.length} of ${maxPlayers} players in the game`}
