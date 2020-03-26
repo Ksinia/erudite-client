@@ -9,7 +9,7 @@ import Room from "./Room";
 class RoomContainer extends Component {
   roomId = parseInt(this.props.match.params.room);
 
-  state = null;
+  state = { room: null };
 
   onClick = async event => {
     let newRoomId = null;
@@ -43,24 +43,21 @@ class RoomContainer extends Component {
   };
 
   componentDidMount() {
-    let room = null;
     if (this.props.rooms && this.props.rooms.length > 0) {
-      room = this.props.rooms.find(el => el.id === this.roomId);
-      this.setState(room);
-      if (room.phase === "started") {
+      const room = this.props.rooms.find(el => el.id === this.roomId);
+      this.setState({ room: room });
+      if (room && room.phase === "started") {
         // backend sends only unfinished game from db
         this.props.history.push(`/game/${room.game.id}`);
       }
     }
   }
   componentDidUpdate(prevProps) {
-    console.log("update room");
     if (this.props.rooms !== prevProps.rooms) {
-      let room = null;
       if (this.props.rooms && this.props.rooms.length > 0) {
-        room = this.props.rooms.find(el => el.id === this.roomId);
-        this.setState(room);
-        if (room.phase === "started") {
+        const room = this.props.rooms.find(el => el.id === this.roomId);
+        this.setState({ room: room });
+        if (room && room.phase === "started") {
           this.props.history.push(`/game/${room.game.id}`);
         }
       }
@@ -70,7 +67,11 @@ class RoomContainer extends Component {
   render() {
     return (
       <div>
-        <Room room={this.state} onClick={this.onClick} user={this.props.user} />
+        <Room
+          room={this.state.room}
+          onClick={this.onClick}
+          user={this.props.user}
+        />
       </div>
     );
   }

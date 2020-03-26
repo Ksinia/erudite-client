@@ -43,6 +43,8 @@ function Room(props) {
               ]
             )
           ]
+        : props.room === undefined
+        ? "No such room"
         : "Loading Room"}
     </div>
   );
