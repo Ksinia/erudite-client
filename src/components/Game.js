@@ -57,6 +57,14 @@ function Game(props) {
                   Return letters
                 </button>
               )}
+            {props.user &&
+              props.game.turnOrder[props.game.turn] === props.user.id &&
+              props.game.phase === "turn" &&
+              props.userLetters.length === 7 && [
+                <button key="change" onClick={props.change}>
+                  Pass and change all letters
+                </button>
+              ]}
             {/* next player validates: */}
             {props.user &&
               props.game.turnOrder.includes(props.user.id) &&

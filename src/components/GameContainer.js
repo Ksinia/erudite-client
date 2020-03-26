@@ -18,7 +18,9 @@ class GameContainer extends Component {
   state = {
     chosenLetterIndex: null,
     userLetters: [],
-    userBoard: this.emptyUserBoard.map(row => row.slice())
+    userBoard: this.emptyUserBoard.map(row => row.slice()),
+    changeLetters: false,
+    changedLetters: []
   };
 
   // extract added letters from whole new hand
@@ -168,6 +170,16 @@ class GameContainer extends Component {
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/undo`)
+        .set("Authorization", `Bearer ${this.props.user.jwt}`);
+      console.log("response test: ", response);
+    } catch (error) {
+      console.warn("error test:", error);
+    }
+  };
+  change = async () => {
+    try {
+      const response = await superagent
+        .post(`${url}/game/${this.gameId}/change`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`);
       console.log("response test: ", response);
     } catch (error) {
@@ -330,6 +342,10 @@ class GameContainer extends Component {
           returnLetters={this.returnLetters}
           returnToRoom={this.returnToRoom}
           undo={this.undo}
+          passAndChangeLetters={this.passAndChangeLetters}
+          changeLetters={this.state.changeLetters}
+          changedLetters={this.state.changedLetters}
+          change={this.change}
         />
       </div>
     );
