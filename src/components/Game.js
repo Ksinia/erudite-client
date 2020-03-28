@@ -57,6 +57,14 @@ function Game(props) {
                   Return letters
                 </button>
               )}
+            {props.user &&
+              props.game.turnOrder[props.game.turn] === props.user.id &&
+              props.game.phase === "turn" &&
+              props.userLetters.length === 7 && [
+                <button key="change" onClick={props.change}>
+                  Pass and change all letters
+                </button>
+              ]}
             {/* next player validates: */}
             {props.user &&
               props.game.turnOrder.includes(props.user.id) &&
@@ -79,7 +87,7 @@ function Game(props) {
                       user => user.id === props.game.turnOrder[props.game.turn]
                     ).name
                   }
-                  's turn
+                  's move
                 </button>
               ]}
             {props.game.phase === "validation" &&
@@ -92,18 +100,18 @@ function Game(props) {
                         props.game.turnOrder[props.getNextTurn(props.game)]
                     ).name
                   }{" "}
-                  disagree with{" "}
+                  doesn't agree with{" "}
                   {
                     props.game.users.find(
                       user => user.id === props.game.turnOrder[props.game.turn]
                     ).name
                   }
-                  's last turn
+                  's last move
                 </p>,
                 props.user &&
                   props.user.id === props.game.turnOrder[props.game.turn] && (
                     <button key="undo" onClick={props.undo}>
-                      Undo my last turn
+                      Undo my last move
                     </button>
                   )
               ]}
