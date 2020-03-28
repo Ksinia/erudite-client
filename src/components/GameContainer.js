@@ -18,9 +18,7 @@ class GameContainer extends Component {
   state = {
     chosenLetterIndex: null,
     userLetters: [],
-    userBoard: this.emptyUserBoard.map(row => row.slice()),
-    changeLetters: false,
-    changedLetters: []
+    userBoard: this.emptyUserBoard.map(row => row.slice())
   };
 
   // extract added letters from whole new hand
@@ -180,7 +178,10 @@ class GameContainer extends Component {
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/change`)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`);
+        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .send({
+          letters: this.props.games[this.gameId].letters[this.props.user.id]
+        });
       console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
@@ -251,11 +252,12 @@ class GameContainer extends Component {
       // no need to update user board,
       // add only new letters to user letters
       else if (
+        !game.lettersChanged &&
         game.phase === "turn" &&
         // check if the previous turn was a turn of logged in user
         game.turnOrder[this.getPrevTurn(game)] === this.props.user.id
       ) {
-        // find user's previous letters (before turn)
+        // find all user's letters (before putting on the board)
         const putLetters = this.state.userBoard.reduce((acc, row) => {
           return acc.concat(row.filter(letter => letter !== null));
         }, []);
@@ -278,6 +280,19 @@ class GameContainer extends Component {
         game.validated === "no"
       ) {
         console.log("user pressed undo");
+        this.setState({
+          ...this.state,
+          userLetters: game.letters[this.props.user.id],
+          userBoard: this.emptyUserBoard.map(row => row.slice())
+        });
+      }
+      // user changed letters
+      else if (
+        game.lettersChanged &&
+        game.phase === "turn" &&
+        game.turnOrder[this.getPrevTurn(game)] === this.props.user.id
+      ) {
+        console.log("user changed letters");
         this.setState({
           ...this.state,
           userLetters: game.letters[this.props.user.id],
@@ -343,8 +358,6 @@ class GameContainer extends Component {
           returnToRoom={this.returnToRoom}
           undo={this.undo}
           passAndChangeLetters={this.passAndChangeLetters}
-          changeLetters={this.state.changeLetters}
-          changedLetters={this.state.changedLetters}
           change={this.change}
         />
       </div>
