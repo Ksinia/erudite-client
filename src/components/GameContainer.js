@@ -208,60 +208,13 @@ class GameContainer extends Component {
       // depending on the length of the updated user hand and other conditions
 
       const game = this.props.games[this.gameId];
-      // the very beginning of the game
-      if (
-        game.phase === "turn" &&
-        !game.board.some(row => row.some(cell => cell))
-      ) {
-        const userLetters = game.letters[this.props.user.id];
-        this.setState({
-          ...this.state,
-          userLetters: userLetters,
-          userBoard: this.emptyUserBoard.map(row => row.slice())
-        });
-      }
 
-      // logged in user made a move
-      else if (
-        game.phase === "validation" &&
-        game.validated === "unknown" &&
-        game.turnOrder[game.turn] === this.props.user.id
-      ) {
-        const userLetters = game.letters[this.props.user.id];
-        this.setState({
-          ...this.state,
-          userLetters: userLetters,
-          userBoard: this.emptyUserBoard.map(row => row.slice())
-        });
-      }
-      // user's turn was not confirmed
-      else if (
-        game.phase === "validation" &&
-        game.validated === "no" &&
-        game.turnOrder[game.turn] === this.props.user.id &&
-        this.state.userLetters.length === 0 &&
-        !this.state.userBoard.some(row => row.some(cell => cell))
-      ) {
-        const updatedUserLetters = game.letters[this.props.user.id];
-        this.setState({
-          ...this.state,
-          userLetters: updatedUserLetters
-        });
-      }
-      // logged in user's turn was validated, user receives new letters,
-      // no need to update user board,
-      // add only new letters to user letters
-      else if (
-        !game.lettersChanged &&
-        game.phase === "turn" &&
-        // check if the previous turn was a turn of logged in user
-        game.turnOrder[this.getPrevTurn(game)] === this.props.user.id
-      ) {
-        // find all user's letters (before putting on the board)
-        const putLetters = this.state.userBoard.reduce((acc, row) => {
-          return acc.concat(row.filter(letter => letter !== null));
-        }, []);
-        const prevLetters = this.state.userLetters.concat(putLetters);
+      // если у меня букв меньше, чем на сервере, то просто добавить
+      const putLetters = this.state.userBoard.reduce((acc, row) => {
+        return acc.concat(row.filter(letter => letter !== null));
+      }, []);
+      const prevLetters = this.state.userLetters.concat(putLetters);
+      if (prevLetters.length < game.letters[this.props.user.id].length) {
         const addedLetters = this.extract(
           prevLetters,
           game.letters[this.props.user.id]
@@ -272,66 +225,36 @@ class GameContainer extends Component {
           ...this.state,
           userLetters: updatedUserLetters
         });
-      }
-      // user pressed undo
-      else if (
-        game.phase === "turn" &&
-        game.turnOrder[game.turn] === this.props.user.id &&
-        game.validated === "no"
+        // если буквы равны, ничего не менять, кроме пересечений
+      } else if (
+        JSON.stringify(prevLetters.slice().sort()) ===
+        JSON.stringify(game.letters[this.props.user.id].slice().sort())
       ) {
-        console.log("user pressed undo");
+        const updatedUserLetters = this.state.userLetters.slice();
+        const updatedUserBoard = this.state.userBoard.map((line, yIndex) =>
+          line.map((cell, xIndex) => {
+            if (cell && game.board[yIndex][xIndex] !== null) {
+              updatedUserLetters.push(cell);
+              return null;
+            } else {
+              return cell;
+            }
+          })
+        );
         this.setState({
           ...this.state,
-          userLetters: game.letters[this.props.user.id],
-          userBoard: this.emptyUserBoard.map(row => row.slice())
+          userLetters: updatedUserLetters,
+          userBoard: updatedUserBoard
         });
       }
-      // user changed letters
-      else if (
-        game.lettersChanged &&
-        game.phase === "turn" &&
-        game.turnOrder[this.getPrevTurn(game)] === this.props.user.id
-      ) {
-        console.log("user changed letters");
-        this.setState({
-          ...this.state,
-          userLetters: game.letters[this.props.user.id],
-          userBoard: this.emptyUserBoard.map(row => row.slice())
-        });
-      }
-      // other cases including:
-      // - other player's move was validated;
-      // - other player made a move, check if current user's letters preliminary put on the
-      // board should be returned to current user (if they are covered with last turn's letters)
+      // если у меня букв больше, чем на сервере, или они не равны, то перерисовать
       else {
-        if (
-          this.state.userLetters.length === 0 &&
-          !this.state.userBoard.some(row => row.some(cell => cell))
-        ) {
-          const updatedUserLetters = game.letters[this.props.user.id];
-          this.setState({
-            ...this.state,
-            userLetters: updatedUserLetters
-          });
-        } else {
-          const updatedUserLetters = [...this.state.userLetters];
-
-          const updatedUserBoard = this.state.userBoard.map((line, yIndex) =>
-            line.map((cell, xIndex) => {
-              if (cell && game.board[yIndex][xIndex] !== null) {
-                updatedUserLetters.push(cell);
-                return null;
-              } else {
-                return cell;
-              }
-            })
-          );
-          this.setState({
-            ...this.state,
-            userLetters: updatedUserLetters,
-            userBoard: updatedUserBoard
-          });
-        }
+        const userLetters = game.letters[this.props.user.id];
+        this.setState({
+          ...this.state,
+          userLetters: userLetters,
+          userBoard: this.emptyUserBoard.map(row => row.slice())
+        });
       }
     }
   }
