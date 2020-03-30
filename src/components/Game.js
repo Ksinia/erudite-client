@@ -60,7 +60,7 @@ function Game(props) {
             {props.user &&
               props.game.turnOrder[props.game.turn] === props.user.id &&
               props.game.phase === "turn" &&
-              props.userLetters.length === 7 && [
+              props.game.letters.pot.length > 0 && [
                 <button key="change" onClick={props.change}>
                   Pass and change all letters
                 </button>
