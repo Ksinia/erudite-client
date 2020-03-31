@@ -28,9 +28,17 @@ class RoomTile extends Component {
               )}
             {phase === "started" &&
               this.props.user &&
-              game.phase === "validation" && game.validated === "unknown" &&
+              game.phase === "validation" &&
+              game.validated === "unknown" &&
               this.props.user.id ===
                 game.turnOrder[(game.turn + 1) % game.turnOrder.length] && (
+                <h3>It's your turn!</h3>
+              )}
+            {phase === "started" &&
+              this.props.user &&
+              game.phase === "validation" &&
+              game.validated === "no" &&
+              this.props.user.id === game.turnOrder[game.turn] && (
                 <h3>It's your turn!</h3>
               )}
             {phase === "waiting" && <p>Waiting for players</p>}
