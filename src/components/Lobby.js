@@ -3,52 +3,6 @@ import RoomTile from "./RoomTile";
 import { colors } from "../colors";
 
 function Lobby(props) {
-  const rooms =
-    props.rooms &&
-    props.rooms.reduce(
-      (allRooms, room) => {
-        const roomDiv = (
-          <div className="room" key={room.id}>
-            <RoomTile
-              style={{ background: colors[room.id % colors.length] }}
-              room={room}
-              user={props.user}
-            />
-          </div>
-        );
-        if (
-          props.user &&
-          room.phase === "started" &&
-          room.users.find(user => user.id === props.user.id)
-        ) {
-          allRooms.currentStarted.push(roomDiv);
-        } else if (
-          props.user &&
-          room.phase === "waiting" &&
-          room.users.find(user => user.id === props.user.id)
-        ) {
-          allRooms.currentWaiting.push(roomDiv);
-        } else {
-          allRooms.other.push(roomDiv);
-        }
-        return allRooms;
-      },
-      { currentStarted: [], currentWaiting: [], other: [] }
-    );
-
-  // const rooms = props.rooms && (
-  //   <div className="rooms">
-  //     {props.rooms.map(room => (
-  //       <div className="room" key={room.id}>
-  //         <RoomTile
-  //           style={{ background: colors[room.id % colors.length] }}
-  //           room={room}
-  //         />
-  //       </div>
-  //     ))}
-  //   </div>
-  // );
-
   return (
     <div>
       <p>Please create a new room or enter an existing room.</p>
@@ -70,22 +24,75 @@ function Lobby(props) {
           <button>Submit</button>
         </form>
       )}
-      {rooms.currentStarted.length > 0 && [
-        <p key="currentStartedTitle">Your current games:</p>,
-        <div key="currentStarted" className="rooms">
-          {rooms.currentStarted}
+      {props.userTurnRooms.length > 0 && [
+        <p key="userTurnRoomsTitle">Your turn</p>,
+        <div key="userTurnRooms" className="rooms">
+          {props.userTurnRooms.map(room => (
+            <div className="room" key={room.id}>
+              <RoomTile
+                style={{ background: colors[0] }}
+                room={room}
+                user={props.user}
+                userTurn={true}
+              />
+            </div>
+          ))}
         </div>
       ]}
-      {rooms.currentWaiting.length > 0 && [
-        <p key="currentWaitingTitle">Your rooms</p>,
-        <div key="currentWaiting" className="rooms">
-          {rooms.currentWaiting}
+      {props.otherTurnRooms.length > 0 && [
+        <p key="otherTurnRoomsTitle">Your other games</p>,
+        <div key="otherTurnRooms" className="rooms">
+          {props.otherTurnRooms.map(room => (
+            <div className="room" key={room.id}>
+              <RoomTile
+                style={{ background: colors[1] }}
+                room={room}
+                user={props.user}
+              />
+            </div>
+          ))}
         </div>
       ]}
-      {rooms.other.length > 0 && [
-        <p key="otherTitle">Other rooms</p>,
-        <div key="other" className="rooms">
-          {rooms.other}
+      {props.userWaitingRooms.length > 0 && [
+        <p key="userWaitingRoomsTitle">Your rooms</p>,
+        <div key="userWaitingRooms" className="rooms">
+          {props.userWaitingRooms.map(room => (
+            <div className="room" key={room.id}>
+              <RoomTile
+                style={{ background: colors[1] }}
+                room={room}
+                user={props.user}
+              />
+            </div>
+          ))}
+        </div>
+      ]}
+      {props.otherWaitingRooms.length > 0 && [
+        <p key="otherWaitingRoomsTitle">Available rooms</p>,
+        <div key="otherWaitingRooms" className="rooms">
+          {props.otherWaitingRooms.map(room => (
+            <div className="room" key={room.id}>
+              <RoomTile
+                style={{ background: colors[2] }}
+                room={room}
+                user={props.user}
+              />
+            </div>
+          ))}
+        </div>
+      ]}
+      {props.otherRooms.length > 0 && [
+        <p key="otherRoomsTitle">Other rooms</p>,
+        <div key="otherRooms" className="rooms">
+          {props.otherRooms.map(room => (
+            <div className="room" key={room.id}>
+              <RoomTile
+                style={{ background: colors[3] }}
+                room={room}
+                user={props.user}
+              />
+            </div>
+          ))}
         </div>
       ]}
     </div>

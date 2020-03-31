@@ -28,15 +28,69 @@ class LobbyContainer extends Component {
   };
 
   render() {
-    return (
-      <Lobby
-        onChange={this.onChange}
-        onSubmit={this.onSubmit}
-        values={this.state}
-        rooms={this.props.lobby}
-        user={this.props.user}
-      />
-    );
+    if (this.props.lobby && this.props.lobby.length > 0) {
+      const rooms = this.props.lobby.reduce(
+        (allRooms, room) => {
+          if (
+            this.props.user &&
+            room.users.find(user => user.id === this.props.user.id) &&
+            room.phase === "started"
+          ) {
+            if (
+              (room.game.phase === "turn" &&
+                this.props.user.id === room.game.turnOrder[room.game.turn]) ||
+              (room.game.phase === "validation" &&
+                room.game.validated === "unknown" &&
+                this.props.user.id ===
+                  room.game.turnOrder[
+                    (room.game.turn + 1) % room.game.turnOrder.length
+                  ]) ||
+              (room.game.phase === "validation" &&
+                room.game.validated === "no" &&
+                this.props.user.id === room.game.turnOrder[room.game.turn])
+            ) {
+              allRooms.userTurn.push(room);
+            } else {
+              allRooms.otherTurn.push(room);
+            }
+          } else if (
+            this.props.user &&
+            (room.phase === "waiting" || room.phase === "ready") &&
+            room.users.find(user => user.id === this.props.user.id)
+          ) {
+            allRooms.userWaiting.push(room);
+          } else if (room.phase === "waiting") {
+            allRooms.otherWaiting.push(room);
+          } else {
+            allRooms.other.push(room);
+          }
+          return allRooms;
+        },
+        {
+          userTurn: [],
+          otherTurn: [],
+          userWaiting: [],
+          otherWaiting: [],
+          other: []
+        }
+      );
+
+      return (
+        <Lobby
+          onChange={this.onChange}
+          onSubmit={this.onSubmit}
+          values={this.state}
+          userTurnRooms={rooms.userTurn}
+          otherTurnRooms={rooms.otherTurn}
+          userWaitingRooms={rooms.userWaiting}
+          otherWaitingRooms={rooms.otherWaiting}
+          otherRooms={rooms.other}
+          user={this.props.user}
+        />
+      );
+    } else {
+      return "Loading...";
+    }
   }
 }
 
