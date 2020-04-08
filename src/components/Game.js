@@ -149,7 +149,173 @@ function Game(props) {
                 ))}
               </tbody>
             </table>
+            {props.game.phase === "finished" &&
+              Object.keys(props.game.result).length > 0 && (
+                <div className="result">
+                  <p>Detailed game results:</p>
+                  <table className="table-result">
+                    <tbody>
+                      {props.game.result.winner.length > 0 && (
+                        <tr key="winner">
+                          <td>The winner</td>
+                          <td>
+                            {props.game.result.winner
+                              .map(
+                                w =>
+                                  props.game.users.find(
+                                    user => user.id === parseInt(w)
+                                  ).name
+                              )
+                              .join(", ")}
+                          </td>
+                        </tr>
+                      )}
+
+                      {props.game.result.longestWord.length > 0 && (
+                        <tr>
+                          <td>The longest word</td>
+                          <td>
+                            {props.game.result.longestWord
+                              .map(
+                                el =>
+                                  `${el.word} by ${
+                                    props.game.users.find(
+                                      user => user.id === el.user
+                                    ).name
+                                  }`
+                              )
+                              .join(", ")}
+                          </td>
+                        </tr>
+                      )}
+
+                      {props.game.result.maxScoreWord.length > 0 && (
+                        <tr>
+                          <td>The most valuable word</td>
+                          <td>
+                            {props.game.result.maxScoreWord
+                              .map(
+                                el =>
+                                  `${el.word} for ${el.value} by ${
+                                    props.game.users.find(
+                                      user => user.id === el.user
+                                    ).name
+                                  }`
+                              )
+                              .join(", ")}
+                          </td>
+                        </tr>
+                      )}
+
+                      {props.game.result.bestTurnByCount[0].qty > 0 && (
+                        <tr>
+                          <td>The maximum words in one turn</td>
+                          <td>
+                            {props.game.result.bestTurnByCount
+                              .map(
+                                el =>
+                                  `${el.qty} by ${
+                                    props.game.users.find(
+                                      user => user.id === el.user
+                                    ).name
+                                  }`
+                              )
+                              .join(", ")}
+                          </td>
+                        </tr>
+                      )}
+
+                      {props.game.result.bestTurnByValue[0].score > 0 && (
+                        <tr>
+                          <td>The most valuable turn</td>
+                          <td>
+                            {props.game.result.bestTurnByValue
+                              .map(
+                                el =>
+                                  `${el.score} by ${
+                                    props.game.users.find(
+                                      user => user.id === el.user
+                                    ).name
+                                  }`
+                              )
+                              .join(", ")}
+                          </td>
+                        </tr>
+                      )}
+                      {props.game.result.neverChangedLetters.length > 0 && (
+                        <tr>
+                          <td>Never changed letters</td>
+                          <td>
+                            {props.game.result.neverChangedLetters
+                              .map(
+                                el =>
+                                  props.game.users.find(user => user.id === el)
+                                    .name
+                              )
+                              .join(", ")}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             <p>Letters left in the bag: {props.game.letters.pot.length}</p>
+            {props.game.turns && props.game.turns.length > 0 && (
+              <div className="turns">
+                <p>Game turns</p>
+                <table className="table-turns">
+                  <thead>
+                    <tr>
+                      <th>Player</th>
+                      <th>Turn</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {props.game.turns
+                      .slice()
+                      .reverse()
+                      .map((turn, index) => (
+                        <tr key={index}>
+                          <td>
+                            {
+                              props.game.users.find(
+                                user => user.id === turn.user
+                              ).name
+                            }
+                          </td>
+                          <td>
+                            {turn.words.length > 0 ? (
+                              <div key={index} className="turn">
+                                <p>
+                                  {turn.score}
+                                  {": "}
+                                  {turn.words
+                                    .map(
+                                      word =>
+                                        `${Object.keys(word)[0]} ${
+                                          word[Object.keys(word)[0]]
+                                        }`
+                                    )
+                                    .join(" ")}
+                                </p>
+                              </div>
+                            ) : (
+                              <div key={index} className="turn">
+                                {turn.changedLetters ? (
+                                  <p>changed letters</p>
+                                ) : (
+                                  <p>passed</p>
+                                )}
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       ) : (
