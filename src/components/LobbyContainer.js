@@ -27,6 +27,9 @@ class LobbyContainer extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  componentDidMount() {
+    document.title = `Erudite`;
+  }
   render() {
     const rooms = this.props.lobby.reduce(
       (allRooms, room) => {

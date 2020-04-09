@@ -189,6 +189,7 @@ class GameContainer extends Component {
   };
 
   componentDidMount() {
+    document.title = `Game ${this.gameId} | Erudite`;
     this.gameStream.onmessage = event => {
       const { data } = event;
       const action = JSON.parse(data);

@@ -43,6 +43,7 @@ class RoomContainer extends Component {
   };
 
   componentDidMount() {
+    document.title = `Room ${this.roomId} | Erudite`;
     if (this.props.rooms && this.props.rooms.length > 0) {
       const room = this.props.rooms.find(el => el.id === this.roomId);
       this.setState({ room: room });

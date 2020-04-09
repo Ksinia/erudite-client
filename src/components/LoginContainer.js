@@ -4,6 +4,9 @@ import FormContainer from "./FormContainer";
 import { connect } from "react-redux";
 
 class LoginContainer extends Component {
+  componentDidMount() {
+    document.title = `Log in | Erudite`;
+  }
   render() {
     return (
       <FormContainer
