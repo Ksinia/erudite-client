@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logOut } from "../actions/authorization";
 import "./Toolbar.css";
+import LangSwitchContainer from "./LangSwitch/LangSwitchContainer";
+import TranslationContainer from "./Translation/TranslationContainer";
 
 class Toolbar extends Component {
   handleClick = () => {
@@ -13,16 +15,32 @@ class Toolbar extends Component {
   render() {
     return (
       <div className="toolbar">
-        <Link to="/">List of games</Link>
-        {!this.props.user && <Link to="/signup">Sign up</Link>}
+        <LangSwitchContainer />
+        <Link to="/">
+          <TranslationContainer translationKey="toolbar_list" />
+        </Link>
+        {!this.props.user && (
+          <Link to="/signup">
+            <TranslationContainer translationKey="sign_up" />
+          </Link>
+        )}
 
-        {this.props.user && <span>Welcome {this.props.user.name}!</span>}
+        {this.props.user && (
+          <span>
+            <TranslationContainer translationKey="welcome" />{" "}
+            {this.props.user.name}!
+          </span>
+        )}
 
-        {!this.props.user && <Link to="/login">Log in</Link>}
+        {!this.props.user && (
+          <Link to="/login">
+            <TranslationContainer translationKey="log_in" />
+          </Link>
+        )}
 
         {this.props.user && (
           <span className="logout" onClick={this.handleClick}>
-            Log out
+            <TranslationContainer translationKey="log_out" />
           </span>
         )}
       </div>

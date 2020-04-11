@@ -4,7 +4,7 @@
   background-color: whitesmoke;
   flex-flow: wrap;
   justify-content: space-evenly;
-  padding: 0.5rem 0;
+  padding: 0;
   position: fixed;
   top: 0px;
   z-index: 999;
@@ -14,6 +14,7 @@
 
 .toolbar > * {
   min-width: 20%;
+  margin: auto;
 }
 
 a {
@@ -25,4 +26,13 @@ a {
 .toolbar a {
   text-decoration: none;
   cursor: pointer;
+}
+.lang button {
+  padding: 0.2em;
+  margin: 0.3em;
+}
+.lang {
+  padding: 0;
+  margin: 0;
+  text-align: "center";
 }
