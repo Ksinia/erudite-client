@@ -12,10 +12,6 @@ class RoomContainer extends Component {
   state = { room: null };
 
   onClick = async event => {
-    let newRoomId = null;
-    if (event.target.name === "join") {
-      newRoomId = this.roomId;
-    }
     if (event.target.name === "start") {
       try {
         const response = await superagent
@@ -34,7 +30,7 @@ class RoomContainer extends Component {
         const response = await superagent
           .put(`${url}/join`)
           .set("Authorization", `Bearer ${this.props.user.jwt}`)
-          .send({ newRoomId });
+          .send({ roomId: this.roomId });
         console.log("response test: ", response);
       } catch (error) {
         console.warn("error test:", error);
