@@ -3,32 +3,32 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-// import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
+import TranslationContainer from "./Translation/TranslationContainer";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function SignUp(props) {
@@ -42,7 +42,7 @@ export default function SignUp(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          <TranslationContainer translationKey="sign_up" />
         </Typography>
         <form className={classes.form} onSubmit={props.onSubmit} noValidate>
           <Grid container spacing={2}>
@@ -52,7 +52,7 @@ export default function SignUp(props) {
                 required
                 fullWidth
                 id="name"
-                label="name"
+                label={<TranslationContainer translationKey="name" />}
                 name="name"
                 autoFocus
                 autoComplete="name"
@@ -66,7 +66,7 @@ export default function SignUp(props) {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={<TranslationContainer translationKey="password" />}
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -88,12 +88,12 @@ export default function SignUp(props) {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            <TranslationContainer translationKey="sign_up" />
           </Button>
           <Grid container justify="center">
             <Grid item>
               <Link to="/login" variant="body2">
-                Already have an account? Log in
+                <TranslationContainer translationKey="already_signed_up" />
               </Link>
             </Grid>
           </Grid>

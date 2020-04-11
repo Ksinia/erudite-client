@@ -20,6 +20,9 @@ button {
   margin: 0.5em;
   border-radius: 3px;
   font-size: medium;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-bottom: 1px solid rgb(180,180,180)
 }
 .letter {
   border: 0.5px solid lightgray;

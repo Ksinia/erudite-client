@@ -1,6 +1,7 @@
 import React from "react";
 import Board from "./Board";
 import letterValues from "../letterValues";
+import TranslationContainer from "./Translation/TranslationContainer";
 
 function Game(props) {
   return (
@@ -40,21 +41,21 @@ function Game(props) {
             </div>
             {props.game.phase === "finished" && (
               <button onClick={props.returnToRoom}>
-                Play again with the same players
+                <TranslationContainer translationKey="play_again" />
               </button>
             )}
             {props.user &&
               props.game.turnOrder[props.game.turn] === props.user.id &&
               props.game.phase === "turn" && (
                 <button key="confirm" onClick={props.confirmTurn}>
-                  Confirm
+                  <TranslationContainer translationKey="confirm" />
                 </button>
               )}
             {props.user &&
               props.game.turnOrder.includes(props.user.id) &&
               props.game.phase !== "finished" && (
                 <button key="return" onClick={props.returnLetters}>
-                  Return letters
+                  <TranslationContainer translationKey="return" />
                 </button>
               )}
             {props.user &&
@@ -62,8 +63,8 @@ function Game(props) {
               props.game.phase === "turn" &&
               props.game.letters.pot.length > 0 && [
                 <button key="change" onClick={props.change}>
-                  Pass and change all letters
-                </button>
+                  <TranslationContainer translationKey="change" />
+                </button>,
               ]}
             {/* next player validates: */}
             {props.user &&
@@ -72,76 +73,103 @@ function Game(props) {
                 props.game.turnOrder[props.getNextTurn(props.game)] &&
               props.game.phase === "validation" && [
                 <button key="yes" name="yes" onClick={props.validateTurn}>
-                  I confirm{" "}
-                  {
-                    props.game.users.find(
-                      user => user.id === props.game.turnOrder[props.game.turn]
-                    ).name
-                  }
-                  's turn
+                  <TranslationContainer
+                    translationKey="i_confirm"
+                    args={[
+                      props.game.users.find(
+                        (user) =>
+                          user.id === props.game.turnOrder[props.game.turn]
+                      ).name,
+                    ]}
+                  />
                 </button>,
                 <button key="no" name="no" onClick={props.validateTurn}>
-                  I disagree with the last{" "}
-                  {
-                    props.game.users.find(
-                      user => user.id === props.game.turnOrder[props.game.turn]
-                    ).name
-                  }
-                  's move
-                </button>
+                  <TranslationContainer
+                    translationKey="no"
+                    args={[
+                      props.game.users.find(
+                        (user) =>
+                          user.id === props.game.turnOrder[props.game.turn]
+                      ).name,
+                    ]}
+                  />
+                </button>,
               ]}
             {props.game.phase === "validation" &&
               props.game.validated === "no" && [
                 <p key="disagree">
-                  {
-                    props.game.users.find(
-                      user =>
-                        user.id ===
-                        props.game.turnOrder[props.getNextTurn(props.game)]
-                    ).name
-                  }{" "}
-                  doesn't agree with{" "}
-                  {
-                    props.game.users.find(
-                      user => user.id === props.game.turnOrder[props.game.turn]
-                    ).name
-                  }
-                  's last move
+                  <TranslationContainer
+                    translationKey="disagree"
+                    args={[
+                      props.game.users.find(
+                        (user) =>
+                          user.id ===
+                          props.game.turnOrder[props.getNextTurn(props.game)]
+                      ).name,
+                      props.game.users.find(
+                        (user) =>
+                          user.id === props.game.turnOrder[props.game.turn]
+                      ).name,
+                    ]}
+                  />
                 </p>,
                 props.user &&
                   props.user.id === props.game.turnOrder[props.game.turn] && (
                     <button key="undo" onClick={props.undo}>
-                      Undo my last move
+                      <TranslationContainer translationKey="undo" />
                     </button>
-                  )
+                  ),
               ]}
             {props.game.phase !== "finished" ? (
-              <p>
-                {props.game.phase === "validation" && "Validation of "}
-                {
-                  props.game.users.find(
-                    user => user.id === props.game.turnOrder[props.game.turn]
-                  ).name
-                }
-                's turn
-              </p>
+              props.game.phase === "validation" ? (
+                <p>
+                  <TranslationContainer
+                    translationKey="validation"
+                    args={[
+                      props.game.users.find(
+                        (user) =>
+                          user.id === props.game.turnOrder[props.game.turn]
+                      ).name,
+                    ]}
+                  />
+                </p>
+              ) : (
+                <p>
+                  <TranslationContainer
+                    translationKey="turn_of"
+                    args={[
+                      props.game.users.find(
+                        (user) =>
+                          user.id === props.game.turnOrder[props.game.turn]
+                      ).name,
+                    ]}
+                  />
+                </p>
+              )
             ) : (
-              <p>Game over</p>
+              <p>
+                <TranslationContainer translationKey="game_over" />
+              </p>
             )}
             <table className="table-score">
               <thead>
                 <tr>
-                  <th>Player</th>
-                  <th>Score</th>
+                  <th>
+                    <TranslationContainer translationKey="player" />
+                  </th>
+                  <th>
+                    <TranslationContainer translationKey="score" />
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {props.game.turnOrder.map(key => (
+                {props.game.turnOrder.map((key) => (
                   <tr key={key}>
                     <td>
                       {
-                        props.game.users.find(user => user.id === parseInt(key))
-                          .name
+                        props.game.users.find(
+                          (user) => user.id === parseInt(key)
+                        ).name
                       }
                     </td>
                     <td>{props.game.score[key]}</td>
@@ -152,18 +180,22 @@ function Game(props) {
             {props.game.phase === "finished" &&
               Object.keys(props.game.result).length > 0 && (
                 <div className="result">
-                  <p>Detailed game results:</p>
+                  <p>
+                    <TranslationContainer translationKey="results" />
+                  </p>
                   <table className="table-result">
                     <tbody>
                       {props.game.result.winner.length > 0 && (
                         <tr key="winner">
-                          <td>The winner</td>
+                          <td>
+                            <TranslationContainer translationKey="winner" />
+                          </td>
                           <td>
                             {props.game.result.winner
                               .map(
-                                w =>
+                                (w) =>
                                   props.game.users.find(
-                                    user => user.id === parseInt(w)
+                                    (user) => user.id === parseInt(w)
                                   ).name
                               )
                               .join(", ")}
@@ -173,84 +205,105 @@ function Game(props) {
 
                       {props.game.result.longestWord.length > 0 && (
                         <tr>
-                          <td>The longest word</td>
                           <td>
-                            {props.game.result.longestWord
-                              .map(
-                                el =>
-                                  `${el.word} by ${
-                                    props.game.users.find(
-                                      user => user.id === el.user
-                                    ).name
-                                  }`
-                              )
-                              .join(", ")}
+                            <TranslationContainer translationKey="longest_word" />
+                          </td>
+                          <td>
+                            {props.game.result.longestWord.map((el, index) => (
+                              <span key={index}>
+                                {el.word}{" "}
+                                {<TranslationContainer translationKey="by" />}{" "}
+                                {
+                                  props.game.users.find(
+                                    (user) => user.id === el.user
+                                  ).name
+                                }
+                              </span>
+                            ))}
                           </td>
                         </tr>
                       )}
 
                       {props.game.result.maxScoreWord.length > 0 && (
                         <tr>
-                          <td>The most valuable word</td>
                           <td>
-                            {props.game.result.maxScoreWord
-                              .map(
-                                el =>
-                                  `${el.word} for ${el.value} by ${
-                                    props.game.users.find(
-                                      user => user.id === el.user
-                                    ).name
-                                  }`
-                              )
-                              .join(", ")}
+                            <TranslationContainer translationKey="valuable_word" />
+                          </td>
+                          <td>
+                            {props.game.result.maxScoreWord.map((el, index) => (
+                              <span key={index}>
+                                {el.word}{" "}
+                                {<TranslationContainer translationKey="for" />}{" "}
+                                {el.value}{" "}
+                                {<TranslationContainer translationKey="by" />}{" "}
+                                {
+                                  props.game.users.find(
+                                    (user) => user.id === el.user
+                                  ).name
+                                }
+                              </span>
+                            ))}
                           </td>
                         </tr>
                       )}
 
                       {props.game.result.bestTurnByCount[0].qty > 0 && (
                         <tr>
-                          <td>The maximum words in one turn</td>
                           <td>
-                            {props.game.result.bestTurnByCount
-                              .map(
-                                el =>
-                                  `${el.qty} by ${
+                            <TranslationContainer translationKey="max_words" />
+                          </td>
+                          <td>
+                            {props.game.result.bestTurnByCount.map(
+                              (el, index) => (
+                                <span key={index}>
+                                  {el.qty}{" "}
+                                  {<TranslationContainer translationKey="by" />}{" "}
+                                  {
                                     props.game.users.find(
-                                      user => user.id === el.user
+                                      (user) => user.id === el.user
                                     ).name
-                                  }`
+                                  }
+                                </span>
                               )
-                              .join(", ")}
+                            )}
                           </td>
                         </tr>
                       )}
 
                       {props.game.result.bestTurnByValue[0].score > 0 && (
                         <tr>
-                          <td>The most valuable turn</td>
                           <td>
-                            {props.game.result.bestTurnByValue
-                              .map(
-                                el =>
-                                  `${el.score} by ${
+                            <TranslationContainer translationKey="valuable_turn" />
+                          </td>
+                          <td>
+                            {props.game.result.bestTurnByValue.map(
+                              (el, index) => (
+                                <span key={index}>
+                                  {el.score}{" "}
+                                  {<TranslationContainer translationKey="by" />}{" "}
+                                  {
                                     props.game.users.find(
-                                      user => user.id === el.user
+                                      (user) => user.id === el.user
                                     ).name
-                                  }`
+                                  }
+                                </span>
                               )
-                              .join(", ")}
+                            )}
                           </td>
                         </tr>
                       )}
                       {props.game.result.neverChangedLetters.length > 0 && (
                         <tr>
-                          <td>Never changed letters</td>
+                          <td>
+                            <TranslationContainer translationKey="never_changed" />
+                          </td>
                           <td>
                             {props.game.result.neverChangedLetters
                               .map(
-                                el =>
-                                  props.game.users.find(user => user.id === el)
-                                    .name
+                                (el) =>
+                                  props.game.users.find(
+                                    (user) => user.id === el
+                                  ).name
                               )
                               .join(", ")}
                           </td>
@@ -260,15 +313,24 @@ function Game(props) {
                   </table>
                 </div>
               )}
-            <p>Letters left in the bag: {props.game.letters.pot.length}</p>
+            <p>
+              <TranslationContainer translationKey="letters" />
+              {props.game.letters.pot.length}
+            </p>
             {props.game.turns && props.game.turns.length > 0 && (
               <div className="turns">
-                <p>Game turns</p>
+                <p>
+                  <TranslationContainer translationKey="turns" />
+                </p>
                 <table className="table-turns">
                   <thead>
                     <tr>
-                      <th>Player</th>
-                      <th>Turn</th>
+                      <th>
+                        <TranslationContainer translationKey="player" />
+                      </th>
+                      <th>
+                        <TranslationContainer translationKey="turn" />
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -280,7 +342,7 @@ function Game(props) {
                           <td>
                             {
                               props.game.users.find(
-                                user => user.id === turn.user
+                                (user) => user.id === turn.user
                               ).name
                             }
                           </td>
@@ -292,7 +354,7 @@ function Game(props) {
                                   {": "}
                                   {turn.words
                                     .map(
-                                      word =>
+                                      (word) =>
                                         `${Object.keys(word)[0]} ${
                                           word[Object.keys(word)[0]]
                                         }`
@@ -303,9 +365,13 @@ function Game(props) {
                             ) : (
                               <div key={index} className="turn">
                                 {turn.changedLetters ? (
-                                  <p>changed letters</p>
+                                  <p>
+                                    <TranslationContainer translationKey="changed" />
+                                  </p>
                                 ) : (
-                                  <p>passed</p>
+                                  <p>
+                                    <TranslationContainer translationKey="passed" />
+                                  </p>
                                 )}
                               </div>
                             )}
@@ -318,8 +384,10 @@ function Game(props) {
             )}
           </div>
         </div>
+      ) : props.game === null ? (
+        <TranslationContainer translationKey="no_game" />
       ) : (
-        "Loading Game"
+        <TranslationContainer translationKey="loading" />
       )}
     </div>
   );
