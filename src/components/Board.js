@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Board.css";
-import letterValues from "../letterValues";
 import TranslationContainer from "./Translation/TranslationContainer";
 
 class Board extends Component {
@@ -113,9 +112,9 @@ class Board extends Component {
                             <p className="multiply">{cell.multiply}</p>
                             <p className="unit">{cell.unit}</p>
                             <p className="value-on-board">
-                              {cell.letter && letterValues[cell.letter]}
+                              {cell.letter && this.props.values[cell.letter]}
                               {
-                                letterValues[
+                                this.props.values[
                                   this.props.userBoard[yIndex][xIndex]
                                 ]
                               }

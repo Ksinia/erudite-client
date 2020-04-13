@@ -24,6 +24,19 @@ function Lobby(props) {
             onChange={props.onChange}
             value={props.values.maxPlayers}
           ></input>
+          <label htmlFor="language">
+            {" "}
+            <TranslationContainer translationKey="language" />
+          </label>
+          <select
+            name="language"
+            onChange={props.onChange}
+            value={props.values.language}
+          >
+            <option value="ru">ru</option>
+            <option value="en">en</option>
+          </select>
+
           <button>
             <TranslationContainer translationKey="submit" />
           </button>
