@@ -34,7 +34,7 @@ function Lobby(props) {
           <TranslationContainer translationKey="your_turn_games" />
         </p>,
         <div key="userTurnRooms" className="rooms">
-          {props.userTurnRooms.map(room => (
+          {props.userTurnRooms.map((room) => (
             <div className="room" key={room.id}>
               <RoomTile
                 style={{ background: colors[0] }}
@@ -44,14 +44,14 @@ function Lobby(props) {
               />
             </div>
           ))}
-        </div>
+        </div>,
       ]}
       {props.otherTurnRooms.length > 0 && [
         <p key="otherTurnRoomsTitle">
           <TranslationContainer translationKey="your_other_games" />
         </p>,
         <div key="otherTurnRooms" className="rooms">
-          {props.otherTurnRooms.map(room => (
+          {props.otherTurnRooms.map((room) => (
             <div className="room" key={room.id}>
               <RoomTile
                 style={{ background: colors[1] }}
@@ -60,14 +60,14 @@ function Lobby(props) {
               />
             </div>
           ))}
-        </div>
+        </div>,
       ]}
       {props.userWaitingRooms.length > 0 && [
         <p key="userWaitingRoomsTitle">
           <TranslationContainer translationKey="your_rooms" />
         </p>,
         <div key="userWaitingRooms" className="rooms">
-          {props.userWaitingRooms.map(room => (
+          {props.userWaitingRooms.map((room) => (
             <div className="room" key={room.id}>
               <RoomTile
                 style={{ background: colors[1] }}
@@ -76,14 +76,14 @@ function Lobby(props) {
               />
             </div>
           ))}
-        </div>
+        </div>,
       ]}
       {props.otherWaitingRooms.length > 0 && [
         <p key="otherWaitingRoomsTitle">
           <TranslationContainer translationKey="available_rooms" />
         </p>,
         <div key="otherWaitingRooms" className="rooms">
-          {props.otherWaitingRooms.map(room => (
+          {props.otherWaitingRooms.map((room) => (
             <div className="room" key={room.id}>
               <RoomTile
                 style={{ background: colors[2] }}
@@ -92,14 +92,14 @@ function Lobby(props) {
               />
             </div>
           ))}
-        </div>
+        </div>,
       ]}
       {props.otherRooms.length > 0 && [
         <p key="otherRoomsTitle">
           <TranslationContainer translationKey="other_rooms" />
         </p>,
         <div key="otherRooms" className="rooms">
-          {props.otherRooms.map(room => (
+          {props.otherRooms.map((room) => (
             <div className="room" key={room.id}>
               <RoomTile
                 style={{ background: colors[3] }}
@@ -108,7 +108,7 @@ function Lobby(props) {
               />
             </div>
           ))}
-        </div>
+        </div>,
       ]}
     </div>
   );

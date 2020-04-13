@@ -6,10 +6,10 @@ import { connect } from "react-redux";
 
 class LobbyContainer extends Component {
   state = {
-    maxPlayers: 2
+    maxPlayers: 2,
   };
 
-  onSubmit = async event => {
+  onSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await superagent
@@ -23,7 +23,7 @@ class LobbyContainer extends Component {
     }
   };
 
-  onChange = event => {
+  onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
@@ -35,7 +35,7 @@ class LobbyContainer extends Component {
       (allRooms, room) => {
         if (
           this.props.user &&
-          room.users.find(user => user.id === this.props.user.id) &&
+          room.users.find((user) => user.id === this.props.user.id) &&
           room.phase === "started"
         ) {
           if (
@@ -58,7 +58,7 @@ class LobbyContainer extends Component {
         } else if (
           this.props.user &&
           (room.phase === "waiting" || room.phase === "ready") &&
-          room.users.find(user => user.id === this.props.user.id)
+          room.users.find((user) => user.id === this.props.user.id)
         ) {
           allRooms.userWaiting.push(room);
         } else if (room.phase === "waiting") {
@@ -73,7 +73,7 @@ class LobbyContainer extends Component {
         otherTurn: [],
         userWaiting: [],
         otherWaiting: [],
-        other: []
+        other: [],
       }
     );
 
@@ -96,7 +96,7 @@ class LobbyContainer extends Component {
 function mapStateToProps(state) {
   return {
     lobby: state.lobby,
-    user: state.user
+    user: state.user,
   };
 }
 export default connect(mapStateToProps)(LobbyContainer);

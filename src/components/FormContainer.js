@@ -5,16 +5,16 @@ import { loginSignupFunction } from "../actions/authorization";
 class FormContainer extends Component {
   initialState = {
     name: "",
-    password: ""
+    password: "",
   };
 
   state = this.initialState;
 
-  onChange = event => {
+  onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     event.preventDefault();
     this.props.dispatch(
       loginSignupFunction(
@@ -41,7 +41,7 @@ class FormContainer extends Component {
 
 function mapStateToProps(state) {
   return {
-    error: state.error
+    error: state.error,
   };
 }
 export default connect(mapStateToProps)(FormContainer);

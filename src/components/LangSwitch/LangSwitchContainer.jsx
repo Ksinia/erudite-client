@@ -18,13 +18,13 @@ class LangSwitchContainer extends Component {
 
 function mapStateToProps(state) {
   return {
-    locale: state.translation.locale
+    locale: state.translation.locale,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    translationActions: bindActionCreators(translationActions, dispatch)
+    translationActions: bindActionCreators(translationActions, dispatch),
   };
 }
 
@@ -35,5 +35,5 @@ export default connect(
 
 LangSwitchContainer.propTypes = {
   locale: PropTypes.string,
-  translationActions: PropTypes.object
+  translationActions: PropTypes.object,
 };

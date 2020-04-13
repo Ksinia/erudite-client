@@ -18,7 +18,7 @@ class App extends Component {
 
   componentDidMount() {
     this.props.dispatch(getProfileFetch());
-    this.stream.onmessage = event => {
+    this.stream.onmessage = (event) => {
       const { data } = event;
       const action = JSON.parse(data);
       this.props.dispatch(action);
@@ -41,13 +41,13 @@ class App extends Component {
         {"Copyright © "}
         <a href="https://ksinia.net/cv/">Ksenia Gulyaeva</a>{" "}
         {new Date().getFullYear()}
-      </footer>
+      </footer>,
     ];
   }
 }
 function mapStateToProps(state) {
   return {
-    user: state.user
+    user: state.user,
   };
 }
 export default connect(mapStateToProps)(App);

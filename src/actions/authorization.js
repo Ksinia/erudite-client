@@ -7,25 +7,22 @@ export const LOGOUT = "LOGOUT";
 //this action is created on server side
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 
-const loginError = error => {
+const loginError = (error) => {
   return {
     type: LOGIN_OR_SIGNUP_ERROR,
-    payload: error
+    payload: error,
   };
 };
 export const logOut = () => {
   localStorage.removeItem("jwt");
   return {
-    type: LOGOUT
+    type: LOGOUT,
   };
 };
 
-export const loginSignupFunction = (
-  type,
-  name,
-  password,
-  history
-) => async dispatch => {
+export const loginSignupFunction = (type, name, password, history) => async (
+  dispatch
+) => {
   const url = `${baseUrl}/${type}`;
   try {
     const response = await superagent.post(url).send({ name, password });
@@ -42,7 +39,7 @@ export const loginSignupFunction = (
   }
 };
 
-export const getProfileFetch = () => async dispatch => {
+export const getProfileFetch = () => async (dispatch) => {
   const jwt = localStorage.jwt;
   const url = `${baseUrl}/profile`;
   if (jwt) {

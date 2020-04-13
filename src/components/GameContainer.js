@@ -13,12 +13,12 @@ class GameContainer extends Component {
 
   emptyUserBoard = Array(15)
     .fill(null)
-    .map(line => Array(15).fill(null));
+    .map((line) => Array(15).fill(null));
 
   state = {
     chosenLetterIndex: null,
     userLetters: [],
-    userBoard: this.emptyUserBoard.map(row => row.slice())
+    userBoard: this.emptyUserBoard.map((row) => row.slice()),
   };
 
   // extract added letters from whole new hand
@@ -42,7 +42,7 @@ class GameContainer extends Component {
     ).letters;
   };
 
-  clickBoard = event => {
+  clickBoard = (event) => {
     const x = parseInt(event.target.dataset.x);
     const y = parseInt(event.target.dataset.y);
 
@@ -68,7 +68,7 @@ class GameContainer extends Component {
         ...this.state,
         chosenLetterIndex: null,
         userLetters: updUserLetters,
-        userBoard: updatedUserBoard
+        userBoard: updatedUserBoard,
       });
     } else if (
       // if cell has user letter and there is no chosen letter, return letter from board to userLetters
@@ -81,13 +81,13 @@ class GameContainer extends Component {
         this.setState({
           ...this.state,
           userLetters: updUserLetters,
-          userBoard: updatedUserBoard
+          userBoard: updatedUserBoard,
         });
       }
     }
   };
 
-  clickLetter = event => {
+  clickLetter = (event) => {
     if (!event.target.dataset.index) {
       this.setState({ ...this.state, chosenLetterIndex: null });
       return;
@@ -95,7 +95,7 @@ class GameContainer extends Component {
     if (this.state.chosenLetterIndex === null) {
       this.setState({
         ...this.state,
-        chosenLetterIndex: parseInt(event.target.dataset.index)
+        chosenLetterIndex: parseInt(event.target.dataset.index),
       });
     } else {
       const updatedUserLetters = [...this.state.userLetters];
@@ -103,25 +103,25 @@ class GameContainer extends Component {
       const newIndex = parseInt(event.target.dataset.index);
       [updatedUserLetters[oldIndex], updatedUserLetters[newIndex]] = [
         updatedUserLetters[newIndex],
-        updatedUserLetters[oldIndex]
+        updatedUserLetters[oldIndex],
       ];
       this.setState({
         ...this.state,
         chosenLetterIndex: null,
-        userLetters: updatedUserLetters
+        userLetters: updatedUserLetters,
       });
     }
   };
 
   returnLetters = () => {
     const updatedUserLetters = [...this.state.userLetters];
-    this.state.userBoard.forEach(row =>
-      row.forEach(cell => cell && updatedUserLetters.push(cell))
+    this.state.userBoard.forEach((row) =>
+      row.forEach((cell) => cell && updatedUserLetters.push(cell))
     );
     this.setState({
       ...this.state,
-      userBoard: this.emptyUserBoard.map(row => row.slice()),
-      userLetters: updatedUserLetters
+      userBoard: this.emptyUserBoard.map((row) => row.slice()),
+      userLetters: updatedUserLetters,
     });
   };
 
@@ -136,7 +136,7 @@ class GameContainer extends Component {
       console.warn("error test:", error);
     }
   };
-  validateTurn = async event => {
+  validateTurn = async (event) => {
     const validation = event.target.name;
     try {
       const response = await superagent
@@ -149,10 +149,10 @@ class GameContainer extends Component {
     }
   };
 
-  getNextTurn = game => {
+  getNextTurn = (game) => {
     return (game.turn + 1) % game.turnOrder.length;
   };
-  getPrevTurn = game => {
+  getPrevTurn = (game) => {
     const index = game.turn - 1;
     if (index < 0) {
       return index + game.turnOrder.length;
@@ -180,7 +180,7 @@ class GameContainer extends Component {
         .post(`${url}/game/${this.gameId}/change`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({
-          letters: this.props.games[this.gameId].letters[this.props.user.id]
+          letters: this.props.games[this.gameId].letters[this.props.user.id],
         });
       console.log("response test: ", response);
     } catch (error) {
@@ -190,7 +190,7 @@ class GameContainer extends Component {
 
   componentDidMount() {
     document.title = `Game ${this.gameId} | Erudite`;
-    this.gameStream.onmessage = event => {
+    this.gameStream.onmessage = (event) => {
       const { data } = event;
       const action = JSON.parse(data);
       this.props.dispatch(action);
@@ -212,7 +212,7 @@ class GameContainer extends Component {
 
       // если у меня букв меньше, чем на сервере, то просто добавить
       const putLetters = this.state.userBoard.reduce((acc, row) => {
-        return acc.concat(row.filter(letter => letter !== null));
+        return acc.concat(row.filter((letter) => letter !== null));
       }, []);
       const prevLetters = this.state.userLetters.concat(putLetters);
       if (prevLetters.length < game.letters[this.props.user.id].length) {
@@ -224,7 +224,7 @@ class GameContainer extends Component {
 
         this.setState({
           ...this.state,
-          userLetters: updatedUserLetters
+          userLetters: updatedUserLetters,
         });
         // если буквы равны, ничего не менять, кроме пересечений
       } else if (
@@ -245,7 +245,7 @@ class GameContainer extends Component {
         this.setState({
           ...this.state,
           userLetters: updatedUserLetters,
-          userBoard: updatedUserBoard
+          userBoard: updatedUserBoard,
         });
       }
       // если у меня букв больше, чем на сервере, или они не равны, то перерисовать
@@ -254,7 +254,7 @@ class GameContainer extends Component {
         this.setState({
           ...this.state,
           userLetters: userLetters,
-          userBoard: this.emptyUserBoard.map(row => row.slice())
+          userBoard: this.emptyUserBoard.map((row) => row.slice()),
         });
       }
     }
@@ -292,7 +292,7 @@ class GameContainer extends Component {
 function MapStateToProps(state) {
   return {
     user: state.user,
-    games: state.games
+    games: state.games,
   };
 }
 export default connect(MapStateToProps)(GameContainer);

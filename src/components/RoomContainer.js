@@ -11,7 +11,7 @@ class RoomContainer extends Component {
 
   state = { room: null };
 
-  onClick = async event => {
+  onClick = async (event) => {
     if (event.target.name === "start") {
       try {
         const response = await superagent
@@ -41,7 +41,7 @@ class RoomContainer extends Component {
   componentDidMount() {
     document.title = `Room ${this.roomId} | Erudite`;
     if (this.props.rooms && this.props.rooms.length > 0) {
-      const room = this.props.rooms.find(el => el.id === this.roomId);
+      const room = this.props.rooms.find((el) => el.id === this.roomId);
       this.setState({ room: room });
       if (room && room.phase === "started") {
         // backend sends only unfinished game from db
@@ -52,7 +52,7 @@ class RoomContainer extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.rooms !== prevProps.rooms) {
       if (this.props.rooms && this.props.rooms.length > 0) {
-        const room = this.props.rooms.find(el => el.id === this.roomId);
+        const room = this.props.rooms.find((el) => el.id === this.roomId);
         this.setState({ room: room });
         if (room && room.phase === "started") {
           this.props.history.push(`/game/${room.game.id}`);
@@ -77,7 +77,7 @@ class RoomContainer extends Component {
 function MapStateToProps(state) {
   return {
     user: state.user,
-    rooms: state.lobby
+    rooms: state.lobby,
   };
 }
 export default connect(MapStateToProps)(RoomContainer);

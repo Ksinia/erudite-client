@@ -15,10 +15,10 @@ class RoomTile extends Component {
                 <TranslationContainer translationKey="room" /> {id}
               </p>
             ) : (
-                <p className="title">
-                  <TranslationContainer translationKey="game" /> {game.id}
-                </p>
-              )}
+              <p className="title">
+                <TranslationContainer translationKey="game" /> {game.id}
+              </p>
+            )}
             {this.props.userTurn && (
               <h3>
                 <TranslationContainer translationKey="your_turn" />
@@ -34,20 +34,23 @@ class RoomTile extends Component {
                 <TranslationContainer translationKey="ready" />
               </p>
             )}
-            {phase === "waiting" && <p>{users.length} {
-              <TranslationContainer translationKey="of" />
-            } {maxPlayers} {
-                <TranslationContainer translationKey="players_in_game" />
-              }
-            </p>}
+            {phase === "waiting" && (
+              <p>
+                {users.length} {<TranslationContainer translationKey="of" />}{" "}
+                {maxPlayers}{" "}
+                {<TranslationContainer translationKey="players_in_game" />}
+              </p>
+            )}
           </div>
           <div className="players">
-            <p><TranslationContainer translationKey="players" /> </p>
+            <p>
+              <TranslationContainer translationKey="players" />{" "}
+            </p>
             {users.length > 0 && phase === "started"
-              ? game.turnOrder.map(id => (
-                <p key={id}>{users.find(user => user.id === id).name}</p>
-              ))
-              : users.map(user => <p key={user.id}>{user.name}</p>)}
+              ? game.turnOrder.map((id) => (
+                  <p key={id}>{users.find((user) => user.id === id).name}</p>
+                ))
+              : users.map((user) => <p key={user.id}>{user.name}</p>)}
           </div>
         </div>
       </Link>

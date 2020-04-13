@@ -7,7 +7,7 @@ export default function reducer(state = [], action = {}) {
       return [...state, action.payload];
     }
     case "UPDATED_ROOM": {
-      return state.map(room => {
+      return state.map((room) => {
         if (room.id === action.payload.id) {
           return action.payload;
         } else {

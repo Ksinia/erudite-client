@@ -8,7 +8,7 @@ class TranslationContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      translation: ""
+      translation: "",
     };
   }
 
@@ -28,14 +28,15 @@ class TranslationContainer extends Component {
 
   _updateTranslation(translationKey, activeLanguageCode) {
     if (translationKey && activeLanguageCode) {
-
       try {
         let translation = TRANSLATIONS[activeLanguageCode][translationKey];
         if (this.props.args && this.props.args.length > 0) {
-          this.props.args.forEach(arg => translation = translation.replace("{}", arg))
+          this.props.args.forEach(
+            (arg) => (translation = translation.replace("{}", arg))
+          );
         }
         this.setState({
-          translation
+          translation,
         });
       } catch (error) {
         console.log(error);
@@ -51,7 +52,7 @@ class TranslationContainer extends Component {
 
 function mapStateToProps(state) {
   return {
-    locale: state.translation.locale
+    locale: state.translation.locale,
   };
 }
 
@@ -59,5 +60,5 @@ export default connect(mapStateToProps, null)(TranslationContainer);
 
 TranslationContainer.propTypes = {
   translationKey: PropTypes.string.isRequired,
-  locale: PropTypes.string
+  locale: PropTypes.string,
 };
