@@ -20,7 +20,11 @@ class Toolbar extends Component {
           <TranslationContainer translationKey="toolbar_list" />
         </Link>
         {!this.props.user && (
-          <Link to="/signup">
+          <Link
+            to={`/signup?prev=${
+              window.location.pathname + window.location.search
+            }`}
+          >
             <TranslationContainer translationKey="sign_up" />
           </Link>
         )}
@@ -33,7 +37,11 @@ class Toolbar extends Component {
         )}
 
         {!this.props.user && (
-          <Link to="/login">
+          <Link
+            to={`/login?prev=${
+              window.location.pathname + window.location.search
+            }`}
+          >
             <TranslationContainer translationKey="log_in" />
           </Link>
         )}

@@ -29,13 +29,18 @@ export const loginSignupFunction = (type, name, password, history) => async (
     const action = JSON.parse(response.text);
     localStorage.setItem("jwt", action.payload.jwt);
     dispatch(action);
-    // dispatch the action that there is no errors
-    dispatch(loginError(null));
-    history.goBack();
+    const prevPageUrl = new URL(window.location.href).searchParams.get("prev");
+    if (prevPageUrl) {
+      history.push(prevPageUrl);
+    } else {
+      history.push("/");
+    }
   } catch (error) {
     console.log("error test:", error);
-    console.log(error.response.body);
-    dispatch(loginError(error.response.body));
+    if (error.response) {
+      console.log(error.response.body);
+      dispatch(loginError(error.response.body));
+    }
   }
 };
 
