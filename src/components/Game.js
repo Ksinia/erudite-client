@@ -209,17 +209,16 @@ function Game(props) {
                             <TranslationContainer translationKey="longest_word" />
                           </td>
                           <td>
-                            {props.game.result.longestWord.map((el, index) => (
-                              <span key={index}>
-                                {el.word}{" "}
-                                {<TranslationContainer translationKey="by" />}{" "}
-                                {
-                                  props.game.users.find(
-                                    (user) => user.id === el.user
-                                  ).name
-                                }
-                              </span>
-                            ))}
+                            {props.game.result.longestWord
+                              .map(
+                                (el) =>
+                                  `${
+                                    props.game.users.find(
+                                      (user) => user.id === el.user
+                                    ).name
+                                  }: ${el.word}`
+                              )
+                              .join(", ")}
                           </td>
                         </tr>
                       )}
@@ -230,65 +229,54 @@ function Game(props) {
                             <TranslationContainer translationKey="valuable_word" />
                           </td>
                           <td>
-                            {props.game.result.maxScoreWord.map((el, index) => (
-                              <span key={index}>
-                                {el.word}{" "}
-                                {<TranslationContainer translationKey="for" />}{" "}
-                                {el.value}{" "}
-                                {<TranslationContainer translationKey="by" />}{" "}
-                                {
-                                  props.game.users.find(
-                                    (user) => user.id === el.user
-                                  ).name
-                                }
-                              </span>
-                            ))}
+                            {props.game.result.maxScoreWord
+                              .map(
+                                (el) =>
+                                  `${
+                                    props.game.users.find(
+                                      (user) => user.id === el.user
+                                    ).name
+                                  }: ${el.value} (${el.word})`
+                              )
+                              .join(", ")}
                           </td>
                         </tr>
                       )}
-
                       {props.game.result.bestTurnByCount[0].qty > 0 && (
                         <tr>
                           <td>
                             <TranslationContainer translationKey="max_words" />
                           </td>
                           <td>
-                            {props.game.result.bestTurnByCount.map(
-                              (el, index) => (
-                                <span key={index}>
-                                  {el.qty}{" "}
-                                  {<TranslationContainer translationKey="by" />}{" "}
-                                  {
+                            {props.game.result.bestTurnByCount
+                              .map(
+                                (el) =>
+                                  `${
                                     props.game.users.find(
                                       (user) => user.id === el.user
                                     ).name
-                                  }
-                                </span>
+                                  }: ${el.qty}`
                               )
-                            )}
+                              .join(", ")}
                           </td>
                         </tr>
                       )}
-
                       {props.game.result.bestTurnByValue[0].score > 0 && (
                         <tr>
                           <td>
                             <TranslationContainer translationKey="valuable_turn" />
                           </td>
                           <td>
-                            {props.game.result.bestTurnByValue.map(
-                              (el, index) => (
-                                <span key={index}>
-                                  {el.score}{" "}
-                                  {<TranslationContainer translationKey="by" />}{" "}
-                                  {
+                            {props.game.result.bestTurnByValue
+                              .map(
+                                (el) =>
+                                  `${
                                     props.game.users.find(
                                       (user) => user.id === el.user
                                     ).name
-                                  }
-                                </span>
+                                  }: ${el.score}`
                               )
-                            )}
+                              .join(", ")}
                           </td>
                         </tr>
                       )}
