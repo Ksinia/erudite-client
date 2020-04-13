@@ -1,7 +1,7 @@
 import React from "react";
 import Board from "./Board";
-import letterValues from "../letterValues";
 import TranslationContainer from "./Translation/TranslationContainer";
+import letterValues from "../constants/letterValues";
 
 function Game(props) {
   return (
@@ -15,6 +15,7 @@ function Game(props) {
               board={props.game.board}
               previousBoard={props.game.previousBoard}
               userBoard={props.userBoard}
+              values={letterValues[props.game.language]}
             />
           </div>
 
@@ -33,7 +34,9 @@ function Game(props) {
                     data-index={index}
                     style={style}
                   >
-                    <p className="value-in-hand">{letterValues[letter]}</p>
+                    <p className="value-in-hand">
+                      {letterValues[props.game.language][letter]}
+                    </p>
                     {letter}
                   </div>
                 );

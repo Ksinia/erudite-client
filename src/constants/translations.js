@@ -41,8 +41,6 @@ export const TRANSLATIONS = {
     max_words: "The maximum words in one turn",
     valuable_turn: "The most valuable turn",
     never_changed: "Never changed letters",
-    by: "by",
-    for: "for",
     turn: "Turn",
     turns: "Game turns",
     passed: "passed",
@@ -64,6 +62,7 @@ export const TRANSLATIONS = {
     name: "Name",
     word: "word",
     letter: "letter",
+    language: "Choose letters set: ",
   },
   ru_RU: {
     create_room: "Пожалуйста, создайте комнату или войдите в существующую.",
@@ -107,8 +106,6 @@ export const TRANSLATIONS = {
     max_words: "Масимум слов за один ход",
     valuable_turn: "Самый дорогой ход",
     never_changed: "Без замены букв",
-    by: "от",
-    for: "за",
     turn: "Ход",
     turns: "Ходы",
     passed: "пас",
@@ -130,6 +127,7 @@ export const TRANSLATIONS = {
     name: "Имя",
     word: "слово",
     letter: "буква",
+    language: "Выберите набор букв: ",
   },
 };
 export const LANG_NAMES = [
