@@ -12,6 +12,24 @@
   margin: 0;
   padding: 0;
 }
+.center-true {
+  background: linear-gradient(
+      to top left,
+      transparent calc(50% - 2px),
+      rgba(220, 220, 220, 0.8) calc(50% - 2px),
+      rgba(220, 220, 220, 0.8) calc(50% + 2px),
+      transparent calc(50% + 2px)
+    ),
+    linear-gradient(
+      to top right,
+      transparent calc(50% - 2px),
+      rgba(220, 220, 220, 0.8) calc(50% - 2px),
+      rgba(220, 220, 220, 0.8) calc(50% + 2px),
+      transparent calc(50% + 2px)
+    );
+  position: relative;
+  z-index: -1;
+}
 .w3 {
   /* background-color: salmon; */
   background-color: rgba(250, 128, 114, 0.5);
