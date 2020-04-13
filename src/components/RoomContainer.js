@@ -20,7 +20,6 @@ class RoomContainer extends Component {
           .send({ roomId: this.roomId });
         console.log("response test: ", response);
         const gameId = response.body.id;
-        console.log(gameId);
         this.props.history.push(`/game/${gameId}`);
       } catch (error) {
         console.warn("error test:", error);
