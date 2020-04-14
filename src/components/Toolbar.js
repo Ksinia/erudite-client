@@ -47,7 +47,7 @@ class Toolbar extends Component {
         )}
 
         {this.props.user && (
-          <Link className="logout" onClick={this.handleClick}>
+          <Link to="#" className="logout" onClick={this.handleClick}>
             <TranslationContainer translationKey="log_out" />
           </Link>
         )}
