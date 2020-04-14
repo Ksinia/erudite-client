@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 class LobbyContainer extends Component {
   state = {
     maxPlayers: 2,
+    language: "ru",
   };
 
   onSubmit = async (event) => {
