@@ -68,7 +68,7 @@ export const TRANSLATIONS = {
   ru_RU: {
     create_room: "Пожалуйста, создайте комнату или войдите в существующую.",
     toolbar_list: "Список игр",
-    welcome: "Добро пожаловать,",
+    welcome: "Привет,",
     log_in: "Войти",
     log_out: "Выйти",
     sign_up: "Зарегистрироваться",

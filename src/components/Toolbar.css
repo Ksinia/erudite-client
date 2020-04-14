@@ -2,9 +2,9 @@
   display: flex;
   width: 100%;
   background-color: whitesmoke;
-  flex-flow: wrap;
-  justify-content: space-evenly;
-  padding: 0;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  padding: 0.1rem 0;
   position: fixed;
   top: 0px;
   z-index: 999;
@@ -13,8 +13,8 @@
 }
 
 .toolbar > * {
-  min-width: 20%;
   margin: auto;
+  padding: 0.1rem;
 }
 
 a {
@@ -24,15 +24,21 @@ a {
   cursor: pointer;
 }
 .toolbar a {
-  text-decoration: none;
   cursor: pointer;
 }
 .lang button {
   padding: 0.2em;
   margin: 0.3em;
+  font-size: small;
 }
 .lang {
   padding: 0;
-  margin: 0;
+  margin: auto;
   text-align: "center";
+}
+
+@media screen and (max-width: 670px) {
+  .toolbar {
+    font-size: small;
+  }
 }
