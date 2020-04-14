@@ -5,9 +5,19 @@ import Lobby from "./Lobby";
 import { connect } from "react-redux";
 
 class LobbyContainer extends Component {
+  getLanguage = () => {
+    if (localStorage.language) {
+      return localStorage.language;
+    } else if (window.navigator.language.slice(0, 2) === "ru") {
+      return "ru";
+    } else {
+      return "en";
+    }
+  };
+
   state = {
     maxPlayers: 2,
-    language: "ru",
+    language: this.getLanguage(),
   };
 
   onSubmit = async (event) => {
@@ -18,6 +28,7 @@ class LobbyContainer extends Component {
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send(this.state);
       console.log("response test: ", response);
+      localStorage.setItem("language", this.state.language);
       this.props.history.push(`/room/${response.body.id}`);
     } catch (error) {
       console.warn("error test:", error);
