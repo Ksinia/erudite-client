@@ -43,7 +43,7 @@ function Game(props) {
               })}
             </div>
             {props.game.phase === "finished" && (
-              <button onClick={props.returnToRoom}>
+              <button key="again" onClick={props.returnToRoom}>
                 <TranslationContainer translationKey="play_again" />
               </button>
             )}
@@ -125,7 +125,7 @@ function Game(props) {
               ]}
             {props.game.phase !== "finished" ? (
               props.game.phase === "validation" ? (
-                <p>
+                <p key="validation_of">
                   <TranslationContainer
                     translationKey="validation"
                     args={[
@@ -137,7 +137,7 @@ function Game(props) {
                   />
                 </p>
               ) : (
-                <p>
+                <p key="turn_of">
                   <TranslationContainer
                     translationKey="turn_of"
                     args={[
@@ -150,17 +150,17 @@ function Game(props) {
                 </p>
               )
             ) : (
-              <p>
+              <p key="game_over">
                 <TranslationContainer translationKey="game_over" />
               </p>
             )}
             <table className="table-score">
               <thead>
                 <tr>
-                  <th>
+                  <th key="player">
                     <TranslationContainer translationKey="player" />
                   </th>
-                  <th>
+                  <th key="score">
                     <TranslationContainer translationKey="score" />
                   </th>
                 </tr>
@@ -190,10 +190,10 @@ function Game(props) {
                     <tbody>
                       {props.game.result.winner.length > 0 && (
                         <tr key="winner">
-                          <td>
+                          <td key="winner">
                             <TranslationContainer translationKey="winner" />
                           </td>
-                          <td>
+                          <td key="details">
                             {props.game.result.winner
                               .map(
                                 (w) =>
@@ -207,11 +207,11 @@ function Game(props) {
                       )}
 
                       {props.game.result.longestWord.length > 0 && (
-                        <tr>
-                          <td>
+                        <tr key="longest_word">
+                          <td key="longest_word">
                             <TranslationContainer translationKey="longest_word" />
                           </td>
-                          <td>
+                          <td key="details">
                             {props.game.result.longestWord
                               .map(
                                 (el) =>
@@ -227,11 +227,11 @@ function Game(props) {
                       )}
 
                       {props.game.result.maxScoreWord.length > 0 && (
-                        <tr>
-                          <td>
+                        <tr key="valuable_word">
+                          <td key="valuable_word">
                             <TranslationContainer translationKey="valuable_word" />
                           </td>
-                          <td>
+                          <td key="details">
                             {props.game.result.maxScoreWord
                               .map(
                                 (el) =>
@@ -246,11 +246,11 @@ function Game(props) {
                         </tr>
                       )}
                       {props.game.result.bestTurnByCount[0].qty > 0 && (
-                        <tr>
-                          <td>
+                        <tr key="max_words">
+                          <td key="max_words">
                             <TranslationContainer translationKey="max_words" />
                           </td>
-                          <td>
+                          <td key="details">
                             {props.game.result.bestTurnByCount
                               .map(
                                 (el) =>
@@ -265,11 +265,11 @@ function Game(props) {
                         </tr>
                       )}
                       {props.game.result.bestTurnByValue[0].score > 0 && (
-                        <tr>
-                          <td>
+                        <tr key="valuable_turn">
+                          <td key="valuable_turn">
                             <TranslationContainer translationKey="valuable_turn" />
                           </td>
-                          <td>
+                          <td key="details">
                             {props.game.result.bestTurnByValue
                               .map(
                                 (el) =>
@@ -284,11 +284,11 @@ function Game(props) {
                         </tr>
                       )}
                       {props.game.result.neverChangedLetters.length > 0 && (
-                        <tr>
-                          <td>
+                        <tr key="never_changed">
+                          <td key="never_changed">
                             <TranslationContainer translationKey="never_changed" />
                           </td>
-                          <td>
+                          <td key="details">
                             {props.game.result.neverChangedLetters
                               .map(
                                 (el) =>
@@ -304,7 +304,7 @@ function Game(props) {
                   </table>
                 </div>
               )}
-            <p>
+            <p key="letters">
               <TranslationContainer translationKey="letters" />
               {props.game.letters.pot.length}
             </p>
@@ -316,10 +316,10 @@ function Game(props) {
                 <table className="table-turns">
                   <thead>
                     <tr>
-                      <th>
+                      <th key="player">
                         <TranslationContainer translationKey="player" />
                       </th>
-                      <th>
+                      <th key="turn">
                         <TranslationContainer translationKey="turn" />
                       </th>
                     </tr>
@@ -330,14 +330,14 @@ function Game(props) {
                       .reverse()
                       .map((turn, index) => (
                         <tr key={index}>
-                          <td>
+                          <td key="1">
                             {
                               props.game.users.find(
                                 (user) => user.id === turn.user
                               ).name
                             }
                           </td>
-                          <td>
+                          <td key="2">
                             {turn.words.length > 0 ? (
                               <div key={index} className="turn">
                                 <p>
