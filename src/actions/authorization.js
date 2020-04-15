@@ -30,7 +30,7 @@ export const loginSignupFunction = (type, name, password, history) => async (
     localStorage.setItem("jwt", action.payload.jwt);
     dispatch(action);
     const prevPageUrl = new URL(window.location.href).searchParams.get("prev");
-    if (prevPageUrl) {
+    if (prevPageUrl && prevPageUrl !== "/login" && prevPageUrl !== "/signup") {
       history.push(prevPageUrl);
     } else {
       history.push("/");
