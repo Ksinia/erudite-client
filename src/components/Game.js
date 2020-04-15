@@ -350,7 +350,7 @@ function Game(props) {
                                           word[Object.keys(word)[0]]
                                         }`
                                     )
-                                    .join(" ")}
+                                    .join(", ")}
                                 </p>
                               </div>
                             ) : (
