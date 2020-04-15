@@ -9,6 +9,7 @@
 }
 .controls {
   min-width: 50%;
+  max-width: 31rem;
 }
 .chosen {
   -webkit-box-shadow: 3px 3px 11px 3px rgba(13, 13, 13, 0.28);
@@ -17,12 +18,30 @@
 }
 button {
   padding: 0.5em;
-  margin: 0.5em;
   border-radius: 3px;
   font-size: medium;
   background-color: white;
   border: 1px solid lightgray;
   border-bottom: 1px solid rgb(180, 180, 180);
+  cursor: pointer;
+}
+button:active {
+  background-color: whitesmoke;
+  outline: none;
+  color: black;
+}
+button:focus {
+  outline: none;
+}
+@media (hover: hover) {
+  button:hover {
+    background-color: whitesmoke;
+  }
+  button:active {
+    background-color: lightgray;
+    outline: none;
+    color: black;
+  }
 }
 .letter {
   border: 0.5px solid lightgray;
@@ -34,6 +53,7 @@ button {
   line-height: 2rem;
   font-size: xx-large;
   position: relative;
+  cursor: pointer;
 }
 
 .letters {
@@ -81,7 +101,7 @@ footer a {
   margin: 0.4rem auto;
 }
 .controls button {
-  margin: 0 auto;
+  margin: 0.2em;
 }
 .controls div {
   margin: 0.4rem auto;

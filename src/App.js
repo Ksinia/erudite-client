@@ -17,6 +17,8 @@ class App extends Component {
   stream = new EventSource(`${url}/stream`);
 
   componentDidMount() {
+    document.addEventListener("touchstart", function () {}, true);
+
     this.props.dispatch(getProfileFetch());
     this.stream.onmessage = (event) => {
       const { data } = event;
