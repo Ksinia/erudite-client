@@ -8,6 +8,8 @@ import Toolbar from "./components/Toolbar";
 import LobbyContainer from "./components/LobbyContainer";
 import RoomContainer from "./components/RoomContainer";
 import GameContainer from "./components/GameContainer";
+import ChangePassword from "./components/ChangePassword";
+import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization.js";
 import { url } from "./url";
 
@@ -18,8 +20,7 @@ class App extends Component {
 
   componentDidMount() {
     document.addEventListener("touchstart", function () {}, true);
-
-    this.props.dispatch(getProfileFetch());
+    this.props.dispatch(getProfileFetch(localStorage.jwt));
     this.stream.onmessage = (event) => {
       const { data } = event;
       const action = JSON.parse(data);
@@ -34,6 +35,8 @@ class App extends Component {
         <Switch>
           <Route path="/signup" component={SignupContainer} />
           <Route path="/login" component={LoginContainer} />
+          <Route path="/change-password" component={ChangePassword} />
+          <Route path="/forgot-password" component={ForgotPassword} />
           <Route path="/room/:room" component={RoomContainer} />
           <Route path="/game/:game" component={GameContainer} />
           <Route path="/" component={LobbyContainer} />

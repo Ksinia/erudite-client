@@ -63,6 +63,7 @@ export const TRANSLATIONS = {
     word: "word",
     letter: "letter",
     language: "Choose letters set: ",
+    forgot: "Forgot password?",
   },
   ru_RU: {
     create_room: "Пожалуйста, создайте комнату или войдите в существующую.",
@@ -128,6 +129,7 @@ export const TRANSLATIONS = {
     word: "слово",
     letter: "буква",
     language: "Выберите набор букв: ",
+    forgot: "Забыли пароль?",
   },
 };
 export const LANG_NAMES = [

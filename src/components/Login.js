@@ -87,6 +87,11 @@ export default function SignIn(props) {
               <Link to="/signup" variant="body2">
                 <TranslationContainer translationKey="no_account" />
               </Link>
+              <Grid item>
+                <Link to="/forgot-password" variant="body2">
+                  <TranslationContainer translationKey="forgot" />
+                </Link>
+              </Grid>
             </Grid>
           </Grid>
         </form>
