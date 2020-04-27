@@ -15,7 +15,7 @@ function Room(props) {
             <TranslationContainer
               translationKey="room_for"
               args={[props.room.maxPlayers]}
-            />
+            /> ({props.room.language})
           </p>,
           props.room.users.length > 0 ? (
             [

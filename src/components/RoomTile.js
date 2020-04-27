@@ -12,11 +12,11 @@ class RoomTile extends Component {
           <div className="description">
             {phase !== "started" ? (
               <p className="title">
-                <TranslationContainer translationKey="room" /> {id}
+                <TranslationContainer translationKey="room" /> {id} ({this.props.room.language})
               </p>
             ) : (
               <p className="title">
-                <TranslationContainer translationKey="game" /> {game.id}
+                <TranslationContainer translationKey="game" /> {game.id} ({this.props.room.language})
               </p>
             )}
             {this.props.userTurn && (
