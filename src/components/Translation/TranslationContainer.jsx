@@ -13,7 +13,7 @@ class TranslationContainer extends Component {
   }
 
   componentDidMount() {
-    this._updateTranslation(this.props.translationKey, this.props.locale);
+    this._updateTranslation(this.props.translationKey, this.props.locale, this.props.args);
   }
 
   componentDidUpdate(prevProps) {
