@@ -16,22 +16,22 @@ class TranslationContainer extends Component {
     this._updateTranslation(this.props.translationKey, this.props.locale);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // update the translation if one of the props will change
+  componentDidUpdate(prevProps) {
+    // update the translation if one of the props has changed
     if (
-      this.props.translationKey !== nextProps.translationKey ||
-      this.props.locale !== nextProps.locale
+      this.props.translationKey !== prevProps.translationKey ||
+      this.props.locale !== prevProps.locale || this.props.args !== prevProps.args
     ) {
-      this._updateTranslation(nextProps.translationKey, nextProps.locale);
+      this._updateTranslation(this.props.translationKey, this.props.locale, this.props.args);
     }
   }
 
-  _updateTranslation(translationKey, activeLanguageCode) {
+  _updateTranslation(translationKey, activeLanguageCode, args) {
     if (translationKey && activeLanguageCode) {
       try {
         let translation = TRANSLATIONS[activeLanguageCode][translationKey];
-        if (this.props.args && this.props.args.length > 0) {
-          this.props.args.forEach(
+        if (args && args.length > 0) {
+          args.forEach(
             (arg) => (translation = translation.replace("{}", arg))
           );
         }
