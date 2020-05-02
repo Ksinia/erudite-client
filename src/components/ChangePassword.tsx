@@ -6,7 +6,7 @@ import {
   getProfileFetch,
   loginError,
   clearError,
-} from "../actions/authorization.js";
+} from "../actions/authorization";
 
 class ChangePassword extends Component {
   initialState = {

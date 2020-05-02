@@ -10,7 +10,7 @@ import RoomContainer from "./components/RoomContainer";
 import GameContainer from "./components/GameContainer";
 import ChangePassword from "./components/ChangePassword";
 import ForgotPassword from "./components/ForgotPassword";
-import { getProfileFetch } from "./actions/authorization.js";
+import { getProfileFetch } from "./actions/authorization";
 import { url } from "./url";
 
 import "./App.css";
