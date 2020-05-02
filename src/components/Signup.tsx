@@ -31,7 +31,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp(props) {
+type Props = {
+  onSubmit;
+  values;
+  onChange;
+  error;
+};
+
+export default function SignUp(props: Props) {
   const classes = useStyles();
 
   return (

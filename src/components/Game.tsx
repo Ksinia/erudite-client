@@ -3,7 +3,24 @@ import Board from "./Board";
 import TranslationContainer from "./Translation/TranslationContainer";
 import letterValues from "../constants/letterValues";
 
-function Game(props) {
+type Props = {
+  game: Object;
+  userBoard: Object;
+  userLetters: string[];
+  chosenLetterIndex: number;
+  user: Object;
+  clickLetter;
+  clickBoard;
+  returnToRoom;
+  returnLetters;
+  confirmTurn;
+  change;
+  validateTurn;
+  getNextTurn;
+  undo;
+};
+
+function Game(props: Props) {
   return (
     <div>
       {props.game ? (

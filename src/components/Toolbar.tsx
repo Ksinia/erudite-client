@@ -6,7 +6,11 @@ import "./Toolbar.css";
 import LangSwitchContainer from "./LangSwitch/LangSwitchContainer";
 import TranslationContainer from "./Translation/TranslationContainer";
 
-class Toolbar extends Component {
+type Props = {
+  user;
+};
+
+class Toolbar extends Component<Props> {
   handleClick = () => {
     const action = logOut();
     this.props.dispatch(action);

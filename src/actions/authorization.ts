@@ -6,7 +6,7 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 
 export const LOGIN_OR_SIGNUP_ERROR = "LOGIN_OR_SIGNUP_ERROR";
 
-export const loginError = (error) => {
+export const loginError = (error: string) => {
   return {
     type: LOGIN_OR_SIGNUP_ERROR,
     payload: error,
@@ -30,7 +30,7 @@ export const logOut = () => {
   };
 };
 
-export const loginSignupFunction = (type, name, password, history) => async (
+export const loginSignupFunction = (type: string, name:string, password:string, history) => async (
   dispatch
 ) => {
   const url = `${baseUrl}/${type}`;
@@ -58,7 +58,7 @@ export const loginSignupFunction = (type, name, password, history) => async (
   }
 };
 
-export const getProfileFetch = (jwt) => async (dispatch) => {
+export const getProfileFetch = (jwt: string) => async (dispatch) => {
   const url = `${baseUrl}/profile`;
   if (jwt) {
     try {

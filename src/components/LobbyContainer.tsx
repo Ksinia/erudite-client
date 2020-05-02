@@ -4,7 +4,12 @@ import { url } from "../url";
 import Lobby from "./Lobby";
 import { connect } from "react-redux";
 
-class LobbyContainer extends Component {
+type Props = {
+  lobby;
+  user;
+};
+
+class LobbyContainer extends Component<Props> {
   getLanguage = () => {
     if (localStorage.language) {
       return localStorage.language;
@@ -20,7 +25,7 @@ class LobbyContainer extends Component {
     language: this.getLanguage(),
   };
 
-  onSubmit = async (event) => {
+  onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     try {
       const response = await superagent
@@ -35,7 +40,7 @@ class LobbyContainer extends Component {
     }
   };
 
-  onChange = (event) => {
+  onChange = (event: React.SyntheticEvent) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 

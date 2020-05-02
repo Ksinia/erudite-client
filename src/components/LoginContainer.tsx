@@ -3,7 +3,11 @@ import Login from "./Login";
 import FormContainer from "./FormContainer";
 import { connect } from "react-redux";
 
-class LoginContainer extends Component {
+type Props = {
+  error;
+};
+
+class LoginContainer extends Component<Props> {
   componentDidMount() {
     document.title = `Log in | Erudite`;
   }

@@ -11,7 +11,7 @@ export const initialState = {
 };
 
 // Reducer
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action: {type: string, locale: string}) {
   switch (action.type) {
     case SET_LANGUAGE:
       return { ...state, locale: action.locale };

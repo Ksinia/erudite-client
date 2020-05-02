@@ -1,11 +1,16 @@
 import React, { Component } from "react";
-import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import { TRANSLATIONS } from "../../constants/translations";
 import Translation from "./Translation";
 
-class TranslationContainer extends Component {
-  constructor(props) {
+type Props = {
+  translationKey: string;
+  locale: string;
+  args: string[];
+};
+
+class TranslationContainer extends Component<Props> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       translation: "",
@@ -13,27 +18,38 @@ class TranslationContainer extends Component {
   }
 
   componentDidMount() {
-    this._updateTranslation(this.props.translationKey, this.props.locale, this.props.args);
+    this._updateTranslation(
+      this.props.translationKey,
+      this.props.locale,
+      this.props.args
+    );
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     // update the translation if one of the props has changed
     if (
       this.props.translationKey !== prevProps.translationKey ||
-      this.props.locale !== prevProps.locale || this.props.args !== prevProps.args
+      this.props.locale !== prevProps.locale ||
+      this.props.args !== prevProps.args
     ) {
-      this._updateTranslation(this.props.translationKey, this.props.locale, this.props.args);
+      this._updateTranslation(
+        this.props.translationKey,
+        this.props.locale,
+        this.props.args
+      );
     }
   }
 
-  _updateTranslation(translationKey, activeLanguageCode, args) {
+  _updateTranslation(
+    translationKey: string,
+    activeLanguageCode: string,
+    args: string[]
+  ) {
     if (translationKey && activeLanguageCode) {
       try {
         let translation = TRANSLATIONS[activeLanguageCode][translationKey];
         if (args && args.length > 0) {
-          args.forEach(
-            (arg) => (translation = translation.replace("{}", arg))
-          );
+          args.forEach((arg) => (translation = translation.replace("{}", arg)));
         }
         this.setState({
           translation,
@@ -57,8 +73,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, null)(TranslationContainer);
-
-TranslationContainer.propTypes = {
-  translationKey: PropTypes.string.isRequired,
-  locale: PropTypes.string,
-};

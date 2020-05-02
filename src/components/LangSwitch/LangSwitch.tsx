@@ -1,7 +1,13 @@
 import React, { Component } from "react";
+
 import { LANG_NAMES } from "../../constants/translations";
 
-export default class LangSwitch extends Component {
+type Props = {
+  locale: string;
+  setLanguage: any;
+};
+
+export default class LangSwitch extends Component<Props> {
   render() {
     return (
       <div className="lang">
@@ -9,7 +15,8 @@ export default class LangSwitch extends Component {
           <button
             key={i}
             style={{
-              fontWeight: this.props.locale === language.locale ? "bold" : "",
+              fontWeight:
+                this.props.locale === language.locale ? "bold" : undefined,
             }}
             onClick={() => {
               this.props.setLanguage(language.locale);

@@ -1,12 +1,13 @@
 import { Component } from "react";
-import { PropTypes } from "prop-types";
 
-export default class Translation extends Component {
+type Props = {
+  translation: string;
+};
+
+export default class Translation extends Component<Props> {
   render() {
     return this.props.translation;
   }
 }
 
-Translation.propTypes = {
-  translation: PropTypes.string.isRequired,
-};
+

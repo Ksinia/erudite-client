@@ -2,7 +2,16 @@ import React, { Component } from "react";
 import "./Board.css";
 import TranslationContainer from "./Translation/TranslationContainer";
 
-class Board extends Component {
+type Props = {
+  key: string;
+  clickBoard;
+  board;
+  previousBoard;
+  userBoard;
+  values;
+};
+
+class Board extends Component<Props> {
   cell = {
     letter: {},
     userLetter: {},

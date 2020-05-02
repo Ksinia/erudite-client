@@ -1,7 +1,13 @@
 import React from "react";
 import TranslationContainer from "./Translation/TranslationContainer";
 
-function Room(props) {
+type Props = {
+  room;
+  user;
+  onClick;
+};
+
+function Room(props: Props) {
   let waitingFor = 0;
   if (props.room) {
     waitingFor = props.room.maxPlayers - props.room.users.length;
@@ -15,7 +21,8 @@ function Room(props) {
             <TranslationContainer
               translationKey="room_for"
               args={[props.room.maxPlayers]}
-            /> ({props.room.language})
+            />{" "}
+            ({props.room.language})
           </p>,
           props.room.users.length > 0 ? (
             [

@@ -3,7 +3,17 @@ import RoomTile from "./RoomTile";
 import { colors } from "../colors";
 import TranslationContainer from "./Translation/TranslationContainer";
 
-function Lobby(props) {
+type Props = {
+  onSubmite;
+  onChange;
+  values;
+  userTurnRooms;
+  otherTurnRooms;
+  otherRooms;
+  user;
+};
+
+function Lobby(props: Props) {
   return (
     <div>
       <p>

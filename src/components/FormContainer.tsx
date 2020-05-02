@@ -2,7 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { loginSignupFunction } from "../actions/authorization";
 
-class FormContainer extends Component {
+type Props = {
+  type: string;
+  name: string;
+  password: string;
+  error: string;
+};
+
+class FormContainer extends Component<Props> {
   initialState = {
     name: "",
     password: "",
@@ -10,11 +17,11 @@ class FormContainer extends Component {
 
   state = this.initialState;
 
-  onChange = (event) => {
+  onChange = (event: React.SyntheticEvent) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onSubmit = (event) => {
+  onSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     this.props.dispatch(
       loginSignupFunction(

@@ -8,7 +8,12 @@ import {
   clearError,
 } from "../actions/authorization";
 
-class ChangePassword extends Component {
+type Props = {
+  user: Object;
+  error: string;
+};
+
+class ChangePassword extends Component<Props> {
   initialState = {
     password: "",
     result: "",
@@ -16,11 +21,11 @@ class ChangePassword extends Component {
 
   state = this.initialState;
 
-  onChange = (event) => {
+  onChange = (event: React.SyntheticEvent) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onSubmit = async (event) => {
+  onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     this.props.dispatch(clearError());
     if (!this.props.user) {

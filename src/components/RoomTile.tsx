@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import "./RoomTile.css";
 import TranslationContainer from "./Translation/TranslationContainer";
 
-class RoomTile extends Component {
+type Props = {
+  style;
+  room;
+  userTurn;
+};
+
+class RoomTile extends Component<Props> {
   render() {
     const { id, maxPlayers, users, phase, game } = this.props.room;
     return (
@@ -12,11 +18,13 @@ class RoomTile extends Component {
           <div className="description">
             {phase !== "started" ? (
               <p className="title">
-                <TranslationContainer translationKey="room" /> {id} ({this.props.room.language})
+                <TranslationContainer translationKey="room" /> {id} (
+                {this.props.room.language})
               </p>
             ) : (
               <p className="title">
-                <TranslationContainer translationKey="game" /> {game.id} ({this.props.room.language})
+                <TranslationContainer translationKey="game" /> {game.id} (
+                {this.props.room.language})
               </p>
             )}
             {this.props.userTurn && (

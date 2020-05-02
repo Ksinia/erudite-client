@@ -11,11 +11,12 @@ class ForgotPassword extends Component {
 
   state = this.initialState;
 
-  onChange = (event) => {
+  onChange = (event: React.SyntheticEvent) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onSubmit = async (event) => {
+  onSubmit = async (event: React.SyntheticEvent) => {
+    console.log("event.constructor.name", event.constructor.name);
     event.preventDefault();
     this.setState({ ...this.state, result: "" });
     const url = `${baseUrl}/generate-link`;

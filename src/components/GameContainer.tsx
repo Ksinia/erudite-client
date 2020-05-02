@@ -6,7 +6,12 @@ import "./Game.css";
 import Game from "./Game";
 import { url } from "../url";
 
-class GameContainer extends Component {
+type Props = {
+  games;
+  user;
+};
+
+class GameContainer extends Component<Props> {
   gameId = this.props.match.params.game;
 
   gameStream = new EventSource(`${url}/game/${this.gameId}`);
@@ -22,7 +27,7 @@ class GameContainer extends Component {
   };
 
   // extract added letters from whole new hand
-  extract = (oldHand, newHand) => {
+  extract = (oldHand: string[], newHand: string[]) => {
     const oldLetters = [...oldHand].sort();
     const newLetters = [...newHand].sort();
     return newLetters.reduce(
@@ -42,7 +47,7 @@ class GameContainer extends Component {
     ).letters;
   };
 
-  clickBoard = (event) => {
+  clickBoard = (event: React.SyntheticEvent) => {
     const x = parseInt(event.target.dataset.x);
     const y = parseInt(event.target.dataset.y);
 
@@ -87,7 +92,7 @@ class GameContainer extends Component {
     }
   };
 
-  clickLetter = (event) => {
+  clickLetter = (event: React.SyntheticEvent) => {
     if (!event.target.dataset.index) {
       this.setState({ ...this.state, chosenLetterIndex: null });
       return;
@@ -136,7 +141,7 @@ class GameContainer extends Component {
       console.warn("error test:", error);
     }
   };
-  validateTurn = async (event) => {
+  validateTurn = async (event: React.SyntheticEvent) => {
     const validation = event.target.name;
     try {
       const response = await superagent
@@ -149,10 +154,10 @@ class GameContainer extends Component {
     }
   };
 
-  getNextTurn = (game) => {
+  getNextTurn = (game: Object) => {
     return (game.turn + 1) % game.turnOrder.length;
   };
-  getPrevTurn = (game) => {
+  getPrevTurn = (game: Object) => {
     const index = game.turn - 1;
     if (index < 0) {
       return index + game.turnOrder.length;
@@ -197,7 +202,7 @@ class GameContainer extends Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (
       this.props.games &&
       this.props.games[this.gameId] &&

@@ -6,12 +6,17 @@ import { url } from "../url";
 import "./Game.css";
 import Room from "./Room";
 
-class RoomContainer extends Component {
+type Props = {
+  user;
+  rooms;
+};
+
+class RoomContainer extends Component<Props> {
   roomId = parseInt(this.props.match.params.room);
 
   state = { room: null };
 
-  onClick = async (event) => {
+  onClick = async (event: React.SyntheticEvent) => {
     if (event.target.name === "start") {
       try {
         const response = await superagent
