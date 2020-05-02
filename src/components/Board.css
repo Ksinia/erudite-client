@@ -6,7 +6,7 @@
 }
 
 .board-table-cell {
-  border: 1px solid lightgrey;
+  border: 1px solid rgb(211, 211, 211);
   width: 2.1rem;
   height: 2.1rem;
   margin: 0;

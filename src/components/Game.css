@@ -44,7 +44,7 @@ button:focus {
   }
 }
 .letter {
-  border: 1px solid lightgray;
+  border: 1px solid rgb(211, 211, 211);
   border-radius: 5px;
   padding: 6px 10px;
   margin: 0.2em;
