@@ -5,9 +5,10 @@ import { logOut } from "../actions/authorization";
 import "./Toolbar.css";
 import LangSwitchContainer from "./LangSwitch/LangSwitchContainer";
 import TranslationContainer from "./Translation/TranslationContainer";
+import { RootState } from "../reducer";
 
 type Props = {
-  user;
+  user: { name: string };
 };
 
 class Toolbar extends Component<Props> {
@@ -59,7 +60,7 @@ class Toolbar extends Component<Props> {
     );
   }
 }
-function mapStateToProps(state) {
+function mapStateToProps(state: RootState) {
   return {
     user: state.user,
   };

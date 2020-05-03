@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { loginSignupFunction } from "../actions/authorization";
+import { RootState } from "../reducer";
 
 type Props = {
   type: string;
@@ -46,7 +47,7 @@ class FormContainer extends Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: RootState) {
   return {
     error: state.error,
   };

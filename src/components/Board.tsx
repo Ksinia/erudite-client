@@ -4,7 +4,9 @@ import TranslationContainer from "./Translation/TranslationContainer";
 
 type Props = {
   key: string;
-  clickBoard;
+  clickBoard: (
+    event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
+  ) => void;
   board;
   previousBoard;
   userBoard;
@@ -22,7 +24,9 @@ class Board extends Component<Props> {
   emptyBoard = Array(15)
     .fill(null)
     .map((line) => Array(15).fill(this.cell));
-  boardBonuses = {
+  boardBonuses: {
+    [key: number]: { [key: number]: (string | JSX.Element)[] };
+  } = {
     0: {
       0: ["w3", "x3", <TranslationContainer translationKey="word" />],
       3: ["l2", "x2", <TranslationContainer translationKey="letter" />],
@@ -80,9 +84,7 @@ class Board extends Component<Props> {
     });
   });
 
-  initialState = { board: this.boardWithBonuses };
-
-  state = this.initialState;
+  readonly state = { board: this.boardWithBonuses };
 
   render() {
     return (

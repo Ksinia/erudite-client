@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { url as baseUrl } from "../url";
 import superagent from "superagent";
 import { connect } from "react-redux";
+import { RootState } from "../reducer";
 import {
   getProfileFetch,
   loginError,
@@ -88,7 +89,7 @@ class ChangePassword extends Component<Props> {
     );
   }
 }
-function MapStateToProps(state) {
+function MapStateToProps(state: RootState) {
   return {
     user: state.user,
     error: state.error,

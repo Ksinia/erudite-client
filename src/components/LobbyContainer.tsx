@@ -3,10 +3,11 @@ import superagent from "superagent";
 import { url } from "../url";
 import Lobby from "./Lobby";
 import { connect } from "react-redux";
+import { RootState } from "../reducer";
 
 type Props = {
   lobby;
-  user;
+  user: { jwt: string; id: number; };
 };
 
 class LobbyContainer extends Component<Props> {
@@ -110,7 +111,7 @@ class LobbyContainer extends Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: RootState) {
   return {
     lobby: state.lobby,
     user: state.user,

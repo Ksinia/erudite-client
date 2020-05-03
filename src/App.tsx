@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import {RootState} from "./reducer/index";
 import { Switch, Route } from "react-router-dom";
 
 import LoginContainer from "./components/LoginContainer";
@@ -12,6 +13,7 @@ import ChangePassword from "./components/ChangePassword";
 import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization";
 import { url } from "./url";
+
 
 import "./App.css";
 
@@ -50,7 +52,8 @@ class App extends Component {
     ];
   }
 }
-function mapStateToProps(state) {
+
+function mapStateToProps(state: RootState) {
   return {
     user: state.user,
   };

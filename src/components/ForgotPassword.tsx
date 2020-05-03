@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { url as baseUrl } from "../url";
 import superagent from "superagent";
 import { connect } from "react-redux";
+import { RootState } from "../reducer";
 
 class ForgotPassword extends Component {
   initialState = {
@@ -58,7 +59,7 @@ class ForgotPassword extends Component {
     );
   }
 }
-function MapStateToProps(state) {
+function MapStateToProps(state: RootState) {
   return {
     user: state.user,
   };

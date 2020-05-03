@@ -2,12 +2,23 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { TRANSLATIONS } from "../../constants/translations";
 import Translation from "./Translation";
+import { RootState } from "../../reducer";
 
-type Props = {
-  translationKey: string;
+interface StateProps {
   locale: string;
-  args: string[];
-};
+}
+
+interface DispatchProps {
+  toggleOn: () => void
+}
+
+interface OwnProps {
+  translationKey: string;
+  args?: string[];
+}
+
+type Props = StateProps & DispatchProps & OwnProps
+
 
 class TranslationContainer extends Component<Props> {
   constructor(props: Props) {
@@ -43,7 +54,7 @@ class TranslationContainer extends Component<Props> {
   _updateTranslation(
     translationKey: string,
     activeLanguageCode: string,
-    args: string[]
+    args?: string[]
   ) {
     if (translationKey && activeLanguageCode) {
       try {
@@ -66,10 +77,10 @@ class TranslationContainer extends Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state:RootState) {
   return {
     locale: state.translation.locale,
   };
 }
 
-export default connect(mapStateToProps, null)(TranslationContainer);
+export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, null)(TranslationContainer);

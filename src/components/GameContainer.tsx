@@ -5,6 +5,7 @@ import superagent from "superagent";
 import "./Game.css";
 import Game from "./Game";
 import { url } from "../url";
+import { RootState } from "../reducer";
 
 type Props = {
   games;
@@ -294,7 +295,7 @@ class GameContainer extends Component<Props> {
   }
 }
 
-function MapStateToProps(state) {
+function MapStateToProps(state: RootState) {
   return {
     user: state.user,
     games: state.games,
