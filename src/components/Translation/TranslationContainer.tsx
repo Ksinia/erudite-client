@@ -8,25 +8,20 @@ interface StateProps {
   locale: string;
 }
 
-interface DispatchProps {
-  toggleOn: () => void
-}
-
 interface OwnProps {
   translationKey: string;
   args?: string[];
 }
 
-type Props = StateProps & DispatchProps & OwnProps
+type Props = StateProps & OwnProps;
 
+interface State {
+  translation: string;
+}
 
-class TranslationContainer extends Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      translation: "",
-    };
-  }
+class TranslationContainer extends Component<Props, State> {
+ 
+  state: State = { translation: "" };
 
   componentDidMount() {
     this._updateTranslation(
@@ -77,10 +72,12 @@ class TranslationContainer extends Component<Props> {
   }
 }
 
-function mapStateToProps(state:RootState) {
+function mapStateToProps(state: RootState): StateProps {
   return {
     locale: state.translation.locale,
   };
 }
 
-export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, null)(TranslationContainer);
+export default connect<StateProps, OwnProps, RootState>(mapStateToProps)(
+  TranslationContainer
+);

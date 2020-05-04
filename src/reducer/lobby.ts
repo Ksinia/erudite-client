@@ -1,16 +1,6 @@
-export interface Room {
-  id: number;
-  maxPlayers: number;
-  language: string;
-  createdAt: string;
-  updatedAt: string;
-  users: Object[];
-  game: Object;
-}
+import { Room, Action } from "./types";
 
-export type Lobby = Room[];
-
-export default function reducer(state: Lobby = [], action = {}) {
+export default function reducer(state: Room[] = [], action: Action) {
   switch (action.type) {
     case "ALL_ROOMS": {
       return action.payload;

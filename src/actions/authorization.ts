@@ -1,12 +1,13 @@
 import superagent from "superagent";
 import { url as baseUrl } from "../url";
+import {Action} from "../reducer/types"
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 //this action is created on server side
 
 export const LOGIN_OR_SIGNUP_ERROR = "LOGIN_OR_SIGNUP_ERROR";
 
-export const loginError = (error: string) => {
+export const loginError = (error: string): Action =>  {
   return {
     type: LOGIN_OR_SIGNUP_ERROR,
     payload: error,

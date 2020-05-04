@@ -6,10 +6,11 @@ import "./Game.css";
 import Game from "./Game";
 import { url } from "../url";
 import { RootState } from "../reducer";
+import { Game as GameType, User}  from "../reducer/types";
 
 type Props = {
-  games;
-  user;
+  games: GameType[];
+  user: User;
 };
 
 class GameContainer extends Component<Props> {

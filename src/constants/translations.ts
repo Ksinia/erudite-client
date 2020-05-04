@@ -1,4 +1,4 @@
-export const TRANSLATIONS = {
+export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
   en_US: {
     create_room: "Please create a new room or enter an existing room.",
     toolbar_list: "List of games",
