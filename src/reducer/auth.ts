@@ -1,7 +1,8 @@
 import { LOGIN_SUCCESS, LOGOUT } from "../actions/authorization";
-import { User, Action } from "./types";
+import { User } from "./types";
+import { AnyAction } from "redux";
 
-export default function reducer(state: User = null, action: Action) {
+export default function reducer(state: User = null, action: AnyAction) {
   switch (action.type) {
     case LOGIN_SUCCESS: {
       return action.payload;

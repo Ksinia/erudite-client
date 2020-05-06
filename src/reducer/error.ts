@@ -3,9 +3,9 @@ import {
   LOGIN_OR_SIGNUP_ERROR,
   CLEAR_ERROR,
 } from "../actions/authorization";
-import { Action } from "./types";
+import { AnyAction } from "redux";
 
-export default function reducer(state = null, action: Action) {
+export default function reducer(state = null, action: AnyAction) {
   switch (action.type) {
     case LOGIN_OR_SIGNUP_ERROR: {
       return action.payload;

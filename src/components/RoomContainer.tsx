@@ -6,16 +6,21 @@ import { url } from "../url";
 import "./Game.css";
 import Room from "./Room";
 import { RootState } from "../reducer";
+import { Room as RoomType, User } from "../reducer/types";
 
-type Props = {
-  user;
-  rooms;
+type StateProps = {
+  user: User;
+  rooms: RoomType[];
 };
 
-class RoomContainer extends Component<Props> {
+type State = {
+  room: null | RoomType;
+};
+
+class RoomContainer extends Component<StateProps, State> {
   roomId = parseInt(this.props.match.params.room);
 
-  state = { room: null };
+  readonly state: State = { room: null };
 
   onClick = async (event: React.SyntheticEvent) => {
     if (event.target.name === "start") {
@@ -54,7 +59,7 @@ class RoomContainer extends Component<Props> {
       }
     }
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: StateProps) {
     if (this.props.rooms !== prevProps.rooms) {
       if (this.props.rooms && this.props.rooms.length > 0) {
         const room = this.props.rooms.find((el) => el.id === this.roomId);

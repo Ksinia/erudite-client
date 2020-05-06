@@ -1,6 +1,7 @@
-import { Room, Action } from "./types";
+import { Room } from "./types";
+import { AnyAction } from "redux";
 
-export default function reducer(state: Room[] = [], action: Action) {
+export default function reducer(state: Room[] = [], action: AnyAction) {
   switch (action.type) {
     case "ALL_ROOMS": {
       return action.payload;

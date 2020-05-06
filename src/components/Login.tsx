@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = {
-  onChange;
-  onSubmit;
-  values;
-  error;
+type OwnProps = {
+  onChange: any;
+  onSubmit: any;
+  values: { name: string; password: string };
+  error: { message: string };
 };
 
-export default function SignIn(props: Props) {
+export default function SignIn(props: OwnProps) {
   const classes = useStyles();
 
   return (

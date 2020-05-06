@@ -2,18 +2,21 @@ import React from "react";
 import RoomTile from "./RoomTile";
 import { colors } from "../colors";
 import TranslationContainer from "./Translation/TranslationContainer";
+import { Room, User } from "../reducer/types";
 
-type Props = {
-  onSubmite;
-  onChange;
-  values;
-  userTurnRooms;
-  otherTurnRooms;
-  otherRooms;
-  user;
+type OwnProps = {
+  onChange: any;
+  onSubmit: any;
+  values: { maxPlayers: number; language: string };
+  userTurnRooms: Room[];
+  otherTurnRooms: Room[];
+  userWaitingRooms: Room[];
+  otherWaitingRooms: Room[];
+  otherRooms: Room[];
+  user: User;
 };
 
-function Lobby(props: Props) {
+function Lobby(props: OwnProps) {
   return (
     <div>
       <p>

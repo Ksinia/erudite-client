@@ -20,7 +20,7 @@ interface State {
 }
 
 class TranslationContainer extends Component<Props, State> {
-  state: State = { translation: "" };
+  readonly state: State = { translation: "" };
 
   componentDidMount() {
     this._updateTranslation(

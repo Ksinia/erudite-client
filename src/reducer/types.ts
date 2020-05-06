@@ -16,6 +16,7 @@ export interface Room {
   updatedAt: string;
   users: User[];
   game: Object;
+  phase: string;
 }
 
 export interface iUser {
@@ -38,8 +39,8 @@ export interface Game {
   score: { [key in iUser["id"]]: number };
   turns;
   result;
-  board;
-  previousBoard;
+  board: (string | null)[][];
+  previousBoard: (string | null)[][];
   putLetters: string[];
   lettersChanged: boolean;
   createdAt: string;

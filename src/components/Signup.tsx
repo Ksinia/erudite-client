@@ -32,10 +32,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  onSubmit;
-  values;
-  onChange;
-  error;
+  onSubmit: any;
+  values: { name: string; password: string };
+  onChange: any;
+  error: { message: string };
 };
 
 export default function SignUp(props: Props) {

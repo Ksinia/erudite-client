@@ -1,16 +1,27 @@
 import React, { Component } from "react";
 import { url as baseUrl } from "../url";
 import superagent from "superagent";
-import { connect } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 import { RootState } from "../reducer";
+import { User } from "../reducer/types";
 
-class ForgotPassword extends Component {
-  initialState = {
+interface StateProps {
+  user: User;
+  error: string;
+}
+
+type Props = StateProps & DispatchProp;
+
+interface State {
+  name: string;
+  result: string;
+}
+
+class ForgotPassword extends Component<Props, State> {
+  readonly state: State = {
     name: "",
     result: "",
   };
-
-  state = this.initialState;
 
   onChange = (event: React.SyntheticEvent) => {
     this.setState({ [event.target.name]: event.target.value });
@@ -64,4 +75,6 @@ function MapStateToProps(state: RootState) {
     user: state.user,
   };
 }
+
+// почему тут нет ошибки ts?
 export default connect(MapStateToProps)(ForgotPassword);

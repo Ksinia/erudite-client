@@ -9,7 +9,8 @@ import {
   clearError,
 } from "../actions/authorization";
 import { User } from "../reducer/types";
-import { Dispatch, AnyAction } from "redux";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
 interface StateProps {
   user: User;
@@ -17,7 +18,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
 
 type Props = StateProps & DispatchProps;

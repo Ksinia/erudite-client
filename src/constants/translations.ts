@@ -132,7 +132,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     forgot: "Забыли пароль?",
   },
 };
-export const LANG_NAMES = [
+export const LANG_NAMES: { locale: string; name: string }[] = [
   { locale: "en_US", name: "EN" },
   { locale: "ru_RU", name: "RU" },
 ];

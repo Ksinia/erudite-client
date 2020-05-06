@@ -4,7 +4,7 @@ import FormContainer from "./FormContainer";
 import { connect } from "react-redux";
 
 type Props = {
-  error;
+  error: string;
 };
 
 class SignupContainer extends Component<Props> {

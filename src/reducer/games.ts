@@ -1,8 +1,9 @@
-import { Game, Action } from "./types";
+import { Game } from "./types";
+import { AnyAction } from "redux";
 
 export default function reducer(
   state: { [key in Game["id"]]: Game } = {},
-  action: Action
+  action: AnyAction
 ) {
   switch (action.type) {
     case "GAME_UPDATED": {

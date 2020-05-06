@@ -1,4 +1,4 @@
-export default {
+export const letterValues: { [key: string]: { [key: string]: number } } = {
   ru: {
     "*": 0,
     а: 1,

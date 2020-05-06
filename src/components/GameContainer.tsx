@@ -1,19 +1,27 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 import superagent from "superagent";
 
 import "./Game.css";
 import Game from "./Game";
 import { url } from "../url";
 import { RootState } from "../reducer";
-import { Game as GameType, User}  from "../reducer/types";
+import { User } from "../reducer/types";
 
-type Props = {
-  games: GameType[];
+interface StateProps {
+  games: any; // исправить потом
   user: User;
+}
+
+type State = {
+  chosenLetterIndex: number | null;
+  userLetters: string[];
+  userBoard: (string | null)[][];
 };
 
-class GameContainer extends Component<Props> {
+type Props = StateProps & DispatchProp;
+
+class GameContainer extends Component<Props, State> {
   gameId = this.props.match.params.game;
 
   gameStream = new EventSource(`${url}/game/${this.gameId}`);
@@ -22,7 +30,7 @@ class GameContainer extends Component<Props> {
     .fill(null)
     .map((line) => Array(15).fill(null));
 
-  state = {
+  state: State = {
     chosenLetterIndex: null,
     userLetters: [],
     userBoard: this.emptyUserBoard.map((row) => row.slice()),
@@ -204,7 +212,7 @@ class GameContainer extends Component<Props> {
     };
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: StateProps) {
     if (
       this.props.games &&
       this.props.games[this.gameId] &&
@@ -288,7 +296,6 @@ class GameContainer extends Component<Props> {
           returnLetters={this.returnLetters}
           returnToRoom={this.returnToRoom}
           undo={this.undo}
-          passAndChangeLetters={this.passAndChangeLetters}
           change={this.change}
         />
       </div>

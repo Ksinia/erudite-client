@@ -1,22 +1,38 @@
-import React, { Component } from "react";
+import React, { Component, Dispatch } from "react";
 import { connect } from "react-redux";
 import { loginSignupFunction } from "../actions/authorization";
 import { RootState } from "../reducer";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
-type Props = {
+interface StateProps {
+  error: string;
+}
+
+interface OwnProps {
   type: string;
+}
+
+interface DispatchProps {
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+}
+
+type Props = StateProps & DispatchProps & OwnProps;
+
+interface State {
   name: string;
   password: string;
-  error: string;
-};
+}
 
-class FormContainer extends Component<Props> {
-  initialState = {
+interface DispatchProps {
+  dispatch: Dispatch<AnyAction>;
+}
+
+class FormContainer extends Component<Props, State> {
+  readonly state: State = {
     name: "",
     password: "",
   };
-
-  state = this.initialState;
 
   onChange = (event: React.SyntheticEvent) => {
     this.setState({ [event.target.name]: event.target.value });

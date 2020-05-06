@@ -1,26 +1,27 @@
 import React from "react";
 import Board from "./Board";
 import TranslationContainer from "./Translation/TranslationContainer";
-import letterValues from "../constants/letterValues";
+import { letterValues } from "../constants/letterValues";
+import { Game as GameType, User } from "../reducer/types";
 
-type Props = {
-  game: Object;
-  userBoard: Object;
+type OwnProps = {
+  game: GameType;
   userLetters: string[];
-  chosenLetterIndex: number;
-  user: Object;
-  clickLetter;
-  clickBoard;
-  returnToRoom;
-  returnLetters;
-  confirmTurn;
-  change;
-  validateTurn;
-  getNextTurn;
-  undo;
+  chosenLetterIndex: number | null;
+  userBoard: (string | null)[][];
+  user: User;
+  clickBoard: Function;
+  clickLetter: Function;
+  confirmTurn: Function;
+  validateTurn: Function;
+  getNextTurn: Function;
+  returnLetters: Function;
+  returnToRoom: Function;
+  undo: Function;
+  change: Function;
 };
 
-function Game(props: Props) {
+function Game(props: OwnProps) {
   return (
     <div>
       {props.game ? (

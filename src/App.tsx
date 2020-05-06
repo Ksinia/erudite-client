@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {RootState} from "./reducer/index";
+import { RootState } from "./reducer/index";
 import { Switch, Route } from "react-router-dom";
 
 import LoginContainer from "./components/LoginContainer";
@@ -14,10 +14,15 @@ import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization";
 import { url } from "./url";
 
-
 import "./App.css";
+import { ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
 
-class App extends Component {
+type DispatchProps = {
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+};
+
+class App extends Component<DispatchProps> {
   stream = new EventSource(`${url}/stream`);
 
   componentDidMount() {

@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 import { logOut } from "../actions/authorization";
 import "./Toolbar.css";
 import LangSwitchContainer from "./LangSwitch/LangSwitchContainer";
 import TranslationContainer from "./Translation/TranslationContainer";
 import { RootState } from "../reducer";
 
-type Props = {
+interface StateProps {
   user: { name: string };
-};
+}
+
+type Props = StateProps & DispatchProp;
 
 class Toolbar extends Component<Props> {
   handleClick = () => {

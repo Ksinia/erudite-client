@@ -1,10 +1,11 @@
 import React from "react";
 import TranslationContainer from "./Translation/TranslationContainer";
+import { User, Room as RoomType } from "../reducer/types";
 
 type Props = {
-  room;
-  user;
-  onClick;
+  room: RoomType;
+  user: User;
+  onClick: any;
 };
 
 function Room(props: Props) {
@@ -20,7 +21,7 @@ function Room(props: Props) {
           <p key="room-for">
             <TranslationContainer
               translationKey="room_for"
-              args={[props.room.maxPlayers]}
+              args={[String(props.room.maxPlayers)]}
             />{" "}
             ({props.room.language})
           </p>,
@@ -42,7 +43,7 @@ function Room(props: Props) {
             <p key="waiting">
               <TranslationContainer
                 translationKey="waiting_for"
-                args={[waitingFor]}
+                args={[String(waitingFor)]}
               />
             </p>
           ),

@@ -1,6 +1,6 @@
 import superagent from "superagent";
 import { url as baseUrl } from "../url";
-import { AnyAction, Dispatch } from "redux";
+import { AnyAction } from "redux";
 import { MyThunkAction } from "../reducer/types";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -37,7 +37,7 @@ export const loginSignupFunction = (
   name: string,
   password: string,
   history
-) => async (dispatch: Dispatch) => {
+): MyThunkAction => async (dispatch) => {
   const url = `${baseUrl}/${type}`;
   try {
     const response = await superagent.post(url).send({ name, password });
