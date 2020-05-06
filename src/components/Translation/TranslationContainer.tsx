@@ -20,7 +20,6 @@ interface State {
 }
 
 class TranslationContainer extends Component<Props, State> {
- 
   state: State = { translation: "" };
 
   componentDidMount() {
@@ -78,6 +77,6 @@ function mapStateToProps(state: RootState): StateProps {
   };
 }
 
-export default connect<StateProps, OwnProps, RootState>(mapStateToProps)(
+export default connect<StateProps, void, OwnProps, RootState>(mapStateToProps)(
   TranslationContainer
 );

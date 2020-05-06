@@ -1,3 +1,8 @@
+import { Action, AnyAction } from "redux";
+import { ThunkAction } from "redux-thunk";
+
+import { RootState } from "../reducer";
+
 enum Language {
   "ru",
   "en",
@@ -43,7 +48,9 @@ export interface Game {
   users: User[];
 }
 
-export interface Action {
-  type: string; // change to enumeration;
-  payload: User | Game | Room[] | any;
-}
+export type MyThunkAction<A extends Action = AnyAction> = ThunkAction<
+  void,
+  RootState,
+  unknown,
+  A
+>;

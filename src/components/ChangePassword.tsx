@@ -8,19 +8,30 @@ import {
   loginError,
   clearError,
 } from "../actions/authorization";
+import { User } from "../reducer/types";
+import { Dispatch, AnyAction } from "redux";
 
-type Props = {
-  user: Object;
+interface StateProps {
+  user: User;
   error: string;
-};
+}
 
-class ChangePassword extends Component<Props> {
-  initialState = {
+interface DispatchProps {
+  dispatch: Dispatch<AnyAction>;
+}
+
+type Props = StateProps & DispatchProps;
+
+interface State {
+  password: string;
+  result: string;
+}
+
+class ChangePassword extends Component<Props, State> {
+  readonly state: State = {
     password: "",
     result: "",
   };
-
-  state = this.initialState;
 
   onChange = (event: React.SyntheticEvent) => {
     this.setState({ [event.target.name]: event.target.value });
@@ -89,10 +100,17 @@ class ChangePassword extends Component<Props> {
     );
   }
 }
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
     error: state.error,
   };
 }
-export default connect(MapStateToProps)(ChangePassword);
+
+// function mapDispatchToProps(dispatch: Redux.Dispatch<any>): DispatchProps {
+//   ...
+// }
+
+export default connect<StateProps, void, void, RootState>(MapStateToProps)(
+  ChangePassword
+);

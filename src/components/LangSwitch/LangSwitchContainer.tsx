@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { bindActionCreators } from "redux";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import { connect } from "react-redux";
+
 import * as translationActions from "../Translation/actions";
 import LangSwitch from "./LangSwitch";
 import { RootState } from "../../reducer";
@@ -10,14 +11,14 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  toggleOn: () => void
+  dispatch: Dispatch<AnyAction>;
 }
 
 interface OwnProps {
-  translationActions: {setLanguage};
+  translationActions: { setLanguage };
 }
 
-type Props = StateProps & DispatchProps & OwnProps
+type Props = StateProps & DispatchProps & OwnProps;
 
 class LangSwitchContainer extends Component<Props> {
   render() {
@@ -36,13 +37,13 @@ function mapStateToProps(state: RootState) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: Dispatch) {
   return {
     translationActions: bindActionCreators(translationActions, dispatch),
   };
 }
 
-export default connect<StateProps, DispatchProps, OwnProps>(
+export default connect<StateProps, DispatchProps, OwnProps, RootState>(
   mapStateToProps,
   mapDispatchToProps
 )(LangSwitchContainer);

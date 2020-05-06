@@ -1,13 +1,14 @@
 import superagent from "superagent";
 import { url as baseUrl } from "../url";
-import {Action} from "../reducer/types"
+import { AnyAction, Dispatch } from "redux";
+import { MyThunkAction } from "../reducer/types";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 //this action is created on server side
 
 export const LOGIN_OR_SIGNUP_ERROR = "LOGIN_OR_SIGNUP_ERROR";
 
-export const loginError = (error: string): Action =>  {
+export const loginError = (error: string): AnyAction => {
   return {
     type: LOGIN_OR_SIGNUP_ERROR,
     payload: error,
@@ -31,9 +32,12 @@ export const logOut = () => {
   };
 };
 
-export const loginSignupFunction = (type: string, name:string, password:string, history) => async (
-  dispatch
-) => {
+export const loginSignupFunction = (
+  type: string,
+  name: string,
+  password: string,
+  history
+) => async (dispatch: Dispatch) => {
   const url = `${baseUrl}/${type}`;
   try {
     const response = await superagent.post(url).send({ name, password });
@@ -59,7 +63,10 @@ export const loginSignupFunction = (type: string, name:string, password:string, 
   }
 };
 
-export const getProfileFetch = (jwt: string) => async (dispatch) => {
+export const getProfileFetch = (
+  jwt: string
+  // ): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => { // no need to pass all of these, because we already did it on our type MyThunkAction
+): MyThunkAction => async (dispatch) => {
   const url = `${baseUrl}/profile`;
   if (jwt) {
     try {
