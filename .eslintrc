@@ -1,12 +1,13 @@
 {
+  "ignorePatterns": ["*.css", "*.svg"],
   "env": {
     "browser": true,
     "node": true
   },
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2018
+    "ecmaVersion": 2020
   },
   "extends": [
     "eslint:recommended",
@@ -17,6 +18,7 @@
   ],
   "rules": {
     "no-duplicate-imports": 2,
+    "no-unused-vars": 0,
     "import/order": 2
   }
 }
