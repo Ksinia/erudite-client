@@ -1,5 +1,5 @@
-import { Room } from "./types";
 import { AnyAction } from "redux";
+import { Room } from "./types";
 
 export default function reducer(state: Room[] = [], action: AnyAction) {
   switch (action.type) {

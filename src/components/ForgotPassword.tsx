@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { url as baseUrl } from "../url";
 import superagent from "superagent";
 import { connect, DispatchProp } from "react-redux";
+import { url as baseUrl } from "../url";
 import { RootState } from "../reducer";
 import { User } from "../reducer/types";
 
@@ -23,8 +23,8 @@ class ForgotPassword extends Component<Props, State> {
     result: "",
   };
 
-  onChange = (event: React.SyntheticEvent) => {
-    this.setState({ [event.target.name]: event.target.value });
+  onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.value });
   };
 
   onSubmit = async (event: React.SyntheticEvent) => {
@@ -76,5 +76,4 @@ function MapStateToProps(state: RootState) {
   };
 }
 
-// почему тут нет ошибки ts?
 export default connect(MapStateToProps)(ForgotPassword);

@@ -15,30 +15,42 @@ export interface Room {
   createdAt: string;
   updatedAt: string;
   users: User[];
-  game: Object;
+  game: Game;
   phase: string;
 }
 
-export interface iUser {
+export type User = {
   id: number;
   name: string;
   jwt?: string;
-}
+};
 
-export type User = iUser | null;
+type Turn = {
+  words: { [key: string]: number }[];
+  score: number;
+  user: number;
+  changedLetters: boolean;
+};
 
 export interface Game {
   id: number;
   language: string;
-  letters: { [key in iUser["id"] | "pot"]: string[] };
+  letters: { [key in User["id"] | "pot"]: string[] };
   phase: string;
   validated: unknown;
-  turnOrder: iUser["id"][];
-  turn: iUser["id"];
+  turnOrder: User["id"][];
+  turn: User["id"];
   passedCount: number;
-  score: { [key in iUser["id"]]: number };
-  turns;
-  result;
+  score: { [key in User["id"]]: number };
+  turns: Turn[];
+  result: {
+    winner: string[]; // должен быть числом!
+    longestWord: { word: string; user: number }[];
+    maxScoreWord: { word: string; value: number; user: number }[]; //как правильно, {}[] или [{}]?
+    bestTurnByCount: [{ qty: number; turn: Turn; user: number }];
+    bestTurnByValue: [{ score: number; turn: Turn; user: number }];
+    neverChangedLetters: number[];
+  };
   board: (string | null)[][];
   previousBoard: (string | null)[][];
   putLetters: string[];

@@ -1,9 +1,9 @@
 import React from "react";
-import TranslationContainer from "./Translation/TranslationContainer";
 import { User, Room as RoomType } from "../reducer/types";
+import TranslationContainer from "./Translation/TranslationContainer";
 
 type Props = {
-  room: RoomType;
+  room: RoomType | null | undefined; //так можно?
   user: User;
   onClick: any;
 };

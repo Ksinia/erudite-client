@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { connect, DispatchProp } from "react-redux";
 import superagent from "superagent";
+import { RouteComponentProps } from "react-router-dom";
 
 import "./Game.css";
 import Game from "./Game";
 import { url } from "../url";
 import { RootState } from "../reducer";
-import { User } from "../reducer/types";
+import { User, Game as GameType } from "../reducer/types";
 
 interface StateProps {
-  games: any; // исправить потом
+  games: { [key: number]: GameType };
   user: User;
 }
 
@@ -19,16 +20,18 @@ type State = {
   userBoard: (string | null)[][];
 };
 
-type Props = StateProps & DispatchProp;
+type MatchParams = { game: string };
+
+type Props = StateProps & DispatchProp & RouteComponentProps<MatchParams>;
 
 class GameContainer extends Component<Props, State> {
-  gameId = this.props.match.params.game;
+  gameId = parseInt(this.props.match.params.game);
 
   gameStream = new EventSource(`${url}/game/${this.gameId}`);
 
   emptyUserBoard = Array(15)
     .fill(null)
-    .map((line) => Array(15).fill(null));
+    .map((_) => Array(15).fill(null));
 
   state: State = {
     chosenLetterIndex: null,
@@ -41,7 +44,7 @@ class GameContainer extends Component<Props, State> {
     const oldLetters = [...oldHand].sort();
     const newLetters = [...newHand].sort();
     return newLetters.reduce(
-      (acc, letter) => {
+      (acc: { i: number; letters: string[] }, letter) => {
         if (acc.i === oldLetters.length) {
           acc.letters.push(letter);
           return acc;
@@ -57,9 +60,17 @@ class GameContainer extends Component<Props, State> {
     ).letters;
   };
 
-  clickBoard = (event: React.SyntheticEvent) => {
-    const x = parseInt(event.target.dataset.x);
-    const y = parseInt(event.target.dataset.y);
+  clickBoard = (event: React.SyntheticEvent<HTMLDivElement>) => {
+    if (
+      event.currentTarget.dataset.x === undefined ||
+      event.currentTarget.dataset.x === "" ||
+      event.currentTarget.dataset.y === undefined ||
+      event.currentTarget.dataset.y === ""
+    ) {
+      return;
+    }
+    const x = parseInt(event.currentTarget.dataset.x);
+    const y = parseInt(event.currentTarget.dataset.y);
 
     // if the cell is occupied by letter
     // do nothing
@@ -151,7 +162,7 @@ class GameContainer extends Component<Props, State> {
       console.warn("error test:", error);
     }
   };
-  validateTurn = async (event: React.SyntheticEvent) => {
+  validateTurn = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const validation = event.target.name;
     try {
       const response = await superagent
@@ -164,10 +175,10 @@ class GameContainer extends Component<Props, State> {
     }
   };
 
-  getNextTurn = (game: Object) => {
+  getNextTurn = (game: GameType) => {
     return (game.turn + 1) % game.turnOrder.length;
   };
-  getPrevTurn = (game: Object) => {
+  getPrevTurn = (game: GameType) => {
     const index = game.turn - 1;
     if (index < 0) {
       return index + game.turnOrder.length;
@@ -226,7 +237,7 @@ class GameContainer extends Component<Props, State> {
       const game = this.props.games[this.gameId];
 
       // если у меня букв меньше, чем на сервере, то просто добавить
-      const putLetters = this.state.userBoard.reduce((acc, row) => {
+      const putLetters = this.state.userBoard.reduce((acc: string[], row) => {
         return acc.concat(row.filter((letter) => letter !== null));
       }, []);
       const prevLetters = this.state.userLetters.concat(putLetters);

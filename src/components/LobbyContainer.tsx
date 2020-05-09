@@ -1,16 +1,25 @@
 import React, { Component } from "react";
 import superagent from "superagent";
-import { url } from "../url";
-import Lobby from "./Lobby";
 import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
+import { url } from "../url";
 import { RootState } from "../reducer";
+import Lobby from "./Lobby";
+import { Room as RoomType, User } from "../reducer/types";
 
-type Props = {
-  lobby;
-  user: { jwt: string; id: number; };
+interface OwnProps {
+  lobby: RoomType[];
+  user: User;
+}
+
+type State = {
+  maxPlayers: number;
+  language: string;
 };
 
-class LobbyContainer extends Component<Props> {
+type Props = OwnProps & RouteComponentProps;
+
+class LobbyContainer extends Component<Props, State> {
   getLanguage = () => {
     if (localStorage.language) {
       return localStorage.language;
@@ -21,7 +30,7 @@ class LobbyContainer extends Component<Props> {
     }
   };
 
-  state = {
+  state: State = {
     maxPlayers: 2,
     language: this.getLanguage(),
   };
@@ -41,8 +50,8 @@ class LobbyContainer extends Component<Props> {
     }
   };
 
-  onChange = (event: React.SyntheticEvent) => {
-    this.setState({ [event.target.name]: event.target.value });
+  onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.value });
   };
 
   componentDidMount() {
@@ -50,7 +59,7 @@ class LobbyContainer extends Component<Props> {
   }
   render() {
     const rooms = this.props.lobby.reduce(
-      (allRooms, room) => {
+      (allRooms: { [key: string]: RoomType[] }, room) => {
         if (
           this.props.user &&
           room.users.find((user) => user.id === this.props.user.id) &&

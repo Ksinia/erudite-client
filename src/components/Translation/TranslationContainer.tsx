@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { TRANSLATIONS } from "../../constants/translations";
-import Translation from "./Translation";
 import { RootState } from "../../reducer";
+import Translation from "./Translation";
 
 interface StateProps {
   locale: string;

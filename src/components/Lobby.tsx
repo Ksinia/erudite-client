@@ -1,8 +1,8 @@
 import React from "react";
-import RoomTile from "./RoomTile";
 import { colors } from "../colors";
-import TranslationContainer from "./Translation/TranslationContainer";
 import { Room, User } from "../reducer/types";
+import RoomTile from "./RoomTile";
+import TranslationContainer from "./Translation/TranslationContainer";
 
 type OwnProps = {
   onChange: any;
@@ -66,7 +66,6 @@ function Lobby(props: OwnProps) {
                 style={{ background: colors[0] }}
                 room={room}
                 user={props.user}
-                userTurn={true}
               />
             </div>
           ))}

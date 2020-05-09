@@ -1,11 +1,14 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
 import Signup from "./Signup";
 import FormContainer from "./FormContainer";
-import { connect } from "react-redux";
 
-type Props = {
+interface OwnProps {
   error: string;
-};
+}
+
+type Props = OwnProps & RouteComponentProps;
 
 class SignupContainer extends Component<Props> {
   componentDidMount() {
@@ -17,7 +20,6 @@ class SignupContainer extends Component<Props> {
         type="signup"
         Display={Signup}
         history={this.props.history}
-        error={this.props.error}
       />
     );
   }

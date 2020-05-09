@@ -1,7 +1,8 @@
 import superagent from "superagent";
-import { url as baseUrl } from "../url";
 import { AnyAction } from "redux";
+import { url as baseUrl } from "../url";
 import { MyThunkAction } from "../reducer/types";
+import { History } from "history";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 //this action is created on server side
@@ -36,7 +37,7 @@ export const loginSignupFunction = (
   type: string,
   name: string,
   password: string,
-  history
+  history: History
 ): MyThunkAction => async (dispatch) => {
   const url = `${baseUrl}/${type}`;
   try {

@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { url as baseUrl } from "../url";
 import superagent from "superagent";
 import { connect } from "react-redux";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { url as baseUrl } from "../url";
 import { RootState } from "../reducer";
 import {
   getProfileFetch,
@@ -9,8 +11,6 @@ import {
   clearError,
 } from "../actions/authorization";
 import { User } from "../reducer/types";
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "redux-thunk";
 
 interface StateProps {
   user: User;
@@ -34,8 +34,11 @@ class ChangePassword extends Component<Props, State> {
     result: "",
   };
 
-  onChange = (event: React.SyntheticEvent) => {
-    this.setState({ [event.target.name]: event.target.value });
+  onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      ...this.state,
+      [event.currentTarget.name]: event.currentTarget.value,
+    });
   };
 
   onSubmit = async (event: React.SyntheticEvent) => {
@@ -108,10 +111,7 @@ function MapStateToProps(state: RootState): StateProps {
   };
 }
 
-// function mapDispatchToProps(dispatch: Redux.Dispatch<any>): DispatchProps {
-//   ...
-// }
-
 export default connect<StateProps, void, void, RootState>(MapStateToProps)(
+  //зачем нужны типы в угловых скобках? Если их убрать, ничего не изменится
   ChangePassword
 );

@@ -7,10 +7,10 @@ type Props = {
   clickBoard: (
     event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
   ) => void;
-  board;
-  previousBoard;
-  userBoard;
-  values;
+  board: (string | null)[][];
+  previousBoard: (string | null)[][];
+  userBoard: (string | null)[][];
+  values: { [key: string]: number };
 };
 
 class Board extends Component<Props> {
@@ -23,37 +23,77 @@ class Board extends Component<Props> {
   };
   emptyBoard = Array(15)
     .fill(null)
-    .map((line) => Array(15).fill(this.cell));
+    .map((_) => Array(15).fill(this.cell));
   boardBonuses: {
     [key: number]: { [key: number]: (string | JSX.Element)[] };
   } = {
     0: {
-      0: ["w3", "x3", <TranslationContainer translationKey="word" />],
-      3: ["l2", "x2", <TranslationContainer translationKey="letter" />],
-      7: ["w3", "x3", <TranslationContainer translationKey="word" />],
+      0: ["w3", "x3", <TranslationContainer translationKey="word" key="00" />],
+      3: [
+        "l2",
+        "x2",
+        <TranslationContainer translationKey="letter" key="03" />,
+      ],
+      7: ["w3", "x3", <TranslationContainer translationKey="word" key="07" />],
     },
     1: {
-      1: ["w2", "x2", <TranslationContainer translationKey="word" />],
-      5: ["l3", "x3", <TranslationContainer translationKey="letter" />],
+      1: ["w2", "x2", <TranslationContainer translationKey="word" key="11" />],
+      5: [
+        "l3",
+        "x3",
+        <TranslationContainer translationKey="letter" key="15" />,
+      ],
     },
     2: {
-      2: ["w2", "x2", <TranslationContainer translationKey="word" />],
-      6: ["l2", "x2", <TranslationContainer translationKey="letter" />],
+      2: ["w2", "x2", <TranslationContainer translationKey="word" key="22" />],
+      6: [
+        "l2",
+        "x2",
+        <TranslationContainer translationKey="letter" key="26" />,
+      ],
     },
     3: {
-      0: ["l2", "x2", <TranslationContainer translationKey="letter" />],
-      3: ["w2", "x2", <TranslationContainer translationKey="word" />],
-      7: ["l2", "x2", <TranslationContainer translationKey="letter" />],
+      0: [
+        "l2",
+        "x2",
+        <TranslationContainer translationKey="letter" key="30" />,
+      ],
+      3: ["w2", "x2", <TranslationContainer translationKey="word" key="33" />],
+      7: [
+        "l2",
+        "x2",
+        <TranslationContainer translationKey="letter" key="37" />,
+      ],
     },
-    4: { 4: ["w2", "x2", <TranslationContainer translationKey="word" />] },
-    5: { 1: ["l3", "x3", <TranslationContainer translationKey="letter" />] },
+    4: {
+      4: ["w2", "x2", <TranslationContainer translationKey="word" key="44" />],
+    },
+    5: {
+      1: [
+        "l3",
+        "x3",
+        <TranslationContainer translationKey="letter" key="51" />,
+      ],
+    },
     6: {
-      2: ["l2", "x2", <TranslationContainer translationKey="letter" />],
-      6: ["l2", "x2", <TranslationContainer translationKey="letter" />],
+      2: [
+        "l2",
+        "x2",
+        <TranslationContainer translationKey="letter" key="62" />,
+      ],
+      6: [
+        "l2",
+        "x2",
+        <TranslationContainer translationKey="letter" key="66" />,
+      ],
     },
     7: {
-      0: ["w3", "x3", <TranslationContainer translationKey="word" />],
-      3: ["l2", "x2", <TranslationContainer translationKey="letter" />],
+      0: ["w3", "x3", <TranslationContainer translationKey="word" key="70" />],
+      3: [
+        "l2",
+        "x2",
+        <TranslationContainer translationKey="letter" key="73" />,
+      ],
     },
   };
   boardWithBonuses = this.emptyBoard.map((row, y) => {
@@ -124,11 +164,10 @@ class Board extends Component<Props> {
                             <p className="unit">{cell.unit}</p>
                             <p className="value-on-board">
                               {cell.letter && this.props.values[cell.letter]}
-                              {
+                              {this.props.userBoard[yIndex][xIndex] !== null &&
                                 this.props.values[
                                   this.props.userBoard[yIndex][xIndex]
-                                ]
-                              }
+                                ]}
                             </p>
                             {cell.letter && cell.letter}
                             {this.props.userBoard[yIndex][xIndex]}

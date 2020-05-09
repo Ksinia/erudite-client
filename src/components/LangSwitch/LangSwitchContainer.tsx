@@ -3,8 +3,8 @@ import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import { connect } from "react-redux";
 
 import * as translationActions from "../Translation/actions";
-import LangSwitch from "./LangSwitch";
 import { RootState } from "../../reducer";
+import LangSwitch from "./LangSwitch";
 
 interface StateProps {
   locale: string;
@@ -15,7 +15,7 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-  translationActions: { setLanguage };
+  translationActions: { [key: string]: (locale: string) => AnyAction };
 }
 
 type Props = StateProps & DispatchProps & OwnProps;

@@ -1,5 +1,5 @@
-import { Game } from "./types";
 import { AnyAction } from "redux";
+import { Game } from "./types";
 
 export default function reducer(
   state: { [key in Game["id"]]: Game } = {},

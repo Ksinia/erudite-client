@@ -1,28 +1,33 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import superagent from "superagent";
+import { RouteComponentProps } from "react-router-dom";
+
 import { url } from "../url";
 import "./Game.css";
-import Room from "./Room";
 import { RootState } from "../reducer";
 import { Room as RoomType, User } from "../reducer/types";
+import Room from "./Room";
 
-type StateProps = {
+type MatchParams = { room: string };
+
+interface StateProps {
   user: User;
   rooms: RoomType[];
-};
+}
+
+type Props = StateProps & RouteComponentProps<MatchParams>;
 
 type State = {
-  room: null | RoomType;
+  room: RoomType | null | undefined;
 };
 
-class RoomContainer extends Component<StateProps, State> {
+class RoomContainer extends Component<Props, State> {
   roomId = parseInt(this.props.match.params.room);
 
   readonly state: State = { room: null };
 
-  onClick = async (event: React.SyntheticEvent) => {
+  onClick = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === "start") {
       try {
         const response = await superagent

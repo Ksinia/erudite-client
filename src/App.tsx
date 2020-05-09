@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { RootState } from "./reducer/index";
 import { Switch, Route } from "react-router-dom";
+import { ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
+import { RootState } from "./reducer/index";
 
 import LoginContainer from "./components/LoginContainer";
 import SignupContainer from "./components/SignupContainer";
@@ -15,8 +17,6 @@ import { getProfileFetch } from "./actions/authorization";
 import { url } from "./url";
 
 import "./App.css";
-import { ThunkDispatch } from "redux-thunk";
-import { AnyAction } from "redux";
 
 type DispatchProps = {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;

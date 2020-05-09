@@ -10,15 +10,15 @@ type OwnProps = {
   chosenLetterIndex: number | null;
   userBoard: (string | null)[][];
   user: User;
-  clickBoard: Function;
-  clickLetter: Function;
-  confirmTurn: Function;
-  validateTurn: Function;
-  getNextTurn: Function;
-  returnLetters: Function;
-  returnToRoom: Function;
-  undo: Function;
-  change: Function;
+  clickBoard: (event: React.SyntheticEvent<HTMLDivElement>) => void;
+  clickLetter: (event: React.SyntheticEvent<HTMLDivElement>) => void;
+  confirmTurn: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
+  validateTurn: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
+  getNextTurn: (game: GameType) => number;
+  returnLetters: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
+  returnToRoom: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
+  undo: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
+  change: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
 };
 
 function Game(props: OwnProps) {
@@ -100,7 +100,7 @@ function Game(props: OwnProps) {
                       props.game.users.find(
                         (user) =>
                           user.id === props.game.turnOrder[props.game.turn]
-                      ).name,
+                      )?.name,
                     ]}
                   />
                 </button>,
@@ -111,7 +111,7 @@ function Game(props: OwnProps) {
                       props.game.users.find(
                         (user) =>
                           user.id === props.game.turnOrder[props.game.turn]
-                      ).name,
+                      )?.name,
                     ]}
                   />
                 </button>,
@@ -126,11 +126,11 @@ function Game(props: OwnProps) {
                         (user) =>
                           user.id ===
                           props.game.turnOrder[props.getNextTurn(props.game)]
-                      ).name,
+                      )?.name,
                       props.game.users.find(
                         (user) =>
                           user.id === props.game.turnOrder[props.game.turn]
-                      ).name,
+                      )?.name,
                     ]}
                   />
                 </p>,
@@ -150,7 +150,7 @@ function Game(props: OwnProps) {
                       props.game.users.find(
                         (user) =>
                           user.id === props.game.turnOrder[props.game.turn]
-                      ).name,
+                      )?.name,
                     ]}
                   />
                 </p>
@@ -162,7 +162,7 @@ function Game(props: OwnProps) {
                       props.game.users.find(
                         (user) =>
                           user.id === props.game.turnOrder[props.game.turn]
-                      ).name,
+                      )?.name,
                     ]}
                   />
                 </p>
@@ -187,11 +187,7 @@ function Game(props: OwnProps) {
                 {props.game.turnOrder.map((key) => (
                   <tr key={key}>
                     <td>
-                      {
-                        props.game.users.find(
-                          (user) => user.id === parseInt(key)
-                        ).name
-                      }
+                      {props.game.users.find((user) => user.id === key)?.name}
                     </td>
                     <td>{props.game.score[key]}</td>
                   </tr>
@@ -217,7 +213,7 @@ function Game(props: OwnProps) {
                                 (w) =>
                                   props.game.users.find(
                                     (user) => user.id === parseInt(w)
-                                  ).name
+                                  )?.name
                               )
                               .join(", ")}
                           </td>
@@ -236,7 +232,7 @@ function Game(props: OwnProps) {
                                   `${
                                     props.game.users.find(
                                       (user) => user.id === el.user
-                                    ).name
+                                    )?.name
                                   }: ${el.word}`
                               )
                               .join(", ")}
@@ -256,7 +252,7 @@ function Game(props: OwnProps) {
                                   `${
                                     props.game.users.find(
                                       (user) => user.id === el.user
-                                    ).name
+                                    )?.name
                                   }: ${el.value} (${el.word})`
                               )
                               .join(", ")}
@@ -275,7 +271,7 @@ function Game(props: OwnProps) {
                                   `${
                                     props.game.users.find(
                                       (user) => user.id === el.user
-                                    ).name
+                                    )?.name
                                   }: ${el.qty}`
                               )
                               .join(", ")}
@@ -294,7 +290,7 @@ function Game(props: OwnProps) {
                                   `${
                                     props.game.users.find(
                                       (user) => user.id === el.user
-                                    ).name
+                                    )?.name
                                   }: ${el.score}`
                               )
                               .join(", ")}
@@ -312,7 +308,7 @@ function Game(props: OwnProps) {
                                 (el) =>
                                   props.game.users.find(
                                     (user) => user.id === el
-                                  ).name
+                                  )?.name
                               )
                               .join(", ")}
                           </td>
@@ -346,13 +342,13 @@ function Game(props: OwnProps) {
                     {props.game.turns
                       .slice()
                       .reverse()
-                      .map((turn, index) => (
+                      .map((turn, index: number) => (
                         <tr key={index}>
                           <td key="1">
                             {
                               props.game.users.find(
                                 (user) => user.id === turn.user
-                              ).name
+                              )?.name
                             }
                           </td>
                           <td key="2">

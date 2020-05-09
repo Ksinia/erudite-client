@@ -57,7 +57,7 @@ function RoomTile(props: OwnProps) {
           </p>
           {users.length > 0 && phase === "started"
             ? game.turnOrder.map((id) => (
-                <p key={id}>{users.find((user) => user.id === id).name}</p>
+                <p key={id}>{users.find((user) => user.id === id)?.name}</p>
               ))
             : users.map((user) => <p key={user.id}>{user.name}</p>)}
         </div>

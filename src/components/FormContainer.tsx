@@ -1,9 +1,11 @@
-import React, { Component, Dispatch } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import { loginSignupFunction } from "../actions/authorization";
-import { RootState } from "../reducer";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+import { RouteComponentProps } from "react-router-dom";
+
+import { loginSignupFunction } from "../actions/authorization";
+import { RootState } from "../reducer";
 
 interface StateProps {
   error: string;
@@ -11,21 +13,18 @@ interface StateProps {
 
 interface OwnProps {
   type: string;
+  Display: Component;
 }
 
 interface DispatchProps {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
 
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps;
 
 interface State {
   name: string;
   password: string;
-}
-
-interface DispatchProps {
-  dispatch: Dispatch<AnyAction>;
 }
 
 class FormContainer extends Component<Props, State> {
@@ -33,12 +32,11 @@ class FormContainer extends Component<Props, State> {
     name: "",
     password: "",
   };
-
-  onChange = (event: React.SyntheticEvent) => {
-    this.setState({ [event.target.name]: event.target.value });
+  onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.value });
   };
 
-  onSubmit = (event: React.SyntheticEvent) => {
+  onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     this.props.dispatch(
       loginSignupFunction(
