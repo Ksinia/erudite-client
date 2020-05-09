@@ -9,7 +9,7 @@ type Props = {
   ) => void;
   board: (string | null)[][];
   previousBoard: (string | null)[][];
-  userBoard: (string | null)[][];
+  userBoard: string[][];
   values: { [key: string]: number };
 };
 
@@ -164,7 +164,7 @@ class Board extends Component<Props> {
                             <p className="unit">{cell.unit}</p>
                             <p className="value-on-board">
                               {cell.letter && this.props.values[cell.letter]}
-                              {this.props.userBoard[yIndex][xIndex] !== null &&
+                              {this.props.userBoard[yIndex][xIndex] !== "" &&
                                 this.props.values[
                                   this.props.userBoard[yIndex][xIndex]
                                 ]}

@@ -66,6 +66,7 @@ function Lobby(props: OwnProps) {
                 style={{ background: colors[0] }}
                 room={room}
                 user={props.user}
+                userTurn={true}
               />
             </div>
           ))}
@@ -82,6 +83,7 @@ function Lobby(props: OwnProps) {
                 style={{ background: colors[1] }}
                 room={room}
                 user={props.user}
+                userTurn={false}
               />
             </div>
           ))}
@@ -98,6 +100,7 @@ function Lobby(props: OwnProps) {
                 style={{ background: colors[1] }}
                 room={room}
                 user={props.user}
+                userTurn={false}
               />
             </div>
           ))}
@@ -114,6 +117,7 @@ function Lobby(props: OwnProps) {
                 style={{ background: colors[2] }}
                 room={room}
                 user={props.user}
+                userTurn={false}
               />
             </div>
           ))}
@@ -130,6 +134,7 @@ function Lobby(props: OwnProps) {
                 style={{ background: colors[3] }}
                 room={room}
                 user={props.user}
+                userTurn={false}
               />
             </div>
           ))}

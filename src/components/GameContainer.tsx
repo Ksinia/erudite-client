@@ -225,6 +225,15 @@ class GameContainer extends Component<Props, State> {
     }
   };
 
+  findTurnUser = (game: GameType, id: number): User => {
+    const user = game.users.find((user) => user.id === id);
+    if (user !== undefined) {
+      return user;
+    }
+    console.log("findTurnUser did not find a user. This shouldn't happen");
+    return { id: -1, name: "" };
+  };
+
   componentDidMount() {
     document.title = `Game ${this.gameId} | Erudite`;
     this.gameStream.onmessage = (event) => {
@@ -319,6 +328,7 @@ class GameContainer extends Component<Props, State> {
           returnToRoom={this.returnToRoom}
           undo={this.undo}
           change={this.change}
+          findTurnUser={this.findTurnUser}
         />
       </div>
     );

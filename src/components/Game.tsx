@@ -8,7 +8,7 @@ type OwnProps = {
   game: GameType;
   userLetters: string[];
   chosenLetterIndex: number | null;
-  userBoard: (string | null)[][];
+  userBoard: string[][];
   user: User;
   clickBoard: (event: React.SyntheticEvent<HTMLDivElement>) => void;
   clickLetter: (event: React.SyntheticEvent<HTMLDivElement>) => void;
@@ -19,6 +19,7 @@ type OwnProps = {
   returnToRoom: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
   undo: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
   change: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
+  findTurnUser: (game: GameType, id: number) => User;
 };
 
 function Game(props: OwnProps) {
@@ -97,10 +98,10 @@ function Game(props: OwnProps) {
                   <TranslationContainer
                     translationKey="i_confirm"
                     args={[
-                      props.game.users.find(
-                        (user) =>
-                          user.id === props.game.turnOrder[props.game.turn]
-                      )?.name,
+                      props.findTurnUser(
+                        props.game,
+                        props.game.turnOrder[props.game.turn]
+                      ).name,
                     ]}
                   />
                 </button>,
@@ -108,10 +109,10 @@ function Game(props: OwnProps) {
                   <TranslationContainer
                     translationKey="no"
                     args={[
-                      props.game.users.find(
-                        (user) =>
-                          user.id === props.game.turnOrder[props.game.turn]
-                      )?.name,
+                      props.findTurnUser(
+                        props.game,
+                        props.game.turnOrder[props.game.turn]
+                      ).name,
                     ]}
                   />
                 </button>,
@@ -122,15 +123,14 @@ function Game(props: OwnProps) {
                   <TranslationContainer
                     translationKey="disagree"
                     args={[
-                      props.game.users.find(
-                        (user) =>
-                          user.id ===
-                          props.game.turnOrder[props.getNextTurn(props.game)]
-                      )?.name,
-                      props.game.users.find(
-                        (user) =>
-                          user.id === props.game.turnOrder[props.game.turn]
-                      )?.name,
+                      props.findTurnUser(
+                        props.game,
+                        props.game.turnOrder[props.getNextTurn(props.game)]
+                      ).name,
+                      props.findTurnUser(
+                        props.game,
+                        props.game.turnOrder[props.game.turn]
+                      ).name,
                     ]}
                   />
                 </p>,
@@ -147,10 +147,10 @@ function Game(props: OwnProps) {
                   <TranslationContainer
                     translationKey="validation"
                     args={[
-                      props.game.users.find(
-                        (user) =>
-                          user.id === props.game.turnOrder[props.game.turn]
-                      )?.name,
+                      props.findTurnUser(
+                        props.game,
+                        props.game.turnOrder[props.game.turn]
+                      ).name,
                     ]}
                   />
                 </p>
@@ -159,10 +159,10 @@ function Game(props: OwnProps) {
                   <TranslationContainer
                     translationKey="turn_of"
                     args={[
-                      props.game.users.find(
-                        (user) =>
-                          user.id === props.game.turnOrder[props.game.turn]
-                      )?.name,
+                      props.findTurnUser(
+                        props.game,
+                        props.game.turnOrder[props.game.turn]
+                      ).name,
                     ]}
                   />
                 </p>

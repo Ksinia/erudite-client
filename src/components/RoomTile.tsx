@@ -9,6 +9,7 @@ type OwnProps = {
   style: any;
   room: Room;
   user: User;
+  userTurn: boolean;
 };
 
 function RoomTile(props: OwnProps) {
@@ -28,7 +29,7 @@ function RoomTile(props: OwnProps) {
               {props.room.language})
             </p>
           )}
-          {props.user && (
+          {props.userTurn && (
             <h3>
               <TranslationContainer translationKey="your_turn" />
             </h3>
