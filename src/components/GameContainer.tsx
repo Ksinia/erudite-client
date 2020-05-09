@@ -4,10 +4,10 @@ import superagent from "superagent";
 import { RouteComponentProps } from "react-router-dom";
 
 import "./Game.css";
-import Game from "./Game";
 import { url } from "../url";
 import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
+import Game from "./Game";
 
 interface StateProps {
   games: { [key: number]: GameType };

@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { url } from "../url";
 import { RootState } from "../reducer";
-import Lobby from "./Lobby";
 import { Room as RoomType, User } from "../reducer/types";
+import Lobby from "./Lobby";
 
 interface OwnProps {
   lobby: RoomType[];

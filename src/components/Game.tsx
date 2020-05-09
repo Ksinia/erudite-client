@@ -1,8 +1,8 @@
 import React from "react";
-import Board from "./Board";
-import TranslationContainer from "./Translation/TranslationContainer";
 import { letterValues } from "../constants/letterValues";
 import { Game as GameType, User } from "../reducer/types";
+import Board from "./Board";
+import TranslationContainer from "./Translation/TranslationContainer";
 
 type OwnProps = {
   game: GameType;

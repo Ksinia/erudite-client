@@ -1,8 +1,8 @@
 import superagent from "superagent";
 import { AnyAction } from "redux";
+import { History } from "history";
 import { url as baseUrl } from "../url";
 import { MyThunkAction } from "../reducer/types";
-import { History } from "history";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 //this action is created on server side
