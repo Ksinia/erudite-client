@@ -17,7 +17,7 @@ interface StateProps {
 type State = {
   chosenLetterIndex: number | null;
   userLetters: string[];
-  userBoard: (string | null)[][];
+  userBoard: string[][];
 };
 
 type MatchParams = { game: string };
@@ -31,7 +31,7 @@ class GameContainer extends Component<Props, State> {
 
   emptyUserBoard = Array(15)
     .fill(null)
-    .map((_) => Array(15).fill(null));
+    .map((_) => Array(15).fill(""));
 
   state: State = {
     chosenLetterIndex: null,
@@ -86,7 +86,7 @@ class GameContainer extends Component<Props, State> {
         this.state.chosenLetterIndex,
         1
       )[0];
-      if (this.state.userBoard[y][x]) {
+      if (this.state.userBoard[y][x] !== "") {
         updUserLetters.push(this.state.userBoard[y][x]);
       }
       updatedUserBoard[y][x] = putLetter;
@@ -101,9 +101,9 @@ class GameContainer extends Component<Props, State> {
       this.props.games[this.gameId].board[y][x] === null &&
       this.state.chosenLetterIndex === null
     ) {
-      if (this.state.userBoard[y][x]) {
+      if (this.state.userBoard[y][x] !== "") {
         updUserLetters.push(this.state.userBoard[y][x]);
-        updatedUserBoard[y][x] = null;
+        updatedUserBoard[y][x] = "";
         this.setState({
           ...this.state,
           userLetters: updUserLetters,
@@ -152,11 +152,22 @@ class GameContainer extends Component<Props, State> {
   };
 
   confirmTurn = async () => {
+    // TODO: move this constant transformation logic to backend
+    const userBoardWithNulls = this.state.userBoard.map((row) =>
+      row.map((cell) => {
+        if (cell === "") {
+          return null;
+        } else {
+          return cell;
+        }
+      })
+    );
+
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/turn`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
-        .send({ userBoard: this.state.userBoard });
+        .send({ userBoard: userBoardWithNulls });
       console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
@@ -238,7 +249,7 @@ class GameContainer extends Component<Props, State> {
 
       // если у меня букв меньше, чем на сервере, то просто добавить
       const putLetters = this.state.userBoard.reduce((acc: string[], row) => {
-        return acc.concat(row.filter((letter) => letter !== null));
+        return acc.concat(row.filter((letter) => letter !== ""));
       }, []);
       const prevLetters = this.state.userLetters.concat(putLetters);
       if (prevLetters.length < game.letters[this.props.user.id].length) {
@@ -262,7 +273,7 @@ class GameContainer extends Component<Props, State> {
           line.map((cell, xIndex) => {
             if (cell && game.board[yIndex][xIndex] !== null) {
               updatedUserLetters.push(cell);
-              return null;
+              return "";
             } else {
               return cell;
             }
