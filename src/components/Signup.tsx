@@ -35,7 +35,7 @@ type Props = {
   onSubmit: any;
   values: { name: string; password: string };
   onChange: any;
-  error: { message: string };
+  error: string;
 };
 
 export default function SignUp(props: Props) {
@@ -82,11 +82,9 @@ export default function SignUp(props: Props) {
               />
             </Grid>
             {/*render error messages from server*/}
-            {props.error && (
-              <Grid item xs={12} style={{ color: "red" }}>
-                {props.error.message}
-              </Grid>
-            )}
+            <Grid item xs={12} style={{ color: "red" }}>
+              {props.error}
+            </Grid>
           </Grid>
           <Button
             type="submit"

@@ -59,7 +59,7 @@ export const loginSignupFunction = (
   } catch (error) {
     console.log("error test:", error);
     if (error.response) {
-      dispatch(loginError(error.response.body));
+      dispatch(loginError(error.response.body.message));
     }
   }
 };

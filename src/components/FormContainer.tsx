@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { RouteComponentProps } from "react-router-dom";
+import { History } from "history";
 
-import { loginSignupFunction } from "../actions/authorization";
+import { loginSignupFunction, clearError } from "../actions/authorization";
 import { RootState } from "../reducer";
+import Login from "./Login";
 
 interface StateProps {
   error: string;
@@ -13,14 +14,15 @@ interface StateProps {
 
 interface OwnProps {
   type: string;
-  Display: Component;
+  Display: typeof Login;
+  history: History;
 }
 
 interface DispatchProps {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
 
-type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps;
+type Props = StateProps & DispatchProps & OwnProps;
 
 interface State {
   name: string;
@@ -47,6 +49,10 @@ class FormContainer extends Component<Props, State> {
       )
     );
   };
+
+  componentWillUnmount() {
+    this.props.dispatch(clearError());
+  }
 
   render() {
     const { Display } = this.props;

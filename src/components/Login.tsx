@@ -35,7 +35,7 @@ type OwnProps = {
   onChange: any;
   onSubmit: any;
   values: { name: string; password: string };
-  error: { message: string };
+  error: string;
 };
 
 export default function SignIn(props: OwnProps) {
@@ -79,7 +79,7 @@ export default function SignIn(props: OwnProps) {
             value={props.values.password}
           />
           {/*render error messages from server*/}
-          {props.error && <p style={{ color: "red" }}>{props.error.message}</p>}
+          <p style={{ color: "red" }}>{props.error}</p>
           <Button
             type="submit"
             fullWidth
