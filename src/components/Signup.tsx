@@ -97,7 +97,7 @@ export default function SignUp(props: Props) {
           </Button>
           <Grid container justify="center">
             <Grid item>
-              <Link to="/login" variant="body2">
+              <Link to="/login">
                 <TranslationContainer translationKey="already_signed_up" />
               </Link>
             </Grid>

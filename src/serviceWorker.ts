@@ -104,7 +104,7 @@ function registerValidSW(
     });
 }
 
-function checkValidServiceWorker(swUrl: RequestInfo, config: any) {
+function checkValidServiceWorker(swUrl: string, config: any) {
   // Check if the service worker can be found. If it can't reload the page.
   fetch(swUrl, {
     headers: { "Service-Worker": "script" },

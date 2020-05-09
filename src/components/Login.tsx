@@ -91,11 +91,11 @@ export default function SignIn(props: OwnProps) {
           </Button>
           <Grid container justify="center">
             <Grid item>
-              <Link to="/signup" variant="body2">
+              <Link to="/signup">
                 <TranslationContainer translationKey="no_account" />
               </Link>
               <Grid item>
-                <Link to="/forgot-password" variant="body2">
+                <Link to="/forgot-password">
                   <TranslationContainer translationKey="forgot" />
                 </Link>
               </Grid>
