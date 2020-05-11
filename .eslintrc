@@ -1,0 +1,24 @@
+{
+  "ignorePatterns": ["*.css", "*.svg"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2020
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:react/recommended"
+  ],
+  "rules": {
+    "no-duplicate-imports": 2,
+    "no-unused-vars": 0,
+    "import/order": 2
+  }
+}
