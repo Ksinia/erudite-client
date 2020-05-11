@@ -113,20 +113,21 @@ class GameContainer extends Component<Props, State> {
     }
   };
 
-  clickLetter = (event: React.SyntheticEvent) => {
-    if (!event.target.dataset.index) {
+  clickLetter = (event: React.MouseEvent<HTMLDivElement>) => {
+    const { dataset } = event.target as HTMLDivElement;
+    if (!dataset.index) {
       this.setState({ ...this.state, chosenLetterIndex: null });
       return;
     }
     if (this.state.chosenLetterIndex === null) {
       this.setState({
         ...this.state,
-        chosenLetterIndex: parseInt(event.target.dataset.index),
+        chosenLetterIndex: parseInt(dataset.index),
       });
     } else {
       const updatedUserLetters = [...this.state.userLetters];
       const oldIndex = this.state.chosenLetterIndex;
-      const newIndex = parseInt(event.target.dataset.index);
+      const newIndex = parseInt(dataset.index);
       [updatedUserLetters[oldIndex], updatedUserLetters[newIndex]] = [
         updatedUserLetters[newIndex],
         updatedUserLetters[oldIndex],
@@ -173,15 +174,13 @@ class GameContainer extends Component<Props, State> {
       console.warn("error test:", error);
     }
   };
-  validateTurn = async (
-    event: React.SyntheticEvent<HTMLButtonElement>
-  ): Promise<void> => {
-    const validation = event.target.name;
+  validateTurn = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const { name } = event.target as HTMLButtonElement;
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/approve`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
-        .send({ validation });
+        .send({ validation: name });
       console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
