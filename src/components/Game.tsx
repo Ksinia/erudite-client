@@ -13,7 +13,9 @@ type OwnProps = {
   clickBoard: (event: React.SyntheticEvent<HTMLDivElement>) => void;
   clickLetter: (event: React.SyntheticEvent<HTMLDivElement>) => void;
   confirmTurn: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
-  validateTurn: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
+  validateTurn: (
+    event: React.SyntheticEvent<HTMLButtonElement>
+  ) => Promise<void>;
   getNextTurn: (game: GameType) => number;
   returnLetters: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
   returnToRoom: (event: React.SyntheticEvent<HTMLButtonElement>) => void;

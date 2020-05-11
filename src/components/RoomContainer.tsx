@@ -27,29 +27,28 @@ class RoomContainer extends Component<Props, State> {
 
   readonly state: State = { room: null };
 
-  onClick = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.name === "start") {
-      try {
-        const response = await superagent
-          .post(`${url}/start`)
-          .set("Authorization", `Bearer ${this.props.user.jwt}`)
-          .send({ roomId: this.roomId });
-        console.log("response test: ", response);
-        const gameId = response.body.id;
-        this.props.history.push(`/game/${gameId}`);
-      } catch (error) {
-        console.warn("error test:", error);
-      }
-    } else {
-      try {
-        const response = await superagent
-          .put(`${url}/join`)
-          .set("Authorization", `Bearer ${this.props.user.jwt}`)
-          .send({ roomId: this.roomId });
-        console.log("response test: ", response);
-      } catch (error) {
-        console.warn("error test:", error);
-      }
+  onClickStart = async (): Promise<void> => {
+    try {
+      const response = await superagent
+        .post(`${url}/start`)
+        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .send({ roomId: this.roomId });
+      console.log("response test: ", response);
+      const gameId = response.body.id;
+      this.props.history.push(`/game/${gameId}`);
+    } catch (error) {
+      console.warn("error test:", error);
+    }
+  };
+  onClickJoin = async (): Promise<void> => {
+    try {
+      const response = await superagent
+        .put(`${url}/join`)
+        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .send({ roomId: this.roomId });
+      console.log("response test: ", response);
+    } catch (error) {
+      console.warn("error test:", error);
     }
   };
 
@@ -81,7 +80,8 @@ class RoomContainer extends Component<Props, State> {
       <div>
         <Room
           room={this.state.room}
-          onClick={this.onClick}
+          onClickStart={this.onClickStart}
+          onClickJoin={this.onClickJoin}
           user={this.props.user}
         />
       </div>

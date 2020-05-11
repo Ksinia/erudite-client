@@ -6,7 +6,7 @@ import "./RoomTile.css";
 import TranslationContainer from "./Translation/TranslationContainer";
 
 type OwnProps = {
-  style: any;
+  style: { background: string };
   room: Room;
   user: User;
   userTurn: boolean;

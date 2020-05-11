@@ -32,9 +32,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  onSubmit: any;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (event: React.SyntheticEvent) => void;
   values: { name: string; password: string };
-  onChange: any;
   error: string;
 };
 

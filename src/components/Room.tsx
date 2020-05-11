@@ -5,7 +5,8 @@ import TranslationContainer from "./Translation/TranslationContainer";
 type Props = {
   room: RoomType | null | undefined; //так можно?
   user: User;
-  onClick: any;
+  onClickStart: () => Promise<void>;
+  onClickJoin: () => Promise<void>;
 };
 
 function Room(props: Props) {
@@ -55,13 +56,13 @@ function Room(props: Props) {
             [
               props.room.phase === "waiting" &&
                 !props.room.users.find((user) => user.id === props.user.id) && (
-                  <button key="join" name="join" onClick={props.onClick}>
+                  <button key="join" onClick={props.onClickJoin}>
                     <TranslationContainer translationKey="join" />
                   </button>
                 ),
               props.room.users.find((user) => user.id === props.user.id) &&
                 props.room.phase === "ready" && (
-                  <button key="start" name="start" onClick={props.onClick}>
+                  <button key="start" onClick={props.onClickStart}>
                     <TranslationContainer translationKey="start" />
                   </button>
                 ),

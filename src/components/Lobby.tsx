@@ -5,8 +5,12 @@ import RoomTile from "./RoomTile";
 import TranslationContainer from "./Translation/TranslationContainer";
 
 type OwnProps = {
-  onChange: any;
-  onSubmit: any;
+  onChange: (
+    event:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => void;
+  onSubmit: (event: React.SyntheticEvent) => Promise<void>;
   values: { maxPlayers: number; language: string };
   userTurnRooms: Room[];
   otherTurnRooms: Room[];

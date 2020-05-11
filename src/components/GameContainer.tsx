@@ -173,7 +173,9 @@ class GameContainer extends Component<Props, State> {
       console.warn("error test:", error);
     }
   };
-  validateTurn = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  validateTurn = async (
+    event: React.SyntheticEvent<HTMLButtonElement>
+  ): Promise<void> => {
     const validation = event.target.name;
     try {
       const response = await superagent

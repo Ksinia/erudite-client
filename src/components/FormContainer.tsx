@@ -34,11 +34,11 @@ class FormContainer extends Component<Props, State> {
     name: "",
     password: "",
   };
-  onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ ...this.state, [event.target.name]: event.target.value });
   };
 
-  onSubmit = (event: React.FormEvent) => {
+  onSubmit = (event: React.SyntheticEvent): void => {
     event.preventDefault();
     this.props.dispatch(
       loginSignupFunction(

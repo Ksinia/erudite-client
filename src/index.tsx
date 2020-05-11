@@ -10,7 +10,9 @@ import store from "./store";
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <App />
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
     </Router>
   </Provider>,
   document.getElementById("root")
@@ -18,5 +20,5 @@ ReactDOM.render(
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+// Learn more about service workers: https://cra.link/PWA
 serviceWorker.unregister();

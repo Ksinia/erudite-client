@@ -35,7 +35,7 @@ class LobbyContainer extends Component<Props, State> {
     language: this.getLanguage(),
   };
 
-  onSubmit = async (event: React.SyntheticEvent) => {
+  onSubmit = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault();
     try {
       const response = await superagent
@@ -50,7 +50,11 @@ class LobbyContainer extends Component<Props, State> {
     }
   };
 
-  onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  onChange = (
+    event:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ): void => {
     this.setState({ ...this.state, [event.target.name]: event.target.value });
   };
 
