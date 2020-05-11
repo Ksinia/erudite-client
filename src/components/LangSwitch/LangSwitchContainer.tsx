@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { bindActionCreators, Dispatch, AnyAction } from "redux";
+import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 
 import * as translationActions from "../Translation/actions";
@@ -11,14 +11,10 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  dispatch: Dispatch<AnyAction>;
+  translationActions: typeof translationActions;
 }
 
-interface OwnProps {
-  translationActions: { [key: string]: (locale: string) => AnyAction };
-}
-
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps;
 
 class LangSwitchContainer extends Component<Props> {
   render() {
@@ -43,7 +39,7 @@ function mapDispatchToProps(dispatch: Dispatch) {
   };
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, RootState>(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(LangSwitchContainer);

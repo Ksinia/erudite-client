@@ -44,11 +44,11 @@ export interface Game {
   score: { [key in User["id"]]: number };
   turns: Turn[];
   result: {
-    winner: string[]; // должен быть числом!
+    winner: string[]; // TODO: it should be a number
     longestWord: { word: string; user: number }[];
-    maxScoreWord: { word: string; value: number; user: number }[]; //как правильно, {}[] или [{}]?
-    bestTurnByCount: [{ qty: number; turn: Turn; user: number }];
-    bestTurnByValue: [{ score: number; turn: Turn; user: number }];
+    maxScoreWord: { word: string; value: number; user: number }[];
+    bestTurnByCount: { qty: number; turn: Turn; user: number }[];
+    bestTurnByValue: { score: number; turn: Turn; user: number }[];
     neverChangedLetters: number[];
   };
   board: (string | null)[][];

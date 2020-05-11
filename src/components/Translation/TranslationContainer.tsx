@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+
 import { TRANSLATIONS } from "../../constants/translations";
 import { RootState } from "../../reducer";
 import Translation from "./Translation";

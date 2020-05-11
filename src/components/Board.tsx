@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import "./Board.css";
 import TranslationContainer from "./Translation/TranslationContainer";
 

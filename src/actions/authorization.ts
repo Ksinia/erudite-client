@@ -1,6 +1,7 @@
 import superagent from "superagent";
 import { AnyAction } from "redux";
 import { History } from "history";
+
 import { url as baseUrl } from "../url";
 import { MyThunkAction } from "../reducer/types";
 
@@ -64,10 +65,9 @@ export const loginSignupFunction = (
   }
 };
 
-export const getProfileFetch = (
-  jwt: string
-  // ): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => { // no need to pass all of these, because we already did it on our type MyThunkAction
-): MyThunkAction => async (dispatch) => {
+export const getProfileFetch = (jwt: string): MyThunkAction => async (
+  dispatch
+) => {
   const url = `${baseUrl}/profile`;
   if (jwt) {
     try {

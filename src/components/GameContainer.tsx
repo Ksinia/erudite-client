@@ -257,7 +257,7 @@ class GameContainer extends Component<Props, State> {
 
       const game = this.props.games[this.gameId];
 
-      // если у меня букв меньше, чем на сервере, то просто добавить
+      // if player has less letters than on server, just add letters from server
       const putLetters = this.state.userBoard.reduce((acc: string[], row) => {
         return acc.concat(row.filter((letter) => letter !== ""));
       }, []);
@@ -273,7 +273,7 @@ class GameContainer extends Component<Props, State> {
           ...this.state,
           userLetters: updatedUserLetters,
         });
-        // если буквы равны, ничего не менять, кроме пересечений
+        // if player's letters are same as on server, don't change anything except for collisions between user letters on the board and other letters on the board
       } else if (
         JSON.stringify(prevLetters.slice().sort()) ===
         JSON.stringify(game.letters[this.props.user.id].slice().sort())
@@ -295,7 +295,7 @@ class GameContainer extends Component<Props, State> {
           userBoard: updatedUserBoard,
         });
       }
-      // если у меня букв больше, чем на сервере, или они не равны, то перерисовать
+      // if player's letters are different (or more) than on server, update player's letters
       else {
         const userLetters = game.letters[this.props.user.id];
         this.setState({

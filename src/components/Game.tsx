@@ -1,4 +1,5 @@
 import React from "react";
+
 import { letterValues } from "../constants/letterValues";
 import { Game as GameType, User } from "../reducer/types";
 import Board from "./Board";

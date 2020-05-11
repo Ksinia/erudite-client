@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 
-import { AnyAction, ActionCreator } from "redux";
 import { LANG_NAMES } from "../../constants/translations";
+import { setLanguage } from "../Translation/actions";
 
 type Props = {
   locale: string;
-  setLanguage: ActionCreator<AnyAction>;
+  setLanguage: typeof setLanguage;
 };
 
 export default class LangSwitch extends Component<Props> {

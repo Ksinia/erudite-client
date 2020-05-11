@@ -3,6 +3,7 @@ import superagent from "superagent";
 import { connect } from "react-redux";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+
 import { url as baseUrl } from "../url";
 import { RootState } from "../reducer";
 import {
@@ -104,14 +105,11 @@ class ChangePassword extends Component<Props, State> {
     );
   }
 }
-function MapStateToProps(state: RootState): StateProps {
+function MapStateToProps(state: RootState) {
   return {
     user: state.user,
     error: state.error,
   };
 }
 
-export default connect<StateProps, void, void, RootState>(MapStateToProps)(
-  //зачем нужны типы в угловых скобках? Если их убрать, ничего не изменится
-  ChangePassword
-);
+export default connect(MapStateToProps)(ChangePassword);

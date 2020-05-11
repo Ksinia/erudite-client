@@ -1,4 +1,5 @@
 import { AnyAction } from "redux";
+
 import { LOGIN_SUCCESS, LOGOUT } from "../actions/authorization";
 import { User } from "./types";
 
