@@ -18,6 +18,8 @@ type State = {
   chosenLetterIndex: number | null;
   userLetters: string[];
   userBoard: string[][];
+  wildCardLetters: string[];
+  wildCardQty: number;
 };
 
 type MatchParams = { game: string };
@@ -37,6 +39,8 @@ class GameContainer extends Component<Props, State> {
     chosenLetterIndex: null,
     userLetters: [],
     userBoard: this.emptyUserBoard.map((row) => row.slice()),
+    wildCardLetters: [],
+    wildCardQty: 0,
   };
 
   // extract added letters from whole new hand
@@ -75,9 +79,13 @@ class GameContainer extends Component<Props, State> {
     // if the cell is occupied by letter
     // do nothing
     // if cell is empty (no letter from server) and chosenLetterIndex is not null
-    // put letter into userBoard and remove letter from userLetters. If there is userLetter, put it back into userLetters
-    let updatedUserBoard = [...this.state.userBoard];
-    let updUserLetters = [...this.state.userLetters];
+    // put letter into userBoard and remove letter from userLetters.
+    let updatedUserBoard = this.state.userBoard.map((row) => row.slice());
+    let updUserLetters = this.state.userLetters.slice();
+    let wildCardQty = this.state.wildCardQty;
+    let wildCardLetters = this.state.wildCardLetters.slice();
+    const letterOnBoard = this.state.userBoard[y][x];
+
     if (
       this.props.games[this.gameId].board[y][x] === null &&
       this.state.chosenLetterIndex !== null
@@ -86,8 +94,19 @@ class GameContainer extends Component<Props, State> {
         this.state.chosenLetterIndex,
         1
       )[0];
-      if (this.state.userBoard[y][x] !== "") {
-        updUserLetters.push(this.state.userBoard[y][x]);
+      // if user put * on the board, increase the qty of *
+      if (putLetter === "*") {
+        wildCardQty += 1;
+        wildCardLetters.push("");
+      }
+      // If there is userLetter in that cell, put it back into userLetters
+
+      if (letterOnBoard !== "") {
+        updUserLetters.push(letterOnBoard);
+        if (letterOnBoard === "*") {
+          wildCardQty -= 1;
+          wildCardLetters = this.state.wildCardLetters.slice(0, wildCardQty);
+        }
       }
       updatedUserBoard[y][x] = putLetter;
       this.setState({
@@ -95,19 +114,27 @@ class GameContainer extends Component<Props, State> {
         chosenLetterIndex: null,
         userLetters: updUserLetters,
         userBoard: updatedUserBoard,
+        wildCardQty,
+        wildCardLetters,
       });
     } else if (
       // if cell has user letter and there is no chosen letter, return letter from board to userLetters
       this.props.games[this.gameId].board[y][x] === null &&
       this.state.chosenLetterIndex === null
     ) {
-      if (this.state.userBoard[y][x] !== "") {
-        updUserLetters.push(this.state.userBoard[y][x]);
+      if (letterOnBoard !== "") {
+        updUserLetters.push(letterOnBoard);
         updatedUserBoard[y][x] = "";
+        if (letterOnBoard === "*") {
+          wildCardQty -= 1;
+          wildCardLetters = this.state.wildCardLetters.slice(0, wildCardQty);
+        }
         this.setState({
           ...this.state,
           userLetters: updUserLetters,
           userBoard: updatedUserBoard,
+          wildCardQty,
+          wildCardLetters,
         });
       }
     }
@@ -149,6 +176,8 @@ class GameContainer extends Component<Props, State> {
       ...this.state,
       userBoard: this.emptyUserBoard.map((row) => row.slice()),
       userLetters: updatedUserLetters,
+      wildCardQty: 0,
+      wildCardLetters: [],
     });
   };
 
@@ -163,12 +192,27 @@ class GameContainer extends Component<Props, State> {
         }
       })
     );
-
+    // if player uses wild cards he must choose a letter for it before submiting a turn
+    let userBoardToSend = userBoardWithNulls;
+    if (this.state.wildCardQty > 0) {
+      let x = 0;
+      userBoardToSend = userBoardWithNulls.map((row) =>
+        row.map((cell) => {
+          if (cell === "*" && this.state.wildCardLetters[x]) {
+            const letter = this.state.wildCardLetters[x];
+            x += 1;
+            return `*${letter}`;
+          } else {
+            return cell;
+          }
+        })
+      );
+    }
     try {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/turn`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
-        .send({ userBoard: userBoardWithNulls });
+        .send({ userBoard: userBoardToSend });
       console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
@@ -235,6 +279,12 @@ class GameContainer extends Component<Props, State> {
     return { id: -1, name: "" };
   };
 
+  onChangeWildCard = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    let wildCardLetters = [...this.state.wildCardLetters];
+    wildCardLetters[parseInt(event.target.name)] = event.target.value;
+    this.setState({ ...this.state, wildCardLetters });
+  };
+
   componentDidMount() {
     document.title = `Game ${this.gameId} | Erudite`;
     this.gameStream.onmessage = (event) => {
@@ -279,10 +329,19 @@ class GameContainer extends Component<Props, State> {
         JSON.stringify(game.letters[this.props.user.id].slice().sort())
       ) {
         const updatedUserLetters = this.state.userLetters.slice();
+        let wildCardQty = this.state.wildCardQty;
+        let wildCardLetters = this.state.wildCardLetters.slice();
         const updatedUserBoard = this.state.userBoard.map((line, yIndex) =>
           line.map((cell, xIndex) => {
             if (cell && game.board[yIndex][xIndex] !== null) {
               updatedUserLetters.push(cell);
+              if (cell === "*") {
+                wildCardQty -= 1;
+                wildCardLetters = this.state.wildCardLetters.slice(
+                  0,
+                  wildCardQty
+                );
+              }
               return "";
             } else {
               return cell;
@@ -293,6 +352,8 @@ class GameContainer extends Component<Props, State> {
           ...this.state,
           userLetters: updatedUserLetters,
           userBoard: updatedUserBoard,
+          wildCardLetters,
+          wildCardQty,
         });
       }
       // if player's letters are different (or more) than on server, update player's letters
@@ -302,6 +363,8 @@ class GameContainer extends Component<Props, State> {
           ...this.state,
           userLetters: userLetters,
           userBoard: this.emptyUserBoard.map((row) => row.slice()),
+          wildCardQty: 0,
+          wildCardLetters: [],
         });
       }
     }
@@ -330,6 +393,9 @@ class GameContainer extends Component<Props, State> {
           undo={this.undo}
           change={this.change}
           findTurnUser={this.findTurnUser}
+          onChangeWildCard={this.onChangeWildCard}
+          wildCardQty={this.state.wildCardQty}
+          wildCardLetters={this.state.wildCardLetters}
         />
       </div>
     );

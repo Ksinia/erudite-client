@@ -4,6 +4,7 @@ import { letterValues } from "../constants/letterValues";
 import { Game as GameType, User } from "../reducer/types";
 import Board from "./Board";
 import TranslationContainer from "./Translation/TranslationContainer";
+import WildCardForm from "./WildCardForm";
 
 type OwnProps = {
   game: GameType;
@@ -21,6 +22,9 @@ type OwnProps = {
   undo: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
   change: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
   findTurnUser: (game: GameType, id: number) => User;
+  onChangeWildCard: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  wildCardQty: number;
+  wildCardLetters: string[];
 };
 
 function Game(props: OwnProps) {
@@ -62,6 +66,12 @@ function Game(props: OwnProps) {
                 );
               })}
             </div>
+            <WildCardForm
+              onChange={props.onChangeWildCard}
+              wildCardQty={props.wildCardQty}
+              wildCardLetters={props.wildCardLetters}
+              alphabet={Object.keys(letterValues[props.game.language])}
+            />
             {props.game.phase === "finished" && (
               <button key="again" onClick={props.returnToRoom}>
                 <TranslationContainer translationKey="play_again" />
@@ -70,7 +80,13 @@ function Game(props: OwnProps) {
             {props.user &&
               props.game.turnOrder[props.game.turn] === props.user.id &&
               props.game.phase === "turn" && (
-                <button key="confirm" onClick={props.confirmTurn}>
+                <button
+                  key="confirm"
+                  onClick={props.confirmTurn}
+                  disabled={props.wildCardLetters.some(
+                    (letter) => letter === ""
+                  )}
+                >
                   <TranslationContainer translationKey="confirm" />
                 </button>
               )}

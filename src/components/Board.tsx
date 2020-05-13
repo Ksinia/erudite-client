@@ -164,7 +164,8 @@ class Board extends Component<Props> {
                             <p className="multiply">{cell.multiply}</p>
                             <p className="unit">{cell.unit}</p>
                             <p className="value-on-board">
-                              {cell.letter && this.props.values[cell.letter]}
+                              {cell.letter && this.props.values[cell.letter[0]]}{" "}
+                              {/*change letter into letter[0] to show zero value for '*' */}
                               {this.props.userBoard[yIndex][xIndex] !== "" &&
                                 this.props.values[
                                   this.props.userBoard[yIndex][xIndex]
