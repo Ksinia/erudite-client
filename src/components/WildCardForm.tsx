@@ -13,7 +13,13 @@ function WildCardForm(props: OwnProps) {
   }
   const options = props.alphabet.sort().map((letter) => {
     if (letter !== "*") {
-      return <option value={letter}>{letter}</option>;
+      return (
+        <option key={letter} value={letter}>
+          {letter}
+        </option>
+      );
+    } else {
+      return null;
     }
   });
   const form = Array(props.wildCardQty)

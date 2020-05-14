@@ -12,6 +12,7 @@ type Props = {
   previousBoard: (string | null)[][];
   userBoard: string[][];
   values: { [key: string]: number };
+  wildCardOnBoard: { [y: number]: { [x: number]: string } };
 };
 
 class Board extends Component<Props> {
@@ -137,9 +138,17 @@ class Board extends Component<Props> {
                 return (
                   <tr key={yIndex}>
                     {row.map((cell, xIndex) => {
+                      // cell.letter =
+                      //   Object.keys(this.props.wildCardOnBoard).find(
+                      //     (letter) =>
+                      //       this.props.wildCardOnBoard[letter].x === xIndex &&
+                      //       this.props.wildCardOnBoard[letter].y === yIndex
+                      //   ) || this.props.board[yIndex][xIndex];
                       cell.letter =
-                        this.props.board[yIndex][xIndex] &&
-                        this.props.board[yIndex][xIndex];
+                        this.props.wildCardOnBoard[yIndex] &&
+                        this.props.wildCardOnBoard[yIndex][xIndex]
+                          ? this.props.wildCardOnBoard[yIndex][xIndex]
+                          : this.props.board[yIndex][xIndex];
                       return (
                         <td
                           className={`board-table-cell center-${
@@ -171,7 +180,7 @@ class Board extends Component<Props> {
                                   this.props.userBoard[yIndex][xIndex]
                                 ]}
                             </p>
-                            {cell.letter && cell.letter}
+                            {cell.letter}
                             {this.props.userBoard[yIndex][xIndex]}
                           </div>
                         </td>

@@ -20,6 +20,7 @@ type State = {
   userBoard: string[][];
   wildCardLetters: string[];
   wildCardQty: number;
+  wildCardOnBoard: { [y: number]: { [x: number]: string } };
 };
 
 type MatchParams = { game: string };
@@ -41,6 +42,7 @@ class GameContainer extends Component<Props, State> {
     userBoard: this.emptyUserBoard.map((row) => row.slice()),
     wildCardLetters: [],
     wildCardQty: 0,
+    wildCardOnBoard: {},
   };
 
   // extract added letters from whole new hand
@@ -76,20 +78,44 @@ class GameContainer extends Component<Props, State> {
     const x = parseInt(event.currentTarget.dataset.x);
     const y = parseInt(event.currentTarget.dataset.y);
 
-    // if the cell is occupied by letter
-    // do nothing
-    // if cell is empty (no letter from server) and chosenLetterIndex is not null
-    // put letter into userBoard and remove letter from userLetters.
     let updatedUserBoard = this.state.userBoard.map((row) => row.slice());
     let updUserLetters = this.state.userLetters.slice();
     let wildCardQty = this.state.wildCardQty;
     let wildCardLetters = this.state.wildCardLetters.slice();
-    const letterOnBoard = this.state.userBoard[y][x];
+    const userLetterOnBoard = this.state.userBoard[y][x];
+    const letterOnBoard = this.props.games[this.gameId].board[y][x];
+    const wildCardOnBoard = { ...this.state.wildCardOnBoard };
 
+    // if the cell is occupied by * and it is your turn you can exchange it
+    // for the same letter and *  should be used on the same turn
     if (
-      this.props.games[this.gameId].board[y][x] === null &&
-      this.state.chosenLetterIndex !== null
+      letterOnBoard &&
+      letterOnBoard[0] === "*" &&
+      this.props.games[this.gameId].phase === "turn" &&
+      this.props.user.id ===
+        this.props.games[this.gameId].turnOrder[
+          this.props.games[this.gameId].turn
+        ] &&
+      this.state.chosenLetterIndex !== null &&
+      updUserLetters[this.state.chosenLetterIndex] === letterOnBoard[1]
     ) {
+      const putLetter = updUserLetters.splice(
+        this.state.chosenLetterIndex,
+        1
+      )[0];
+      updUserLetters.push("*");
+      wildCardOnBoard[y] = wildCardOnBoard[y] || {};
+      wildCardOnBoard[y][x] = putLetter;
+      this.setState({
+        ...this.state,
+        chosenLetterIndex: null,
+        userLetters: updUserLetters,
+        wildCardOnBoard,
+      });
+    }
+    // if cell is empty (no letter from server) and chosenLetterIndex is not null
+    // put letter into userBoard and remove letter from userLetters.
+    else if (letterOnBoard === null && this.state.chosenLetterIndex !== null) {
       const putLetter = updUserLetters.splice(
         this.state.chosenLetterIndex,
         1
@@ -101,9 +127,9 @@ class GameContainer extends Component<Props, State> {
       }
       // If there is userLetter in that cell, put it back into userLetters
 
-      if (letterOnBoard !== "") {
-        updUserLetters.push(letterOnBoard);
-        if (letterOnBoard === "*") {
+      if (userLetterOnBoard !== "") {
+        updUserLetters.push(userLetterOnBoard);
+        if (userLetterOnBoard === "*") {
           wildCardQty -= 1;
           wildCardLetters = this.state.wildCardLetters.slice(0, wildCardQty);
         }
@@ -119,13 +145,13 @@ class GameContainer extends Component<Props, State> {
       });
     } else if (
       // if cell has user letter and there is no chosen letter, return letter from board to userLetters
-      this.props.games[this.gameId].board[y][x] === null &&
+      letterOnBoard === null &&
       this.state.chosenLetterIndex === null
     ) {
-      if (letterOnBoard !== "") {
-        updUserLetters.push(letterOnBoard);
+      if (userLetterOnBoard !== "") {
+        updUserLetters.push(userLetterOnBoard);
         updatedUserBoard[y][x] = "";
-        if (letterOnBoard === "*") {
+        if (userLetterOnBoard === "*") {
           wildCardQty -= 1;
           wildCardLetters = this.state.wildCardLetters.slice(0, wildCardQty);
         }
@@ -212,7 +238,10 @@ class GameContainer extends Component<Props, State> {
       const response = await superagent
         .post(`${url}/game/${this.gameId}/turn`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
-        .send({ userBoard: userBoardToSend });
+        .send({
+          userBoard: userBoardToSend,
+          wildCardOnBoard: this.state.wildCardOnBoard,
+        });
       console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
@@ -365,6 +394,7 @@ class GameContainer extends Component<Props, State> {
           userBoard: this.emptyUserBoard.map((row) => row.slice()),
           wildCardQty: 0,
           wildCardLetters: [],
+          wildCardOnBoard: {},
         });
       }
     }
@@ -396,6 +426,7 @@ class GameContainer extends Component<Props, State> {
           onChangeWildCard={this.onChangeWildCard}
           wildCardQty={this.state.wildCardQty}
           wildCardLetters={this.state.wildCardLetters}
+          wildCardOnBoard={this.state.wildCardOnBoard}
         />
       </div>
     );

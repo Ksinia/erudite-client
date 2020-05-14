@@ -25,6 +25,7 @@ type OwnProps = {
   onChangeWildCard: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   wildCardQty: number;
   wildCardLetters: string[];
+  wildCardOnBoard: { [y: number]: { [x: number]: string } };
 };
 
 function Game(props: OwnProps) {
@@ -40,6 +41,7 @@ function Game(props: OwnProps) {
               previousBoard={props.game.previousBoard}
               userBoard={props.userBoard}
               values={letterValues[props.game.language]}
+              wildCardOnBoard={props.wildCardOnBoard}
             />
           </div>
 
