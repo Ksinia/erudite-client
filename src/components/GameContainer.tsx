@@ -9,10 +9,61 @@ import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
 import Game from "./Game";
 
+/**
+ * extract added letters from whole new hand
+ */
+const arrayDifference = (subArray: string[], array: string[]) => {
+  const sortedSubArray = [...subArray].sort();
+  const sortedArray = [...array].sort();
+  return sortedArray.reduce(
+    (acc: { i: number; letters: string[] }, letter) => {
+      if (acc.i === sortedSubArray.length) {
+        acc.letters.push(letter);
+        return acc;
+      }
+      if (letter === sortedSubArray[acc.i]) {
+        acc.i++;
+        return acc;
+      }
+      acc.letters.push(letter);
+      return acc;
+    },
+    { i: 0, letters: [] }
+  ).letters;
+};
+
+const getPreviousLetters = (
+  userBoard: string[][],
+  wildCardOnBoard: WildCardOnBoard,
+  userLetters: string[]
+) => {
+  const putLetters = userBoard.reduce((acc: string[], row) => {
+    return acc.concat(row.filter((letter) => letter !== ""));
+  }, []);
+  const changedLetters = Object.keys(wildCardOnBoard).reduce((acc, y) => {
+    return acc.concat(
+      Object.keys(wildCardOnBoard[parseInt(y)]).reduce((a, x) => {
+        a.push(wildCardOnBoard[parseInt(y)][parseInt(x)]);
+        return a;
+      }, [] as string[])
+    );
+  }, [] as string[]);
+  let prevLetters = userLetters.concat(putLetters).concat(changedLetters);
+  if (changedLetters.length > 0) {
+    prevLetters = arrayDifference(
+      Array(changedLetters.length).fill("*"),
+      prevLetters
+    );
+  }
+  return prevLetters;
+};
+
 interface StateProps {
   games: { [key: number]: GameType };
   user: User;
 }
+
+type WildCardOnBoard = { [key: number]: { [key: number]: string } };
 
 type State = {
   chosenLetterIndex: number | null;
@@ -20,7 +71,7 @@ type State = {
   userBoard: string[][];
   wildCardLetters: string[];
   wildCardQty: number;
-  wildCardOnBoard: { [key: number]: { [key: number]: string } };
+  wildCardOnBoard: WildCardOnBoard;
 };
 
 type MatchParams = { game: string };
@@ -43,27 +94,6 @@ class GameContainer extends Component<Props, State> {
     wildCardLetters: [],
     wildCardQty: 0,
     wildCardOnBoard: {},
-  };
-
-  // extract added letters from whole new hand
-  extract = (oldHand: string[], newHand: string[]) => {
-    const oldLetters = [...oldHand].sort();
-    const newLetters = [...newHand].sort();
-    return newLetters.reduce(
-      (acc: { i: number; letters: string[] }, letter) => {
-        if (acc.i === oldLetters.length) {
-          acc.letters.push(letter);
-          return acc;
-        }
-        if (letter === oldLetters[acc.i]) {
-          acc.i++;
-          return acc;
-        }
-        acc.letters.push(letter);
-        return acc;
-      },
-      { i: 0, letters: [] }
-    ).letters;
   };
 
   clickBoard = (event: React.SyntheticEvent<HTMLDivElement>) => {
@@ -194,16 +224,17 @@ class GameContainer extends Component<Props, State> {
   };
 
   returnLetters = () => {
-    const updatedUserLetters = [...this.state.userLetters];
-    this.state.userBoard.forEach((row) =>
-      row.forEach((cell) => cell && updatedUserLetters.push(cell))
-    );
     this.setState({
       ...this.state,
       userBoard: this.emptyUserBoard.map((row) => row.slice()),
-      userLetters: updatedUserLetters,
+      userLetters: getPreviousLetters(
+        this.state.userBoard,
+        this.state.wildCardOnBoard,
+        this.state.userLetters
+      ),
       wildCardQty: 0,
       wildCardLetters: [],
+      wildCardOnBoard: {},
     });
   };
 
@@ -335,40 +366,20 @@ class GameContainer extends Component<Props, State> {
       // depending on the length of the updated user hand and other conditions
 
       const game = this.props.games[this.gameId];
+      const { userBoard, wildCardOnBoard, userLetters } = this.state;
 
       // if player has less letters than on server, just add letters from server
-      const putLetters = this.state.userBoard.reduce((acc: string[], row) => {
-        return acc.concat(row.filter((letter) => letter !== ""));
-      }, []);
-      const changedLetters = Object.keys(this.state.wildCardOnBoard).reduce(
-        (acc, y) => {
-          return acc.concat(
-            Object.keys(this.state.wildCardOnBoard[parseInt(y)]).reduce(
-              (a, x) => {
-                a.push(this.state.wildCardOnBoard[parseInt(y)][parseInt(x)]);
-                return a;
-              },
-              [] as string[]
-            )
-          );
-        },
-        [] as string[]
+      const prevLetters = getPreviousLetters(
+        userBoard,
+        wildCardOnBoard,
+        userLetters
       );
-      let prevLetters = this.state.userLetters
-        .concat(putLetters)
-        .concat(changedLetters);
-      if (changedLetters.length > 0) {
-        prevLetters = this.extract(
-          Array(changedLetters.length).fill("*"),
-          prevLetters
-        );
-      }
       if (prevLetters.length < game.letters[this.props.user.id].length) {
-        const addedLetters = this.extract(
+        const addedLetters = arrayDifference(
           prevLetters,
           game.letters[this.props.user.id]
         );
-        const updatedUserLetters = this.state.userLetters.concat(addedLetters);
+        const updatedUserLetters = userLetters.concat(addedLetters);
 
         this.setState({
           ...this.state,
@@ -379,10 +390,9 @@ class GameContainer extends Component<Props, State> {
         JSON.stringify(prevLetters.slice().sort()) ===
         JSON.stringify(game.letters[this.props.user.id].slice().sort())
       ) {
-        const userLetters = this.state.userLetters.slice();
         let wildCardQty = this.state.wildCardQty;
         let wildCardLetters = this.state.wildCardLetters.slice();
-        const userBoard = this.state.userBoard.map((line, yIndex) =>
+        const updatedUserBoard = userBoard.map((line, yIndex) =>
           line.map((cell, xIndex) => {
             if (cell && game.board[yIndex][xIndex] !== null) {
               userLetters.push(cell);
@@ -402,7 +412,7 @@ class GameContainer extends Component<Props, State> {
         this.setState({
           ...this.state,
           userLetters,
-          userBoard,
+          userBoard: updatedUserBoard,
           wildCardLetters,
           wildCardQty,
         });
