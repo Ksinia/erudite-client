@@ -223,6 +223,7 @@ function Game(props: OwnProps) {
               </tbody>
             </table>
             {props.game.phase === "finished" &&
+              "result" in props.game &&
               Object.keys(props.game.result).length > 0 && (
                 <div className="result">
                   <p>
