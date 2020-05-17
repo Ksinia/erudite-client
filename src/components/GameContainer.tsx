@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { connect, DispatchProp } from "react-redux";
+import { connect } from "react-redux";
 import superagent from "superagent";
 import { RouteComponentProps } from "react-router-dom";
 
 import "./Game.css";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 import { url } from "../url";
 import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
+import { sendTurn } from "../actions/turn";
 import Game from "./Game";
 
 /**
@@ -61,9 +64,10 @@ const getPreviousLetters = (
 interface StateProps {
   games: { [key: number]: GameType };
   user: User;
+  duplicatedWords: string[];
 }
 
-type WildCardOnBoard = { [key: number]: { [key: number]: string } };
+export type WildCardOnBoard = { [key: number]: { [key: number]: string } };
 
 type State = {
   chosenLetterIndex: number | null;
@@ -76,7 +80,11 @@ type State = {
 
 type MatchParams = { game: string };
 
-type Props = StateProps & DispatchProp & RouteComponentProps<MatchParams>;
+interface DispatchProps {
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+}
+
+type Props = StateProps & DispatchProps & RouteComponentProps<MatchParams>;
 
 class GameContainer extends Component<Props, State> {
   gameId = parseInt(this.props.match.params.game);
@@ -265,17 +273,15 @@ class GameContainer extends Component<Props, State> {
         })
       );
     }
-    try {
-      const response = await superagent
-        .post(`${url}/game/${this.gameId}/turn`)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`)
-        .send({
-          userBoard: userBoardToSend,
-          wildCardOnBoard: this.state.wildCardOnBoard,
-        });
-      console.log("response test: ", response);
-    } catch (error) {
-      console.warn("error test:", error);
+    if (this.props.user.jwt) {
+      this.props.dispatch(
+        sendTurn(
+          this.gameId,
+          this.props.user.jwt,
+          userBoardToSend,
+          this.state.wildCardOnBoard
+        )
+      );
     }
   };
   validateTurn = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -459,6 +465,7 @@ class GameContainer extends Component<Props, State> {
           wildCardQty={this.state.wildCardQty}
           wildCardLetters={this.state.wildCardLetters}
           wildCardOnBoard={this.state.wildCardOnBoard}
+          duplicatedWords={this.props.duplicatedWords}
         />
       </div>
     );
@@ -469,6 +476,7 @@ function MapStateToProps(state: RootState) {
   return {
     user: state.user,
     games: state.games,
+    duplicatedWords: state.duplicatedWords,
   };
 }
 export default connect(MapStateToProps)(GameContainer);

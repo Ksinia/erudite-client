@@ -26,6 +26,7 @@ type OwnProps = {
   wildCardQty: number;
   wildCardLetters: string[];
   wildCardOnBoard: { [y: number]: { [x: number]: string } };
+  duplicatedWords: string[];
 };
 
 function Game(props: OwnProps) {
@@ -78,6 +79,14 @@ function Game(props: OwnProps) {
               <button key="again" onClick={props.returnToRoom}>
                 <TranslationContainer translationKey="play_again" />
               </button>
+            )}
+            {props.duplicatedWords && props.duplicatedWords.length > 0 && (
+              <p style={{ color: "red" }}>
+                <TranslationContainer
+                  translationKey="duplicated"
+                  args={[props.duplicatedWords.join(", ")]}
+                />
+              </p>
             )}
             {props.user &&
               props.game.turnOrder[props.game.turn] === props.user.id &&

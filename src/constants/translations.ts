@@ -65,6 +65,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     language: "Choose letters set: ",
     forgot: "Forgot password?",
     select: "Please select a letter for *",
+    duplicated: "Cannot confirm this turn. Duplicated words: {}",
   },
   ru_RU: {
     create_room: "Пожалуйста, создайте комнату или войдите в существующую.",
@@ -132,6 +133,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     language: "Выберите набор букв: ",
     forgot: "Забыли пароль?",
     select: "Пожалуйста, выберите букву для *",
+    duplicated: "Нельзя подтвердить ход. Повторяющиеся слова: {}",
   },
 };
 export const LANG_NAMES: { locale: string; name: string }[] = [
