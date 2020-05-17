@@ -6,6 +6,7 @@ import error from "./error";
 import lobby from "./lobby";
 import games from "./games";
 import duplicatedWords from "./duplicatedWords";
+import finishedGamesIds from "./finishedGamesIds";
 
 export const rootReducer = combineReducers({
   user,
@@ -14,6 +15,7 @@ export const rootReducer = combineReducers({
   games,
   translation,
   duplicatedWords,
+  finishedGamesIds,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

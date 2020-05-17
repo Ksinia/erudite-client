@@ -38,7 +38,7 @@ class Toolbar extends Component<Props> {
         )}
 
         {this.props.user && (
-          <Link to="/change-password">
+          <Link to="/user">
             <TranslationContainer translationKey="welcome" />{" "}
             {this.props.user.name}!
           </Link>

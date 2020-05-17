@@ -23,6 +23,7 @@ export type User = {
   id: number;
   name: string;
   jwt?: string;
+  finishedGamesIds?: number[];
 };
 
 type Turn = {

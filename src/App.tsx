@@ -3,19 +3,19 @@ import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
-import { RootState } from "./reducer/index";
 
+import { RootState } from "./reducer/index";
 import LoginContainer from "./components/LoginContainer";
 import SignupContainer from "./components/SignupContainer";
 import Toolbar from "./components/Toolbar";
 import LobbyContainer from "./components/LobbyContainer";
 import RoomContainer from "./components/RoomContainer";
 import GameContainer from "./components/GameContainer";
-import ChangePassword from "./components/ChangePassword";
 import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization";
 import { url } from "./url";
 import "./App.css";
+import UserPage from "./components/UserPage";
 
 type DispatchProps = {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
@@ -41,7 +41,7 @@ class App extends Component<DispatchProps> {
         <Switch>
           <Route path="/signup" component={SignupContainer} />
           <Route path="/login" component={LoginContainer} />
-          <Route path="/change-password" component={ChangePassword} />
+          <Route path="/user" component={UserPage} />
           <Route path="/forgot-password" component={ForgotPassword} />
           <Route path="/room/:room" component={RoomContainer} />
           <Route path="/game/:game" component={GameContainer} />
