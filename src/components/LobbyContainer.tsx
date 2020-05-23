@@ -7,6 +7,7 @@ import { url } from "../url";
 import { RootState } from "../reducer";
 import { Room as RoomType, User } from "../reducer/types";
 import Lobby from "./Lobby";
+import { AnyAction, Dispatch } from "redux";
 
 interface OwnProps {
   lobby: RoomType[];
@@ -18,9 +19,15 @@ type State = {
   language: string;
 };
 
-type Props = OwnProps & RouteComponentProps;
+interface DispatchProps {
+  dispatch: Dispatch<AnyAction>;
+}
+
+type Props = OwnProps & DispatchProps & RouteComponentProps;
 
 class LobbyContainer extends Component<Props, State> {
+  stream: EventSource | undefined = undefined;
+
   getLanguage = () => {
     if (localStorage.language) {
       return localStorage.language;
@@ -61,7 +68,20 @@ class LobbyContainer extends Component<Props, State> {
 
   componentDidMount() {
     document.title = `Erudite`;
+    this.stream = new EventSource(`${url}/stream`);
+    this.stream.onmessage = (event) => {
+      const { data } = event;
+      const action = JSON.parse(data);
+      this.props.dispatch(action);
+    };
   }
+
+  componentWillUnmount() {
+    if (this.stream) {
+      this.stream.close();
+    }
+  }
+
   render() {
     const rooms = this.props.lobby.reduce(
       (allRooms: { [key: string]: RoomType[] }, room) => {

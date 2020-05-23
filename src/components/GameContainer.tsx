@@ -89,7 +89,7 @@ type Props = StateProps & DispatchProps & RouteComponentProps<MatchParams>;
 class GameContainer extends Component<Props, State> {
   gameId = parseInt(this.props.match.params.game);
 
-  gameStream = new EventSource(`${url}/game/${this.gameId}`);
+  gameStream: EventSource | undefined = undefined;
 
   emptyUserBoard = Array(15)
     .fill(null)
@@ -352,6 +352,7 @@ class GameContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
+    this.gameStream = new EventSource(`${url}/game/${this.gameId}`);
     document.title = `Game ${this.gameId} | Erudite`;
     this.gameStream.onmessage = (event) => {
       const { data } = event;
@@ -439,7 +440,9 @@ class GameContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.gameStream.close();
+    if (this.gameStream) {
+      this.gameStream.close();
+    }
   }
 
   render() {

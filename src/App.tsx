@@ -13,7 +13,6 @@ import RoomContainer from "./components/RoomContainer";
 import GameContainer from "./components/GameContainer";
 import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization";
-import { url } from "./url";
 import "./App.css";
 import UserPage from "./components/UserPage";
 
@@ -22,16 +21,9 @@ type DispatchProps = {
 };
 
 class App extends Component<DispatchProps> {
-  stream = new EventSource(`${url}/stream`);
-
   componentDidMount() {
     document.addEventListener("touchstart", function () {}, true);
     this.props.dispatch(getProfileFetch(localStorage.jwt));
-    this.stream.onmessage = (event) => {
-      const { data } = event;
-      const action = JSON.parse(data);
-      this.props.dispatch(action);
-    };
   }
 
   render() {

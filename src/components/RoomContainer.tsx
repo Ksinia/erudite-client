@@ -8,6 +8,7 @@ import "./Game.css";
 import { RootState } from "../reducer";
 import { Room as RoomType, User } from "../reducer/types";
 import Room from "./Room";
+import { Dispatch, AnyAction } from "redux";
 
 type MatchParams = { room: string };
 
@@ -16,7 +17,11 @@ interface StateProps {
   rooms: RoomType[];
 }
 
-type Props = StateProps & RouteComponentProps<MatchParams>;
+interface DispatchProps {
+  dispatch: Dispatch<AnyAction>;
+}
+
+type Props = StateProps & DispatchProps & RouteComponentProps<MatchParams>;
 
 type State = {
   room: RoomType | null | undefined;
@@ -24,6 +29,8 @@ type State = {
 
 class RoomContainer extends Component<Props, State> {
   roomId = parseInt(this.props.match.params.room);
+
+  stream: EventSource | undefined = undefined;
 
   readonly state: State = { room: null };
 
@@ -54,6 +61,12 @@ class RoomContainer extends Component<Props, State> {
 
   componentDidMount() {
     document.title = `Room ${this.roomId} | Erudite`;
+    this.stream = new EventSource(`${url}/stream`);
+    this.stream.onmessage = (event) => {
+      const { data } = event;
+      const action = JSON.parse(data);
+      this.props.dispatch(action);
+    };
     if (this.props.rooms && this.props.rooms.length > 0) {
       const room = this.props.rooms.find((el) => el.id === this.roomId);
       this.setState({ room: room });
@@ -72,6 +85,12 @@ class RoomContainer extends Component<Props, State> {
           this.props.history.push(`/game/${room.game.id}`);
         }
       }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.stream) {
+      this.stream.close();
     }
   }
 
