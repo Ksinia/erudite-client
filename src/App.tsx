@@ -43,7 +43,8 @@ class App extends Component<DispatchProps> {
       <footer key="footer">
         {"Copyright © "}
         <a href="https://ksinia.net/cv/">Ksenia Gulyaeva</a>{" "}
-        {new Date().getFullYear()}
+        {new Date().getFullYear()},{" "}
+        <a href="https://github.com/Ksinia/erudite-client">Source Code</a>
       </footer>,
     ];
   }
