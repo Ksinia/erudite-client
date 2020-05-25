@@ -5,6 +5,7 @@ import { Game as GameType, User } from "../reducer/types";
 import Board from "./Board";
 import TranslationContainer from "./Translation/TranslationContainer";
 import WildCardForm from "./WildCardForm";
+import RoomContainer from "./RoomContainer";
 
 type OwnProps = {
   game: GameType;
@@ -18,7 +19,9 @@ type OwnProps = {
   validateTurn: (event: React.MouseEvent<HTMLButtonElement>) => Promise<void>;
   getNextTurn: (game: GameType) => number;
   returnLetters: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
-  returnToRoom: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
+  playAgainWithSamePlayers: (
+    event: React.SyntheticEvent<HTMLButtonElement>
+  ) => void;
   undo: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
   change: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
   findTurnUser: (game: GameType, id: number) => User;
@@ -30,9 +33,12 @@ type OwnProps = {
 };
 
 function Game(props: OwnProps) {
+  if (!props.game) {
+    return <TranslationContainer translationKey="loading" />;
+  }
   return (
     <div>
-      {props.game ? (
+      {props.game.phase !== "waiting" && props.game.phase !== "ready" ? (
         <div key="game" className="game">
           <div className="board">
             <Board
@@ -76,7 +82,7 @@ function Game(props: OwnProps) {
               alphabet={Object.keys(letterValues[props.game.language])}
             />
             {props.game.phase === "finished" && (
-              <button key="again" onClick={props.returnToRoom}>
+              <button key="again" onClick={props.playAgainWithSamePlayers}>
                 <TranslationContainer translationKey="play_again" />
               </button>
             )}
@@ -421,7 +427,7 @@ function Game(props: OwnProps) {
       ) : props.game === null ? (
         <TranslationContainer translationKey="no_game" />
       ) : (
-        <TranslationContainer translationKey="loading" />
+        <RoomContainer gameId={props.game.id} />
       )}
     </div>
   );

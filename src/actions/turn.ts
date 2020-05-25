@@ -15,13 +15,12 @@ export const duplicatedWords = (words: string[]): AnyAction => {
 };
 
 export const NO_DUPLICATIONS = "NO_DUPLICATIONS";
-export const CLEAR_ERROR = "CLEAR_ERROR";
 
-// export const clearError = () => {
-//   return {
-//     type: CLEAR_ERROR,
-//   };
-// };
+export const clearDuplicatedWordsError = () => {
+  return {
+    type: NO_DUPLICATIONS,
+  };
+};
 
 export const sendTurn = (
   gameId: number,

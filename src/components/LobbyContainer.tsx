@@ -5,12 +5,12 @@ import { RouteComponentProps } from "react-router-dom";
 
 import { url } from "../url";
 import { RootState } from "../reducer";
-import { Room as RoomType, User } from "../reducer/types";
+import { Game as GameType, User } from "../reducer/types";
 import Lobby from "./Lobby";
 import { AnyAction, Dispatch } from "redux";
 
 interface OwnProps {
-  lobby: RoomType[];
+  lobby: GameType[];
   user: User;
 }
 
@@ -47,12 +47,12 @@ class LobbyContainer extends Component<Props, State> {
     event.preventDefault();
     try {
       const response = await superagent
-        .post(`${url}/room`)
+        .post(`${url}/create`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send(this.state);
       console.log("response test: ", response);
       localStorage.setItem("language", this.state.language);
-      this.props.history.push(`/room/${response.body.id}`);
+      this.props.history.push(`/game/${response.body.id}`);
     } catch (error) {
       console.warn("error test:", error);
     }
@@ -83,42 +83,40 @@ class LobbyContainer extends Component<Props, State> {
   }
 
   render() {
-    const rooms = this.props.lobby.reduce(
-      (allRooms: { [key: string]: RoomType[] }, room) => {
+    const games = this.props.lobby.reduce(
+      (allGames: { [key: string]: GameType[] }, game) => {
         if (
           this.props.user &&
-          room.users.find((user) => user.id === this.props.user.id) &&
-          room.phase === "started"
+          game.users.find((user) => user.id === this.props.user.id) &&
+          (game.phase === "turn" || game.phase === "validation")
         ) {
           if (
-            (room.game.phase === "turn" &&
-              this.props.user.id === room.game.turnOrder[room.game.turn]) ||
-            (room.game.phase === "validation" &&
-              room.game.validated === "unknown" &&
+            (game.phase === "turn" &&
+              this.props.user.id === game.turnOrder[game.turn]) ||
+            (game.phase === "validation" &&
+              game.validated === "unknown" &&
               this.props.user.id ===
-                room.game.turnOrder[
-                  (room.game.turn + 1) % room.game.turnOrder.length
-                ]) ||
-            (room.game.phase === "validation" &&
-              room.game.validated === "no" &&
-              this.props.user.id === room.game.turnOrder[room.game.turn])
+                game.turnOrder[(game.turn + 1) % game.turnOrder.length]) ||
+            (game.phase === "validation" &&
+              game.validated === "no" &&
+              this.props.user.id === game.turnOrder[game.turn])
           ) {
-            allRooms.userTurn.push(room);
+            allGames.userTurn.push(game);
           } else {
-            allRooms.otherTurn.push(room);
+            allGames.otherTurn.push(game);
           }
         } else if (
           this.props.user &&
-          (room.phase === "waiting" || room.phase === "ready") &&
-          room.users.find((user) => user.id === this.props.user.id)
+          (game.phase === "waiting" || game.phase === "ready") &&
+          game.users.find((user) => user.id === this.props.user.id)
         ) {
-          allRooms.userWaiting.push(room);
-        } else if (room.phase === "waiting") {
-          allRooms.otherWaiting.push(room);
+          allGames.userWaiting.push(game);
+        } else if (game.phase === "waiting") {
+          allGames.otherWaiting.push(game);
         } else {
-          allRooms.other.push(room);
+          allGames.other.push(game);
         }
-        return allRooms;
+        return allGames;
       },
       {
         userTurn: [],
@@ -134,11 +132,11 @@ class LobbyContainer extends Component<Props, State> {
         onChange={this.onChange}
         onSubmit={this.onSubmit}
         values={this.state}
-        userTurnRooms={rooms.userTurn}
-        otherTurnRooms={rooms.otherTurn}
-        userWaitingRooms={rooms.userWaiting}
-        otherWaitingRooms={rooms.otherWaiting}
-        otherRooms={rooms.other}
+        userTurnGames={games.userTurn}
+        otherTurnGames={games.otherTurn}
+        userWaitingGames={games.userWaiting}
+        otherWaitingGames={games.otherWaiting}
+        otherGames={games.other}
         user={this.props.user}
       />
     );

@@ -1,10 +1,10 @@
 import React from "react";
 
-import { User, Room as RoomType } from "../reducer/types";
+import { User, Game as GameType } from "../reducer/types";
 import TranslationContainer from "./Translation/TranslationContainer";
 
 type Props = {
-  room: RoomType | null | undefined;
+  room: GameType | null | undefined;
   user: User;
   onClickStart: () => Promise<void>;
   onClickJoin: () => Promise<void>;
