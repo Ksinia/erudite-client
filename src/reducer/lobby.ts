@@ -19,6 +19,9 @@ export default function reducer(state: Game[] = [], action: AnyAction) {
         }
       });
     }
+    case "DELETE_GAME_IN_LOBBY": {
+      return state.filter((game) => game.id !== parseInt(action.payload));
+    }
     default:
       return state;
   }

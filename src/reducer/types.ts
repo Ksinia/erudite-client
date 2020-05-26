@@ -35,16 +35,19 @@ type Turn = {
 
 export interface Game {
   id: number;
-  language: string;
-  letters?: { [key in User["id"] | "pot"]: string[] };
   phase: string;
-  validated: unknown;
   turnOrder: User["id"][];
   turn: User["id"];
-  passedCount?: number;
-  score?: { [key in User["id"]]: number };
-  turns?: Turn[];
-  result?: {
+  validated: string;
+  language: string;
+  maxPlayers: number;
+  users: User[];
+  archived: boolean;
+  letters: { [key in User["id"] | "pot"]: string[] };
+  passedCount: number;
+  score: { [key in User["id"]]: number };
+  turns: Turn[];
+  result: {
     winner: string[]; // TODO: it should be a number
     longestWord: { word: string; user: number }[];
     maxScoreWord: { word: string; value: number; user: number }[];
@@ -52,15 +55,12 @@ export interface Game {
     bestTurnByValue: { score: number; turn: Turn; user: number }[];
     neverChangedLetters: number[];
   };
-  board?: (string | null)[][];
-  previousBoard?: (string | null)[][];
-  putLetters?: string[];
-  lettersChanged?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  // roomId: number;
-  users: User[];
-  maxPlayers: number;
+  board: (string | null)[][];
+  previousBoard: (string | null)[][];
+  putLetters: string[];
+  lettersChanged: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type MyThunkAction<A extends Action = AnyAction> = ThunkAction<

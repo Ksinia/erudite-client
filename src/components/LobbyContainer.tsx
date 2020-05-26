@@ -38,7 +38,7 @@ class LobbyContainer extends Component<Props, State> {
     }
   };
 
-  state: State = {
+  readonly state: State = {
     maxPlayers: 2,
     language: this.getLanguage(),
   };
