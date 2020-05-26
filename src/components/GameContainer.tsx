@@ -9,9 +9,9 @@ import { ThunkDispatch } from "redux-thunk";
 import { url } from "../url";
 import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
-import { sendTurn } from "../actions/turn";
+import { sendTurn , clearDuplicatedWordsError } from "../actions/turn";
 import Game from "./Game";
-import { clearDuplicatedWordsError } from "../actions/turn";
+
 
 /**
  * extract added letters from whole new hand

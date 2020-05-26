@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router";
-import GameContainer from "./GameContainer";
-import { url } from "../url";
 import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "../reducer";
 import { AnyAction } from "redux";
 import { connect } from "react-redux";
+import { RootState } from "../reducer";
+import { url } from "../url";
 import { Game } from "../reducer/types";
+import GameContainer from "./GameContainer";
 import RoomContainer from "./RoomContainer";
 import TranslationContainer from "./Translation/TranslationContainer";
 

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import superagent from "superagent";
+import { Dispatch, AnyAction } from "redux";
 
 import { url } from "../url";
 import "./Game.css";
 import { RootState } from "../reducer";
 import { User, Game } from "../reducer/types";
 import Room from "./Room";
-import { Dispatch, AnyAction } from "redux";
 
 interface OwnProps {
   game: Game;
