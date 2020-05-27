@@ -362,15 +362,17 @@ class GameContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
-    const userLetters = this.props.game.letters[this.props.user.id];
-    this.setState({
-      ...this.state,
-      userLetters,
-      userBoard: this.emptyUserBoard.map((row) => row.slice()),
-      wildCardQty: 0,
-      wildCardLetters: [],
-      wildCardOnBoard: {},
-    });
+    if (this.props.user) {
+      const userLetters = this.props.game.letters[this.props.user.id];
+      this.setState({
+        ...this.state,
+        userLetters,
+        userBoard: this.emptyUserBoard.map((row) => row.slice()),
+        wildCardQty: 0,
+        wildCardLetters: [],
+        wildCardOnBoard: {},
+      });
+    }
   }
   componentDidUpdate(prevProps: StateProps) {
     if (
