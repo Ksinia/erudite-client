@@ -362,7 +362,7 @@ class GameContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
-    if (this.props.user) {
+    if (this.props.user && this.props.user.id in this.props.game.turnOrder) {
       const userLetters = this.props.game.letters[this.props.user.id];
       this.setState({
         ...this.state,
