@@ -4,23 +4,14 @@ import { User, Game as GameType } from "../reducer/types";
 import TranslationContainer from "./Translation/TranslationContainer";
 
 type Props = {
-  room: GameType | null | undefined;
+  room: GameType;
   user: User;
   onClickStart: () => Promise<void>;
   onClickJoin: () => Promise<void>;
 };
 
 function Room(props: Props) {
-  let waitingFor = 0;
-  if (props.room) {
-    waitingFor = props.room.maxPlayers - props.room.users.length;
-  }
-  if (props.room === undefined) {
-    return <TranslationContainer translationKey="loading" />;
-  }
-  if (props.room === null) {
-    return <TranslationContainer translationKey="no_game" />;
-  }
+  const waitingFor = props.room.maxPlayers - props.room.users.length;
   return (
     <div>
       <p key="room-for">

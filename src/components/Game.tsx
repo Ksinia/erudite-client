@@ -32,12 +32,6 @@ type OwnProps = {
 };
 
 function Game(props: OwnProps) {
-  if (props.game === undefined) {
-    return <TranslationContainer translationKey="loading" />;
-  }
-  if (props.game === null) {
-    return <TranslationContainer translationKey="no_game" />;
-  }
   return (
     <div key="game" className="game">
       <div className="board">

@@ -9,9 +9,8 @@ import { ThunkDispatch } from "redux-thunk";
 import { url } from "../url";
 import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
-import { sendTurn , clearDuplicatedWordsError } from "../actions/turn";
+import { sendTurn, clearDuplicatedWordsError } from "../actions/turn";
 import Game from "./Game";
-
 
 /**
  * extract added letters from whole new hand
@@ -362,11 +361,19 @@ class GameContainer extends Component<Props, State> {
     }
   };
 
+  componentDidMount() {
+    const userLetters = this.props.game.letters[this.props.user.id];
+    this.setState({
+      ...this.state,
+      userLetters,
+      userBoard: this.emptyUserBoard.map((row) => row.slice()),
+      wildCardQty: 0,
+      wildCardLetters: [],
+      wildCardOnBoard: {},
+    });
+  }
   componentDidUpdate(prevProps: StateProps) {
     if (
-      this.props.game &&
-      this.props.game.phase !== "waiting" &&
-      this.props.game.phase !== "ready" &&
       this.props !== prevProps &&
       this.props.user &&
       this.props.game.turnOrder.includes(this.props.user.id)
@@ -382,6 +389,19 @@ class GameContainer extends Component<Props, State> {
         userBoard,
         wildCardOnBoard,
         userLetters
+      );
+      console.log("prevLetters.length", prevLetters.length);
+      console.log(
+        "game.letters[this.props.user.id].length",
+        game.letters[this.props.user.id].length
+      );
+      console.log(
+        "JSON.stringify(prevLetters.slice().sort())",
+        JSON.stringify(prevLetters.slice().sort())
+      );
+      console.log(
+        "JSON.stringify(game.letters[this.props.user.id].slice().sort())",
+        JSON.stringify(game.letters[this.props.user.id].slice().sort())
       );
       if (prevLetters.length < game.letters[this.props.user.id].length) {
         const addedLetters = arrayDifference(
@@ -446,6 +466,9 @@ class GameContainer extends Component<Props, State> {
   }
 
   render() {
+    if (!this.props.game) {
+      console.log("No game");
+    }
     return (
       <div>
         <Game
