@@ -35,12 +35,15 @@ type Turn = {
 
 export interface Game {
   id: number;
-  language: string;
-  letters: { [key in User["id"] | "pot"]: string[] };
   phase: string;
-  validated: unknown;
   turnOrder: User["id"][];
   turn: User["id"];
+  validated: string;
+  language: string;
+  maxPlayers: number;
+  users: User[];
+  archived: boolean;
+  letters: { [key in User["id"] | "pot"]: string[] };
   passedCount: number;
   score: { [key in User["id"]]: number };
   turns: Turn[];
@@ -58,8 +61,6 @@ export interface Game {
   lettersChanged: boolean;
   createdAt: string;
   updatedAt: string;
-  roomId: number;
-  users: User[];
 }
 
 export type MyThunkAction<A extends Action = AnyAction> = ThunkAction<

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import superagent from "superagent";
-import { RouteComponentProps } from "react-router-dom";
+import { History } from "history";
 
 import "./Game.css";
 import { AnyAction } from "redux";
@@ -9,8 +9,9 @@ import { ThunkDispatch } from "redux-thunk";
 import { url } from "../url";
 import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
-import { sendTurn } from "../actions/turn";
+import { sendTurn , clearDuplicatedWordsError } from "../actions/turn";
 import Game from "./Game";
+
 
 /**
  * extract added letters from whole new hand
@@ -62,7 +63,6 @@ const getPreviousLetters = (
 };
 
 interface StateProps {
-  games: { [key: number]: GameType };
   user: User;
   duplicatedWords: string[];
 }
@@ -78,24 +78,23 @@ type State = {
   wildCardOnBoard: WildCardOnBoard;
 };
 
-type MatchParams = { game: string };
+interface OwnProps {
+  game: GameType;
+  history: History;
+}
 
 interface DispatchProps {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
 
-type Props = StateProps & DispatchProps & RouteComponentProps<MatchParams>;
+type Props = StateProps & DispatchProps & OwnProps;
 
 class GameContainer extends Component<Props, State> {
-  gameId = parseInt(this.props.match.params.game);
-
-  gameStream: EventSource | undefined = undefined;
-
   emptyUserBoard = Array(15)
     .fill(null)
     .map((_) => Array(15).fill(""));
 
-  state: State = {
+  readonly state: State = {
     chosenLetterIndex: null,
     userLetters: [],
     userBoard: this.emptyUserBoard.map((row) => row.slice()),
@@ -121,7 +120,7 @@ class GameContainer extends Component<Props, State> {
     let wildCardQty = this.state.wildCardQty;
     let wildCardLetters = this.state.wildCardLetters.slice();
     const userLetterOnBoard = this.state.userBoard[y][x];
-    const letterOnBoard = this.props.games[this.gameId].board[y][x];
+    const letterOnBoard = this.props.game.board[y][x];
     const wildCardOnBoard = { ...this.state.wildCardOnBoard };
 
     // if the cell is occupied by * and it is your turn you can exchange it
@@ -129,11 +128,8 @@ class GameContainer extends Component<Props, State> {
     if (
       letterOnBoard &&
       letterOnBoard[0] === "*" &&
-      this.props.games[this.gameId].phase === "turn" &&
-      this.props.user.id ===
-        this.props.games[this.gameId].turnOrder[
-          this.props.games[this.gameId].turn
-        ] &&
+      this.props.game.phase === "turn" &&
+      this.props.user.id === this.props.game.turnOrder[this.props.game.turn] &&
       this.state.chosenLetterIndex !== null &&
       updUserLetters[this.state.chosenLetterIndex] === letterOnBoard[1]
     ) {
@@ -276,7 +272,7 @@ class GameContainer extends Component<Props, State> {
     if (this.props.user.jwt) {
       this.props.dispatch(
         sendTurn(
-          this.gameId,
+          this.props.game.id,
           this.props.user.jwt,
           userBoardToSend,
           this.state.wildCardOnBoard
@@ -288,7 +284,7 @@ class GameContainer extends Component<Props, State> {
     const { name } = event.target as HTMLButtonElement;
     try {
       const response = await superagent
-        .post(`${url}/game/${this.gameId}/approve`)
+        .post(`${url}/game/${this.props.game.id}/approve`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ validation: name });
       console.log("response test: ", response);
@@ -300,6 +296,7 @@ class GameContainer extends Component<Props, State> {
   getNextTurn = (game: GameType) => {
     return (game.turn + 1) % game.turnOrder.length;
   };
+
   getPrevTurn = (game: GameType) => {
     const index = game.turn - 1;
     if (index < 0) {
@@ -308,27 +305,24 @@ class GameContainer extends Component<Props, State> {
     return index;
   };
 
-  returnToRoom = () => {
-    this.props.history.push(`/room/${this.props.games[this.gameId].roomId}`);
-  };
-
   undo = async () => {
     try {
       const response = await superagent
-        .post(`${url}/game/${this.gameId}/undo`)
+        .post(`${url}/game/${this.props.game.id}/undo`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`);
       console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
     }
   };
+
   change = async () => {
     try {
       const response = await superagent
-        .post(`${url}/game/${this.gameId}/change`)
+        .post(`${url}/game/${this.props.game.id}/change`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({
-          letters: this.props.games[this.gameId].letters[this.props.user.id],
+          letters: this.props.game.letters[this.props.user.id],
         });
       console.log("response test: ", response);
     } catch (error) {
@@ -351,28 +345,36 @@ class GameContainer extends Component<Props, State> {
     this.setState({ ...this.state, wildCardLetters });
   };
 
-  componentDidMount() {
-    this.gameStream = new EventSource(`${url}/game/${this.gameId}`);
-    document.title = `Game ${this.gameId} | Erudite`;
-    this.gameStream.onmessage = (event) => {
-      const { data } = event;
-      const action = JSON.parse(data);
-      this.props.dispatch(action);
-    };
-  }
+  playAgainWithSamePlayers = async () => {
+    try {
+      const response = await superagent
+        .post(`${url}/create`)
+        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .send({
+          maxPlayers: this.props.game.maxPlayers,
+          language: this.props.game.language,
+          players: this.props.game.turnOrder,
+        });
+      console.log("response test: ", response);
+      this.props.history.push(`/game/${response.body.id}`);
+    } catch (error) {
+      console.warn("error test:", error);
+    }
+  };
 
   componentDidUpdate(prevProps: StateProps) {
     if (
-      this.props.games &&
-      this.props.games[this.gameId] &&
+      this.props.game &&
+      this.props.game.phase !== "waiting" &&
+      this.props.game.phase !== "ready" &&
       this.props !== prevProps &&
       this.props.user &&
-      this.props.games[this.gameId].turnOrder.includes(this.props.user.id)
+      this.props.game.turnOrder.includes(this.props.user.id)
     ) {
       // update state of the component
       // depending on the length of the updated user hand and other conditions
 
-      const game = this.props.games[this.gameId];
+      const game = this.props.game;
       const { userBoard, wildCardOnBoard, userLetters } = this.state;
 
       // if player has less letters than on server, just add letters from server
@@ -440,16 +442,14 @@ class GameContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.gameStream) {
-      this.gameStream.close();
-    }
+    this.props.dispatch(clearDuplicatedWordsError());
   }
 
   render() {
     return (
       <div>
         <Game
-          game={this.props.games[this.gameId]}
+          game={this.props.game}
           userLetters={this.state.userLetters}
           chosenLetterIndex={this.state.chosenLetterIndex}
           userBoard={this.state.userBoard}
@@ -460,7 +460,7 @@ class GameContainer extends Component<Props, State> {
           validateTurn={this.validateTurn}
           getNextTurn={this.getNextTurn}
           returnLetters={this.returnLetters}
-          returnToRoom={this.returnToRoom}
+          playAgainWithSamePlayers={this.playAgainWithSamePlayers}
           undo={this.undo}
           change={this.change}
           findTurnUser={this.findTurnUser}
@@ -478,7 +478,6 @@ class GameContainer extends Component<Props, State> {
 function MapStateToProps(state: RootState) {
   return {
     user: state.user,
-    games: state.games,
     duplicatedWords: state.duplicatedWords,
   };
 }

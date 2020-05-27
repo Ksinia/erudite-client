@@ -1,23 +1,26 @@
 import { AnyAction } from "redux";
 
-import { Room } from "./types";
+import { Game } from "./types";
 
-export default function reducer(state: Room[] = [], action: AnyAction) {
+export default function reducer(state: Game[] = [], action: AnyAction) {
   switch (action.type) {
-    case "ALL_ROOMS": {
+    case "ALL_GAMES": {
       return action.payload;
     }
-    case "NEW_ROOM": {
+    case "NEW_GAME": {
       return [...state, action.payload];
     }
-    case "UPDATED_ROOM": {
-      return state.map((room) => {
-        if (room.id === action.payload.id) {
+    case "UPDATED_GAME_IN_LOBBY": {
+      return state.map((game) => {
+        if (game.id === action.payload.id) {
           return action.payload;
         } else {
-          return room;
+          return game;
         }
       });
+    }
+    case "DELETE_GAME_IN_LOBBY": {
+      return state.filter((game) => game.id !== parseInt(action.payload));
     }
     default:
       return state;

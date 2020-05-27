@@ -1,7 +1,7 @@
 import React from "react";
 
 import { colors } from "../colors";
-import { Room, User } from "../reducer/types";
+import { User, Game } from "../reducer/types";
 import RoomTile from "./RoomTile";
 import TranslationContainer from "./Translation/TranslationContainer";
 
@@ -13,11 +13,11 @@ type OwnProps = {
   ) => void;
   onSubmit: (event: React.SyntheticEvent) => Promise<void>;
   values: { maxPlayers: number; language: string };
-  userTurnRooms: Room[];
-  otherTurnRooms: Room[];
-  userWaitingRooms: Room[];
-  otherWaitingRooms: Room[];
-  otherRooms: Room[];
+  userTurnGames: Game[];
+  otherTurnGames: Game[];
+  userWaitingGames: Game[];
+  otherWaitingGames: Game[];
+  otherGames: Game[];
   user: User;
 };
 
@@ -60,16 +60,16 @@ function Lobby(props: OwnProps) {
           </button>
         </form>
       )}
-      {props.userTurnRooms.length > 0 && [
+      {props.userTurnGames.length > 0 && [
         <p key="userTurnRoomsTitle">
           <TranslationContainer translationKey="your_turn_games" />
         </p>,
         <div key="userTurnRooms" className="rooms">
-          {props.userTurnRooms.map((room) => (
-            <div className="room" key={room.id}>
+          {props.userTurnGames.map((game) => (
+            <div className="room" key={game.id}>
               <RoomTile
                 style={{ background: colors[0] }}
-                room={room}
+                room={game}
                 user={props.user}
                 userTurn={true}
               />
@@ -77,16 +77,16 @@ function Lobby(props: OwnProps) {
           ))}
         </div>,
       ]}
-      {props.otherTurnRooms.length > 0 && [
+      {props.otherTurnGames.length > 0 && [
         <p key="otherTurnRoomsTitle">
           <TranslationContainer translationKey="your_other_games" />
         </p>,
         <div key="otherTurnRooms" className="rooms">
-          {props.otherTurnRooms.map((room) => (
-            <div className="room" key={room.id}>
+          {props.otherTurnGames.map((game) => (
+            <div className="room" key={game.id}>
               <RoomTile
                 style={{ background: colors[1] }}
-                room={room}
+                room={game}
                 user={props.user}
                 userTurn={false}
               />
@@ -94,16 +94,16 @@ function Lobby(props: OwnProps) {
           ))}
         </div>,
       ]}
-      {props.userWaitingRooms.length > 0 && [
+      {props.userWaitingGames.length > 0 && [
         <p key="userWaitingRoomsTitle">
           <TranslationContainer translationKey="your_rooms" />
         </p>,
         <div key="userWaitingRooms" className="rooms">
-          {props.userWaitingRooms.map((room) => (
-            <div className="room" key={room.id}>
+          {props.userWaitingGames.map((game) => (
+            <div className="room" key={game.id}>
               <RoomTile
                 style={{ background: colors[1] }}
-                room={room}
+                room={game}
                 user={props.user}
                 userTurn={false}
               />
@@ -111,16 +111,16 @@ function Lobby(props: OwnProps) {
           ))}
         </div>,
       ]}
-      {props.otherWaitingRooms.length > 0 && [
+      {props.otherWaitingGames.length > 0 && [
         <p key="otherWaitingRoomsTitle">
           <TranslationContainer translationKey="available_rooms" />
         </p>,
         <div key="otherWaitingRooms" className="rooms">
-          {props.otherWaitingRooms.map((room) => (
-            <div className="room" key={room.id}>
+          {props.otherWaitingGames.map((game) => (
+            <div className="room" key={game.id}>
               <RoomTile
                 style={{ background: colors[2] }}
-                room={room}
+                room={game}
                 user={props.user}
                 userTurn={false}
               />
@@ -128,16 +128,16 @@ function Lobby(props: OwnProps) {
           ))}
         </div>,
       ]}
-      {props.otherRooms.length > 0 && [
+      {props.otherGames.length > 0 && [
         <p key="otherRoomsTitle">
           <TranslationContainer translationKey="other_rooms" />
         </p>,
         <div key="otherRooms" className="rooms">
-          {props.otherRooms.map((room) => (
-            <div className="room" key={room.id}>
+          {props.otherGames.map((game) => (
+            <div className="room" key={game.id}>
               <RoomTile
                 style={{ background: colors[3] }}
-                room={room}
+                room={game}
                 user={props.user}
                 userTurn={false}
               />

@@ -9,12 +9,11 @@ import LoginContainer from "./components/LoginContainer";
 import SignupContainer from "./components/SignupContainer";
 import Toolbar from "./components/Toolbar";
 import LobbyContainer from "./components/LobbyContainer";
-import RoomContainer from "./components/RoomContainer";
-import GameContainer from "./components/GameContainer";
 import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization";
-import "./App.css";
 import UserPage from "./components/UserPage";
+import GameHandler from "./components/GameHandler";
+import "./App.css";
 
 type DispatchProps = {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
@@ -35,8 +34,7 @@ class App extends Component<DispatchProps> {
           <Route path="/login" component={LoginContainer} />
           <Route path="/user" component={UserPage} />
           <Route path="/forgot-password" component={ForgotPassword} />
-          <Route path="/room/:room" component={RoomContainer} />
-          <Route path="/game/:game" component={GameContainer} />
+          <Route path="/game/:game" component={GameHandler} />
           <Route path="/" component={LobbyContainer} />
         </Switch>
       </div>,
