@@ -61,6 +61,7 @@ export interface Game {
   lettersChanged: boolean;
   createdAt: string;
   updatedAt: string;
+  wordsForValidation: string[];
 }
 
 export type MyThunkAction<A extends Action = AnyAction> = ThunkAction<

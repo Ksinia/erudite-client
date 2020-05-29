@@ -114,6 +114,15 @@ function Game(props: OwnProps) {
               <TranslationContainer translationKey="change" />
             </button>,
           ]}
+        {props.game.phase === "validation" &&
+          props.game.wordsForValidation.length > 0 && (
+            <p>
+              <TranslationContainer
+                translationKey="to_validate"
+                args={[props.game.wordsForValidation.join(", ")]}
+              />
+            </p>
+          )}
         {/* next player validates: */}
         {props.user &&
           props.game.turnOrder.includes(props.user.id) &&
