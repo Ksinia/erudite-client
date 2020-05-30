@@ -25,8 +25,7 @@ type OwnProps = {
   change: (event: React.SyntheticEvent<HTMLButtonElement>) => void;
   findTurnUser: (game: GameType, id: number) => User;
   onChangeWildCard: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  wildCardQty: number;
-  wildCardLetters: string[];
+  wildCardLetters: { letter: string; x: number; y: number }[];
   wildCardOnBoard: { [y: number]: { [x: number]: string } };
   duplicatedWords: string[];
 };
@@ -47,31 +46,32 @@ function Game(props: OwnProps) {
       </div>
 
       <div className="controls">
-        <div className="letters" onClick={props.clickLetter}>
-          {props.userLetters.map((letter, index) => {
-            let style = {};
-            if (index === props.chosenLetterIndex) {
-              style = { background: "whitesmoke" };
-            }
-            return (
-              <div
-                className="letter"
-                key={index}
-                data-letter={letter}
-                data-index={index}
-                style={style}
-              >
-                <p className="value-in-hand">
-                  {letterValues[props.game.language][letter]}
-                </p>
-                {letter}
-              </div>
-            );
-          })}
-        </div>
+        {props.user && (
+          <div className="letters" onClick={props.clickLetter}>
+            {props.userLetters.map((letter, index) => {
+              let style = {};
+              if (index === props.chosenLetterIndex) {
+                style = { background: "whitesmoke" };
+              }
+              return (
+                <div
+                  className="letter"
+                  key={index}
+                  data-letter={letter}
+                  data-index={index}
+                  style={style}
+                >
+                  <p className="value-in-hand">
+                    {letterValues[props.game.language][letter]}
+                  </p>
+                  {letter}
+                </div>
+              );
+            })}
+          </div>
+        )}
         <WildCardForm
           onChange={props.onChangeWildCard}
-          wildCardQty={props.wildCardQty}
           wildCardLetters={props.wildCardLetters}
           alphabet={Object.keys(letterValues[props.game.language])}
         />
@@ -94,7 +94,9 @@ function Game(props: OwnProps) {
             <button
               key="confirm"
               onClick={props.confirmTurn}
-              disabled={props.wildCardLetters.some((letter) => letter === "")}
+              disabled={props.wildCardLetters.some(
+                (letterObject) => letterObject.letter === ""
+              )}
             >
               <TranslationContainer translationKey="confirm" />
             </button>
