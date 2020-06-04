@@ -17,7 +17,7 @@ function Room(props: Props) {
       <p key="room-for">
         <TranslationContainer
           translationKey="room_for"
-          args={[String(props.room.maxPlayers)]}
+          args={[String(props.room.id), String(props.room.maxPlayers)]}
         />{" "}
         ({props.room.language})
       </p>
