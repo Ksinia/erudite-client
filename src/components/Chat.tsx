@@ -7,8 +7,8 @@ import io from "socket.io-client";
 import { RootState } from "../reducer";
 import { url } from "../url";
 import { User, Message } from "../reducer/types";
-// import TranslationContainer from "./Translation/TranslationContainer";
 import { clearMessages } from "../actions/chat";
+import "./Chat.css";
 
 interface OwnProps {
   gameId: number;
@@ -54,10 +54,7 @@ class Chat extends Component<Props, State> {
   };
 
   componentDidMount() {
-    if (
-      this.props.user
-      //   this.props.players.find((player) => player.id === this.props.user.id)
-    ) {
+    if (this.props.user) {
       const chatSocket = io(url, {
         path: "/chat",
         query: {
@@ -74,10 +71,7 @@ class Chat extends Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     if (this.props.user !== prevProps.user) {
-      if (
-        this.props.user
-        // this.props.players.find((player) => player.id === this.props.user.id)
-      ) {
+      if (this.props.user) {
         const chatSocket = io(url, {
           path: "/chat",
           query: {
@@ -110,22 +104,19 @@ class Chat extends Component<Props, State> {
         this.props.players.find((player) => player.id === this.props.user.id))
     ) {
       return (
-        <div>
-          <h3>Chat of game {this.props.gameId}</h3>
+        <div className="chat">
           {this.props.players.find(
             (player) => player.id === this.props.user.id
-          ) ? (
+          ) && (
             <form onSubmit={this.onSubmit}>
-              <label>Enter message:</label>
               <input
+                autoComplete="off"
                 name="message"
                 onChange={this.onChange}
                 value={this.state.message}
               ></input>
-              <button>Submit</button>
+              <button disabled={!this.state.message}>↑</button>
             </form>
-          ) : (
-            <p>Please log in and join the game to send a message</p>
           )}
           {this.props.chat.map((message, index) => (
             <p key={index}>

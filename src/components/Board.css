@@ -1,8 +1,8 @@
 .table-board {
   margin: 1em auto;
   border-collapse: collapse;
-  width: 31.5rem;
-  height: 31.5rem;
+  width: 31.5em;
+  height: 31.5em;
 }
 
 .board-table-cell {
@@ -11,6 +11,7 @@
   height: 2.1rem;
   margin: 0;
   padding: 0;
+  color: rgb(60, 60, 60);
 }
 .center-true {
   background: linear-gradient(
@@ -88,7 +89,7 @@
   z-index: -3;
   font-weight: medium;
 }
-@media screen and (max-width: 670px) {
+@media screen and (max-width: 31.5em) {
   .table-board {
     width: 90vmin;
     height: 90vmin;
