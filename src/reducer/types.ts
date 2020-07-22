@@ -70,3 +70,13 @@ export type MyThunkAction<A extends Action = AnyAction> = ThunkAction<
   unknown,
   A
 >;
+
+export type Message = {
+  userId: number;
+  text: string;
+  gameId: number;
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
+  id?: number;
+};

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import superagent from "superagent";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
-
 import { AnyAction, Dispatch } from "redux";
+
 import { url } from "../url";
 import { RootState } from "../reducer";
 import { Game as GameType, User } from "../reducer/types";

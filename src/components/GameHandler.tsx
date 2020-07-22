@@ -1,14 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { RouteComponentProps } from "react-router";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { connect } from "react-redux";
+
 import { RootState } from "../reducer";
 import { url } from "../url";
 import { Game } from "../reducer/types";
 import GameContainer from "./GameContainer";
 import RoomContainer from "./RoomContainer";
 import TranslationContainer from "./Translation/TranslationContainer";
+import Chat from "./Chat";
 
 type MatchParams = { game: string };
 
@@ -79,15 +81,23 @@ class GameHandler extends Component<Props, State> {
       return <TranslationContainer translationKey="no_game" />;
     }
     const game = this.props.games[this.state.gameId];
-    if (game.phase === "waiting" || game.phase === "ready") {
-      return <RoomContainer key={this.state.gameId} game={game} />;
-    }
     return (
-      <GameContainer
-        history={this.props.history}
-        key={this.state.gameId}
-        game={game}
-      />
+      <Fragment>
+        {game.phase === "waiting" || game.phase === "ready" ? (
+          <RoomContainer key={this.state.gameId} game={game} />
+        ) : (
+          <GameContainer
+            history={this.props.history}
+            key={this.state.gameId}
+            game={game}
+          />
+        )}
+        <Chat
+          gameId={this.state.gameId}
+          players={game.users}
+          gamePhase={game.phase}
+        />
+      </Fragment>
     );
   }
 }
