@@ -24,11 +24,12 @@ button {
   border: 1px solid lightgray;
   border-bottom: 1px solid rgb(180, 180, 180);
   cursor: pointer;
+  color: rgb(60, 60, 60);
 }
 button:active {
   background-color: whitesmoke;
   outline: none;
-  color: black;
+  color: rgb(60, 60, 60);
 }
 button:focus {
   outline: none;
@@ -40,7 +41,7 @@ button:focus {
   button:active {
     background-color: lightgray;
     outline: none;
-    color: black;
+    color: rgb(60, 60, 60);
   }
 }
 .letter {
@@ -111,6 +112,10 @@ footer a {
 }
 .turns {
   font-size: small;
+  overflow: auto;
+  height: 18em;
+  width: fit-content;
+  padding: 1em;
 }
 .table-turns {
   margin: auto;

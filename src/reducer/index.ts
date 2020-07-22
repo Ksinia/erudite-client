@@ -7,6 +7,7 @@ import lobby from "./lobby";
 import games from "./games";
 import duplicatedWords from "./duplicatedWords";
 import finishedGamesIds from "./finishedGamesIds";
+import chat from "./chat";
 
 export const rootReducer = combineReducers({
   user,
@@ -16,6 +17,7 @@ export const rootReducer = combineReducers({
   translation,
   duplicatedWords,
   finishedGamesIds,
+  chat,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -18,7 +18,7 @@
 }
 
 a {
-  color: black;
+  color: rgb(60, 60, 60);
 }
 .logout {
   cursor: pointer;

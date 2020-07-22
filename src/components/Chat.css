@@ -1,0 +1,60 @@
+.chat {
+  overflow: auto;
+  height: 31.5em;
+  width: 31.5em;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  margin: 1em auto;
+  font-size: small;
+  padding: 1em;
+}
+.chat form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.chat p {
+  margin: 1em 0;
+  text-align: left;
+}
+
+.chat form > * {
+  margin: auto 0;
+  color: rgb(60, 60, 60);
+}
+
+.chat form input {
+  background-color: white;
+  border-radius: 5px;
+  border: none;
+  width: 100%;
+  resize: vertical;
+  overflow: auto;
+  overflow-y: hidden;
+  height: fit-content;
+  margin-right: 1em;
+  height: 30px;
+}
+.chat form input:focus {
+  outline: none;
+}
+
+.chat form button {
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  line-height: 0.3;
+  box-sizing: border-box;
+}
+@media screen and (max-width: 31.5em) {
+  .chat form button {
+    font-size: small;
+  }
+  .chat {
+    width: 90vmin;
+    height: 90vmin;
+    table-layout: fixed;
+  }
+}
