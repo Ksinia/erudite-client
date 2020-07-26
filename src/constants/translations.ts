@@ -15,7 +15,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     other_rooms: "Other rooms",
     room: "Room",
     game: "Game",
-    your_turn: "It's your turn!",
+    your_turn: "Your turn!",
     waiting: "Waiting for players",
     ready: "Ready for the game",
     of: "of",

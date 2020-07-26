@@ -1,39 +1,69 @@
 .room-tile {
-  padding: 0.5em;
-  margin: 1em;
-  color: rgb(60, 60, 60);
-  text-align: left;
-  height: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  margin: 1rem 0.1rem;
+  cursor: pointer;
+  width: 250px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+.room-tile:hover {
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+}
+.tile-header {
+  border-bottom: 1px solid lightgrey;
+  border-radius: 4px 4px 0 0;
+  height: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.tile-header p {
+  margin: auto;
+}
+.tile-body {
+  height: 60%;
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-evenly;
-  min-height: 100px;
-  min-width: 250px;
+  padding: 0.1rem 0.8rem;
 }
-.room a {
+.tile-body p {
+  margin: auto;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: normal;
+  word-break: keep-all;
+}
+@media only screen and (max-width: 420px) {
+  .room-tile {
+    width: 90vw;
+  }
+}
+.rooms a {
   text-decoration: none;
-}
-.title {
-  font-weight: bold;
-}
-
-.description {
-  /* margin-right: 1em; */
-  /* margin: 1em auto; */
-  text-align: center;
-  /* width: 50%; */
-}
-
-.players {
-  text-align: center;
-  /* margin: auto; */
-  /* width: 50%; */
-  /* margin: 1em auto; */
 }
 .rooms {
   display: flex;
   flex-flow: row wrap;
+  justify-content: space-evenly;
 }
-.room {
-  margin: auto;
+.status {
+  font-size: small;
+  font-weight: normal;
+  width: 60%;
+  font-weight: bold;
+}
+.number {
+  width: 15%;
+  font-size: large;
+  font-weight: bold;
+  padding-left: 5%;
+}
+.language {
+  width: 15%;
+  font-size: small;
+  font-weight: bold;
+  padding-left: 5%;
 }
