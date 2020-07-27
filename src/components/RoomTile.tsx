@@ -65,18 +65,18 @@ function RoomTile(props: OwnProps) {
           </p>
         </div>
         <div className="tile-body">
-          {users.length > 0 && phase === "started" ? (
-            turnOrder.map((userId) => (
-              <p key={userId}>
-                {users.find((user) => user.id === userId)?.name}
-              </p>
-            ))
-          ) : (
-            // replace space with U+00A0, non-breaking space
-            <p>
-              {users.map((user) => user.name.replace(" ", " ")).join(" • ")}
-            </p>
-          )}
+          <p>
+            {turnOrder
+              ? turnOrder
+                  .map((userId) =>
+                    users
+                      .find((user) => user.id === userId)
+                      ?.name.replace(" ", " ")
+                  )
+                  .join(" • ")
+              : // replace space with U+00A0, non-breaking space
+                users.map((user) => user.name.replace(" ", " ")).join(" • ")}
+          </p>
         </div>
       </div>
     </Link>
