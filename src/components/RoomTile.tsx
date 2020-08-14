@@ -46,14 +46,10 @@ function RoomTile(props: OwnProps) {
               />
             )}
             {phase === "ready" && (
-              <p>
-                <TranslationContainer translationKey="ready" />
-              </p>
+              <TranslationContainer translationKey="ready" />
             )}
             {props.userTurn ? (
-              <p>
-                <TranslationContainer translationKey="your_turn" />
-              </p>
+              <TranslationContainer translationKey="your_turn" />
             ) : (
               getActiveUserName(props.room)
             )}
