@@ -7,17 +7,21 @@ export default function reducer(state: Game[] = [], action: AnyAction) {
     case "ALL_GAMES": {
       return action.payload;
     }
-    case "NEW_GAME": {
-      return [...state, action.payload];
-    }
     case "UPDATED_GAME_IN_LOBBY": {
-      return state.map((game) => {
-        if (game.id === action.payload.id) {
-          return action.payload;
+      const updatedGame = action.payload;
+      let gameFound = false;
+      let newState = state.map((game) => {
+        if (game.id === updatedGame.id) {
+          gameFound = true;
+          return updatedGame;
         } else {
           return game;
         }
       });
+      if (!gameFound) {
+        newState.push(updatedGame);
+      }
+      return newState;
     }
     case "DELETE_GAME_IN_LOBBY": {
       return state.filter((game) => game.id !== parseInt(action.payload));
