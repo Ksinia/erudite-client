@@ -7,6 +7,7 @@
   height: 120px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .room-tile:hover {
   box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
@@ -66,4 +67,19 @@
   font-size: small;
   font-weight: bold;
   padding-left: 5%;
+}
+.counter {
+  position: absolute;
+  top: -0.8em;
+  right: -0.8em;
+  background-color: tomato;
+  color: white;
+  border-radius: 20px;
+  width: fit-content;
+  min-width: 20px;
+  height: 20px;
+  font-size: small;
+  line-height: 1em;
+  padding: 3px;
+  box-sizing: border-box;
 }

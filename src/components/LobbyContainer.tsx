@@ -3,6 +3,7 @@ import superagent from "superagent";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { AnyAction, Dispatch } from "redux";
+import io from "socket.io-client";
 
 import { url } from "../url";
 import { RootState } from "../reducer";
@@ -17,6 +18,7 @@ interface OwnProps {
 type State = {
   maxPlayers: number;
   language: string;
+  lobbySocket: any | undefined;
 };
 
 interface DispatchProps {
@@ -41,6 +43,7 @@ class LobbyContainer extends Component<Props, State> {
   readonly state: State = {
     maxPlayers: 2,
     language: this.getLanguage(),
+    lobbySocket: undefined,
   };
 
   onSubmit = async (event: React.SyntheticEvent): Promise<void> => {
@@ -74,11 +77,46 @@ class LobbyContainer extends Component<Props, State> {
       const action = JSON.parse(data);
       this.props.dispatch(action);
     };
+    if (this.props.user) {
+      const lobbySocket = io(url, {
+        path: "/lobby",
+        query: {
+          jwt: this.props.user.jwt,
+        },
+      });
+      this.setState({ ...this.state, lobbySocket });
+      lobbySocket.on("message", (action: AnyAction) => {
+        this.props.dispatch(action);
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.user !== prevProps.user) {
+      if (this.props.user) {
+        const lobbySocket = io(url, {
+          path: "/lobby",
+          query: {
+            jwt: this.props.user.jwt,
+          },
+        });
+        this.setState({ ...this.state, lobbySocket });
+        lobbySocket.on("message", (action: AnyAction) => {
+          this.props.dispatch(action);
+        });
+      } else if (this.state.lobbySocket) {
+        this.state.lobbySocket.close();
+        this.setState({ ...this.state, lobbySocket: undefined });
+      }
+    }
   }
 
   componentWillUnmount() {
     if (this.stream) {
       this.stream.close();
+    }
+    if (this.state.lobbySocket) {
+      this.state.lobbySocket.close();
     }
   }
 

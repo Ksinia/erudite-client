@@ -8,6 +8,7 @@ import games from "./games";
 import duplicatedWords from "./duplicatedWords";
 import finishedGamesIds from "./finishedGamesIds";
 import chat from "./chat";
+import messagesCount from "./messagesCount";
 
 export const rootReducer = combineReducers({
   user,
@@ -18,6 +19,7 @@ export const rootReducer = combineReducers({
   duplicatedWords,
   finishedGamesIds,
   chat,
+  messagesCount,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
