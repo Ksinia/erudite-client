@@ -19,6 +19,7 @@ type OwnProps = {
   otherWaitingGames: Game[];
   otherGames: Game[];
   user: User;
+  sendingFormEnabled: boolean;
 };
 
 function Lobby(props: OwnProps) {
@@ -55,7 +56,7 @@ function Lobby(props: OwnProps) {
             <option value="en">en</option>
           </select>
 
-          <button>
+          <button disabled={!props.sendingFormEnabled}>
             <TranslationContainer translationKey="submit" />
           </button>
         </form>

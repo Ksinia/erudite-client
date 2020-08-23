@@ -16,9 +16,12 @@ interface OwnProps {
 }
 
 type State = {
-  maxPlayers: number;
-  language: string;
+  formFields: {
+    maxPlayers: number;
+    language: string;
+  };
   lobbySocket: any | undefined;
+  sendingFormEnabled: boolean;
 };
 
 interface DispatchProps {
@@ -41,23 +44,29 @@ class LobbyContainer extends Component<Props, State> {
   };
 
   readonly state: State = {
-    maxPlayers: 2,
-    language: this.getLanguage(),
+    formFields: {
+      maxPlayers: 2,
+      language: this.getLanguage(),
+    },
     lobbySocket: undefined,
+    sendingFormEnabled: true,
   };
 
   onSubmit = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault();
-    try {
-      const response = await superagent
-        .post(`${url}/create`)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`)
-        .send(this.state);
-      console.log("response test: ", response);
-      localStorage.setItem("language", this.state.language);
-      this.props.history.push(`/game/${response.body.id}`);
-    } catch (error) {
-      console.warn("error test:", error);
+    if (this.state.sendingFormEnabled) {
+      this.setState({ ...this.state, sendingFormEnabled: false });
+      try {
+        const response = await superagent
+          .post(`${url}/create`)
+          .set("Authorization", `Bearer ${this.props.user.jwt}`)
+          .send(this.state.formFields);
+        console.log("response test: ", response);
+        localStorage.setItem("language", this.state.formFields.language);
+        this.props.history.push(`/game/${response.body.id}`);
+      } catch (error) {
+        console.warn("error test:", error);
+      }
     }
   };
 
@@ -66,7 +75,13 @@ class LobbyContainer extends Component<Props, State> {
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLInputElement>
   ): void => {
-    this.setState({ ...this.state, [event.target.name]: event.target.value });
+    this.setState({
+      ...this.state,
+      formFields: {
+        ...this.state.formFields,
+        [event.target.name]: event.target.value,
+      },
+    });
   };
 
   componentDidMount() {
@@ -169,13 +184,14 @@ class LobbyContainer extends Component<Props, State> {
       <Lobby
         onChange={this.onChange}
         onSubmit={this.onSubmit}
-        values={this.state}
+        values={this.state.formFields}
         userTurnGames={games.userTurn}
         otherTurnGames={games.otherTurn}
         userWaitingGames={games.userWaiting}
         otherWaitingGames={games.otherWaiting}
         otherGames={games.other}
         user={this.props.user}
+        sendingFormEnabled={this.state.sendingFormEnabled}
       />
     );
   }
