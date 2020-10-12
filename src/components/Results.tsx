@@ -63,7 +63,13 @@ function transformResults(game: Game) {
     results.push([
       "max_words",
       `${game.result.bestTurnByCount
-        .map((el) => game.users.find((user) => user.id === el.user)?.name)
+        .reduce((acc, el) => {
+          const name = game.users.find((user) => user.id === el.user)?.name;
+          if (!acc.includes(name)) {
+            acc.push(name);
+          }
+          return acc;
+        }, [] as (string | undefined)[])
         .join(", ")} (${game.result.bestTurnByCount[0].qty})`,
     ]);
   }
@@ -71,7 +77,13 @@ function transformResults(game: Game) {
     results.push([
       "valuable_turn",
       `${game.result.bestTurnByValue
-        .map((el) => game.users.find((user) => user.id === el.user)?.name)
+        .reduce((acc, el) => {
+          const name = game.users.find((user) => user.id === el.user)?.name;
+          if (!acc.includes(name)) {
+            acc.push(name);
+          }
+          return acc;
+        }, [] as (string | undefined)[])
         .join(", ")} (${game.result.bestTurnByValue[0].score})`,
     ]);
   }
