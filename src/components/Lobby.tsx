@@ -1,6 +1,5 @@
 import React from "react";
 
-import { colors } from "../colors";
 import { User, Game } from "../reducer/types";
 import RoomTile from "./RoomTile";
 import TranslationContainer from "./Translation/TranslationContainer";
