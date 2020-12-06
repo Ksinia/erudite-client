@@ -21,12 +21,13 @@ type Props = StateProps & DispatchProps;
 class UserPage extends Component<Props> {
   render() {
     return (
-      <React.Fragment>
-        {this.props.user && this.props.user.jwt && (
+      this.props.user &&
+      this.props.user.jwt && (
+        <React.Fragment>
           <FinishedGamesContainer jwt={this.props.user.jwt} />
-        )}
-        <ChangePassword />
-      </React.Fragment>
+          <ChangePassword />
+        </React.Fragment>
+      )
     );
   }
 }
