@@ -7,9 +7,9 @@ import TranslationContainer from "./Translation/TranslationContainer";
 import { Dispatch, AnyAction } from "redux";
 import { RootState } from "../reducer";
 import { connect } from "react-redux";
+import { colors } from "../colors";
 
 type OwnProps = {
-  style: { background: string };
   room: Game;
   user: User;
   userTurn: boolean;
@@ -43,6 +43,31 @@ function getActiveUserName(game: Game): string {
   return "";
 }
 
+function getWinnerName(game: Game): string {
+  return game.users
+    .filter((user) => game.result.winner.includes(user.id.toString()))
+    .map((user) => user.name)
+    .join(", ");
+}
+
+function getTileColor(props: Props): string {
+  if (props.room.phase === "finished") {
+    return props.room.users
+      .filter((user) => props.room.result.winner.includes(user.id.toString()))
+      .map((user) => user.id)
+      .includes(props.user.id)
+      ? colors.green
+      : colors.red;
+  }
+  if (
+    props.user &&
+    props.room.users.some((user) => user.id === props.user.id)
+  ) {
+    return props.userTurn ? colors.red : colors.orange;
+  }
+  return props.room.phase === "waiting" ? colors.green : colors.blue;
+}
+
 class RoomTile extends Component<Props> {
   render() {
     const {
@@ -56,7 +81,10 @@ class RoomTile extends Component<Props> {
     return (
       <Link to={`/game/${id}`}>
         <div className="room-tile">
-          <div className="tile-header" style={this.props.style}>
+          <div
+            className="tile-header"
+            style={{ background: getTileColor(this.props) }}
+          >
             <p className="number">{id}</p>
             <p className="status">
               {phase === "waiting" && (
@@ -68,11 +96,13 @@ class RoomTile extends Component<Props> {
               {phase === "ready" && (
                 <TranslationContainer translationKey="ready" />
               )}
-              {this.props.userTurn ? (
+              {phase !== "finished" && this.props.userTurn ? (
                 <TranslationContainer translationKey="your_turn" />
               ) : (
                 getActiveUserName(this.props.room)
               )}
+              {phase === "finished" &&
+                "\uD83C\uDFC6 " + getWinnerName(this.props.room)}
             </p>
             <p className="language">
               {language.toUpperCase()}

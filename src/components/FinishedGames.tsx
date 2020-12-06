@@ -1,27 +1,32 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Game, User } from "../reducer/types";
+import RoomTile from "./RoomTile";
 import TranslationContainer from "./Translation/TranslationContainer";
 
 type OwnProps = {
-  finishedGamesIds: number[];
+  finishedGames: Game[];
+  user: User;
 };
 
 function FinishedGames(props: OwnProps) {
   return (
     <React.Fragment>
-      {props.finishedGamesIds ? (
-        props.finishedGamesIds.length > 0 && (
+      {props.finishedGames ? (
+        props.finishedGames.length > 0 && (
           <React.Fragment>
             <h3>
               <TranslationContainer translationKey="finished" />
             </h3>
-            {props.finishedGamesIds.map((id) => (
-              <div key={id}>
-                <Link to={`/game/${id}`}>
-                  <TranslationContainer translationKey="game" /> {id}
-                </Link>
-              </div>
-            ))}
+            <div className="rooms">
+              {props.finishedGames.map((game) => (
+                <RoomTile
+                  key={game.id}
+                  room={game}
+                  user={props.user}
+                  userTurn={false}
+                />
+              ))}
+            </div>
           </React.Fragment>
         )
       ) : (

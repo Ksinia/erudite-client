@@ -2,18 +2,18 @@ import superagent from "superagent";
 import { AnyAction } from "redux";
 
 import { url } from "../url";
-import { MyThunkAction } from "../reducer/types";
+import { Game, MyThunkAction } from "../reducer/types";
 
 export const FINISHED_GAMES = "FINISHED_GAMES";
 
-export const finishedGamesIdsLoaded = (gameIds: number[]): AnyAction => {
+export const finishedGamesLoaded = (games: Game[]): AnyAction => {
   return {
     type: FINISHED_GAMES,
-    payload: gameIds,
+    payload: games,
   };
 };
 
-export const loadFinishGamesIds = (jwt: string): MyThunkAction => async (
+export const loadFinishGames = (jwt: string): MyThunkAction => async (
   dispatch
 ) => {
   try {
@@ -22,7 +22,7 @@ export const loadFinishGamesIds = (jwt: string): MyThunkAction => async (
       .set("Authorization", `Bearer ${jwt}`);
 
     console.log("response test: ", response);
-    const action = finishedGamesIdsLoaded(response.body);
+    const action = finishedGamesLoaded(response.body);
     dispatch(action);
   } catch (error) {
     console.warn("error test:", error);
