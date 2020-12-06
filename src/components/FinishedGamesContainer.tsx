@@ -4,14 +4,16 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { connect } from "react-redux";
 import { RootState } from "../reducer";
-import { loadFinishGamesIds } from "../actions/user";
+import { loadFinishGames } from "../actions/user";
 import FinishedGames from "./FinishedGames";
+import { Game, User } from "../reducer/types";
 
 interface OwnProps {
   jwt: string;
 }
 interface StateProps {
-  finishedGamesIds: number[];
+  finishedGames: Game[];
+  user: User;
 }
 
 interface DispatchProps {
@@ -22,15 +24,21 @@ type Props = OwnProps & StateProps & DispatchProps;
 
 class FinishedGamesContainer extends Component<Props> {
   componentDidMount() {
-    this.props.dispatch(loadFinishGamesIds(this.props.jwt));
+    this.props.dispatch(loadFinishGames(this.props.jwt));
   }
   render() {
-    return <FinishedGames finishedGamesIds={this.props.finishedGamesIds} />;
+    return (
+      <FinishedGames
+        finishedGames={this.props.finishedGames}
+        user={this.props.user}
+      />
+    );
   }
 }
 function MapStateToProps(state: RootState) {
   return {
-    finishedGamesIds: state.finishedGamesIds,
+    finishedGames: state.finishedGames,
+    user: state.user,
   };
 }
 

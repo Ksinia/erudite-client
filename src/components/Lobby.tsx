@@ -68,12 +68,7 @@ function Lobby(props: OwnProps) {
         <div key="userTurnRooms" className="rooms">
           {props.userTurnGames.map((game) => (
             <div className="room" key={game.id}>
-              <RoomTile
-                style={{ background: colors[0] }}
-                room={game}
-                user={props.user}
-                userTurn={true}
-              />
+              <RoomTile room={game} user={props.user} userTurn={true} />
             </div>
           ))}
         </div>,
@@ -85,12 +80,7 @@ function Lobby(props: OwnProps) {
         <div key="otherTurnRooms" className="rooms">
           {props.otherTurnGames.map((game) => (
             <div className="room" key={game.id}>
-              <RoomTile
-                style={{ background: colors[1] }}
-                room={game}
-                user={props.user}
-                userTurn={false}
-              />
+              <RoomTile room={game} user={props.user} userTurn={false} />
             </div>
           ))}
         </div>,
@@ -102,12 +92,7 @@ function Lobby(props: OwnProps) {
         <div key="userWaitingRooms" className="rooms">
           {props.userWaitingGames.map((game) => (
             <div className="room" key={game.id}>
-              <RoomTile
-                style={{ background: colors[1] }}
-                room={game}
-                user={props.user}
-                userTurn={false}
-              />
+              <RoomTile room={game} user={props.user} userTurn={false} />
             </div>
           ))}
         </div>,
@@ -119,12 +104,7 @@ function Lobby(props: OwnProps) {
         <div key="otherWaitingRooms" className="rooms">
           {props.otherWaitingGames.map((game) => (
             <div className="room" key={game.id}>
-              <RoomTile
-                style={{ background: colors[2] }}
-                room={game}
-                user={props.user}
-                userTurn={false}
-              />
+              <RoomTile room={game} user={props.user} userTurn={false} />
             </div>
           ))}
         </div>,
@@ -136,12 +116,7 @@ function Lobby(props: OwnProps) {
         <div key="otherRooms" className="rooms">
           {props.otherGames.map((game) => (
             <div className="room" key={game.id}>
-              <RoomTile
-                style={{ background: colors[3] }}
-                room={game}
-                user={props.user}
-                userTurn={false}
-              />
+              <RoomTile room={game} user={props.user} userTurn={false} />
             </div>
           ))}
         </div>,

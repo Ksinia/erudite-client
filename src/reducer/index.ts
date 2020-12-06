@@ -6,7 +6,7 @@ import error from "./error";
 import lobby from "./lobby";
 import games from "./games";
 import duplicatedWords from "./duplicatedWords";
-import finishedGamesIds from "./finishedGamesIds";
+import finishedGames from "./finishedGames";
 import chat from "./chat";
 import messagesCount from "./messagesCount";
 
@@ -17,7 +17,7 @@ export const rootReducer = combineReducers({
   games,
   translation,
   duplicatedWords,
-  finishedGamesIds,
+  finishedGames,
   chat,
   messagesCount,
 });

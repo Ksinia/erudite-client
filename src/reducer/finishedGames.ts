@@ -1,9 +1,10 @@
 import { AnyAction } from "redux";
 
 import { FINISHED_GAMES } from "../actions/user";
+import { Game } from "./types";
 
 export default function reducer(
-  state: number[] | null = null,
+  state: Game[] | null = null,
   action: AnyAction
 ) {
   switch (action.type) {

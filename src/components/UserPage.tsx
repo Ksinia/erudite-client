@@ -5,7 +5,6 @@ import { ThunkDispatch } from "redux-thunk";
 
 import { RootState } from "../reducer";
 import { User } from "../reducer/types";
-import { loadFinishGamesIds } from "../actions/user";
 import ChangePassword from "./ChangePassword";
 import FinishedGamesContainer from "./FinishedGamesContainer";
 
@@ -20,12 +19,6 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps;
 
 class UserPage extends Component<Props> {
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.user && this.props.user.jwt && !prevProps.user) {
-      this.props.dispatch(loadFinishGamesIds(this.props.user.jwt));
-    }
-  }
-
   render() {
     return (
       <React.Fragment>
