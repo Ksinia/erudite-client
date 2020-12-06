@@ -59,7 +59,10 @@ function transformResults(game: Game) {
         .join(", ") + ` (${game.result.maxScoreWord[0].value})`,
     ]);
   }
-  if (game.result.bestTurnByCount[0].qty > 0) {
+  if (
+    game.result.bestTurnByCount.length &&
+    game.result.bestTurnByCount[0].qty > 0
+  ) {
     results.push([
       "max_words",
       `${game.result.bestTurnByCount
@@ -73,7 +76,10 @@ function transformResults(game: Game) {
         .join(", ")} (${game.result.bestTurnByCount[0].qty})`,
     ]);
   }
-  if (game.result.bestTurnByValue[0].score > 0) {
+  if (
+    game.result.bestTurnByValue.length &&
+    game.result.bestTurnByValue[0].score > 0
+  ) {
     results.push([
       "valuable_turn",
       `${game.result.bestTurnByValue
