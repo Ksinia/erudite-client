@@ -4,21 +4,22 @@ import RoomTile from "./RoomTile";
 import TranslationContainer from "./Translation/TranslationContainer";
 
 type OwnProps = {
-  finishedGames: Game[];
+  gamesList: Game[];
   user: User;
+  category: string;
 };
 
-function FinishedGames(props: OwnProps) {
+function GamesTilesList(props: OwnProps) {
   return (
     <React.Fragment>
-      {props.finishedGames ? (
-        props.finishedGames.length > 0 && (
+      {props.gamesList ? (
+        props.gamesList.length > 0 && (
           <React.Fragment>
             <h3>
-              <TranslationContainer translationKey="finished" />
+              <TranslationContainer translationKey={props.category} />
             </h3>
             <div className="rooms">
-              {props.finishedGames.map((game) => (
+              {props.gamesList.map((game) => (
                 <RoomTile
                   key={game.id}
                   room={game}
@@ -36,4 +37,4 @@ function FinishedGames(props: OwnProps) {
   );
 }
 
-export default FinishedGames;
+export default GamesTilesList;

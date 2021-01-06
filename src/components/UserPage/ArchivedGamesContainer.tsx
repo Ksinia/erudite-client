@@ -3,16 +3,16 @@ import { ThunkDispatch } from "redux-thunk";
 
 import { AnyAction } from "redux";
 import { connect } from "react-redux";
-import { RootState } from "../reducer";
-import { loadFinishGames } from "../actions/user";
-import FinishedGames from "./FinishedGames";
-import { Game, User } from "../reducer/types";
+import { RootState } from "../../reducer";
+import { loadArchivedGames } from "../../actions/user";
+import GamesTilesList from "../GamesTilesList";
+import { Game, User } from "../../reducer/types";
 
 interface OwnProps {
   jwt: string;
 }
 interface StateProps {
-  finishedGames: Game[];
+  gamesList: Game[];
   user: User;
 }
 
@@ -22,24 +22,25 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-class FinishedGamesContainer extends Component<Props> {
+class ArchivedGamesContainer extends Component<Props> {
   componentDidMount() {
-    this.props.dispatch(loadFinishGames(this.props.jwt));
+    this.props.dispatch(loadArchivedGames(this.props.jwt));
   }
   render() {
     return (
-      <FinishedGames
-        finishedGames={this.props.finishedGames}
+      <GamesTilesList
+        gamesList={this.props.gamesList}
         user={this.props.user}
+        category={"archived"}
       />
     );
   }
 }
 function MapStateToProps(state: RootState) {
   return {
-    finishedGames: state.finishedGames,
+    gamesList: state.archivedGames,
     user: state.user,
   };
 }
 
-export default connect(MapStateToProps)(FinishedGamesContainer);
+export default connect(MapStateToProps)(ArchivedGamesContainer);

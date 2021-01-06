@@ -66,8 +66,11 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     forgot: "Forgot password?",
     select: "Please select a letter for *",
     duplicated: "Cannot confirm this turn. Duplicated words: {}",
-    finished: "Your finished games:",
+    finished: "Your finished games",
+    archived: "Your archived games",
     to_validate: "Words to be validated: {}",
+    expand_archived: "Expand archived games",
+    collapse_archived: "Collapse archived games",
   },
   ru_RU: {
     create_room: "Пожалуйста, создайте комнату или войдите в существующую.",
@@ -136,8 +139,11 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     forgot: "Забыли пароль?",
     select: "Пожалуйста, выберите букву для *",
     duplicated: "Нельзя подтвердить ход. Повторяющиеся слова: {}",
-    finished: "Ваши законченные игры:",
+    finished: "Ваши законченные игры",
+    archived: "Ваши архивные игры",
     to_validate: "Слова для подтверждения: {}",
+    expand_archived: "Развернуть архивные игры",
+    collapse_archived: "Cвернуть архивные игры",
   },
 };
 export const LANG_NAMES: { locale: string; name: string }[] = [

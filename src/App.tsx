@@ -11,7 +11,7 @@ import Toolbar from "./components/Toolbar";
 import LobbyContainer from "./components/LobbyContainer";
 import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization";
-import UserPage from "./components/UserPage";
+import UserPage from "./components/UserPage/UserPage";
 import GameHandler from "./components/GameHandler";
 import "./App.css";
 

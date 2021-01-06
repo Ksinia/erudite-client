@@ -1,0 +1,7 @@
+.collapse {
+  display: none;
+}
+
+.collapse.in {
+  display: initial;
+}

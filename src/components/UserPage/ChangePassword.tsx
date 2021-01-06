@@ -4,14 +4,14 @@ import { connect } from "react-redux";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { url as baseUrl } from "../url";
-import { RootState } from "../reducer";
+import { url as baseUrl } from "../../url";
+import { RootState } from "../../reducer";
 import {
   getProfileFetch,
   loginError,
   clearError,
-} from "../actions/authorization";
-import { User } from "../reducer/types";
+} from "../../actions/authorization";
+import { User } from "../../reducer/types";
 
 interface StateProps {
   user: User;

@@ -7,6 +7,7 @@ import lobby from "./lobby";
 import games from "./games";
 import duplicatedWords from "./duplicatedWords";
 import finishedGames from "./finishedGames";
+import archivedGames from "./archivedGames";
 import chat from "./chat";
 import messagesCount from "./messagesCount";
 
@@ -18,6 +19,7 @@ export const rootReducer = combineReducers({
   translation,
   duplicatedWords,
   finishedGames,
+  archivedGames,
   chat,
   messagesCount,
 });
