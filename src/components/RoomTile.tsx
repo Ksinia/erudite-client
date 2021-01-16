@@ -12,7 +12,6 @@ import { colors } from "../colors";
 type OwnProps = {
   room: Game;
   user: User;
-  userTurn: boolean;
 };
 interface StateProps {
   messagesCount: { [key: number]: number };
@@ -25,20 +24,9 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & OwnProps;
 
 function getActiveUserName(game: Game): string {
-  const { phase, users, turnOrder, turn } = game;
-  if (phase === "turn") {
-    const user = users.find((user) => user.id === turnOrder[turn]);
-    if (user) {
-      return user.name;
-    }
-  }
-  if (phase === "validation") {
-    const user = users.find(
-      (user) => user.id === turnOrder[(turn + 1) % turnOrder.length]
-    );
-    if (user) {
-      return user.name;
-    }
+  const user = game.users.find((user) => user.id === game.activeUserId);
+  if (user) {
+    return user.name;
   }
   return "";
 }
@@ -63,7 +51,9 @@ function getTileColor(props: Props): string {
     props.user &&
     props.room.users.some((user) => user.id === props.user.id)
   ) {
-    return props.userTurn ? colors.red : colors.orange;
+    return props.room.activeUserId == props.user.id
+      ? colors.red
+      : colors.orange;
   }
   return props.room.phase === "waiting" ? colors.green : colors.blue;
 }
@@ -96,12 +86,15 @@ class RoomTile extends Component<Props> {
               {phase === "ready" && (
                 <TranslationContainer translationKey="ready" />
               )}
-              {phase !== "finished" && this.props.userTurn ? (
+              {phase !== "finished" &&
+              this.props.user &&
+              this.props.room.activeUserId === this.props.user.id ? (
                 <TranslationContainer translationKey="your_turn" />
               ) : (
                 getActiveUserName(this.props.room)
               )}
               {phase === "finished" &&
+                getWinnerName(this.props.room) &&
                 "\uD83C\uDFC6 " + getWinnerName(this.props.room)}
             </p>
             <p className="language">
