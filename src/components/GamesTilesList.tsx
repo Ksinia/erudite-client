@@ -20,12 +20,7 @@ function GamesTilesList(props: OwnProps) {
             </h3>
             <div className="rooms">
               {props.gamesList.map((game) => (
-                <RoomTile
-                  key={game.id}
-                  room={game}
-                  user={props.user}
-                  userTurn={false}
-                />
+                <RoomTile key={game.id} room={game} user={props.user} />
               ))}
             </div>
           </React.Fragment>

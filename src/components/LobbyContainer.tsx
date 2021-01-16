@@ -143,17 +143,7 @@ class LobbyContainer extends Component<Props, State> {
           game.users.find((user) => user.id === this.props.user.id) &&
           (game.phase === "turn" || game.phase === "validation")
         ) {
-          if (
-            (game.phase === "turn" &&
-              this.props.user.id === game.turnOrder[game.turn]) ||
-            (game.phase === "validation" &&
-              game.validated === "unknown" &&
-              this.props.user.id ===
-                game.turnOrder[(game.turn + 1) % game.turnOrder.length]) ||
-            (game.phase === "validation" &&
-              game.validated === "no" &&
-              this.props.user.id === game.turnOrder[game.turn])
-          ) {
+          if (this.props.user.id === game.activeUserId) {
             allGames.userTurn.push(game);
           } else {
             allGames.otherTurn.push(game);
