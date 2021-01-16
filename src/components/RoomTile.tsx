@@ -51,7 +51,7 @@ function getTileColor(props: Props): string {
     props.user &&
     props.room.users.some((user) => user.id === props.user.id)
   ) {
-    return props.room.activeUserId == props.user.id
+    return props.room.activeUserId === props.user.id
       ? colors.red
       : colors.orange;
   }
