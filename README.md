@@ -21,7 +21,7 @@ The frontend sends requests to the backend deployed to [Heroku](https://k-erudit
 If you want to install backend for this app:
 
 - Clone [this repository](https://github.com/Ksinia/erudite-server)
-- Run mpn install for the backend
+- Run npm install for the backend
 - Set up PostgreSQL database
 
 ## Technologies used
