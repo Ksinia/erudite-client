@@ -54,19 +54,20 @@ class Chat extends Component<Props, State> {
   };
 
   componentDidMount() {
-    if (this.props.user) {
-      const chatSocket = io(url, {
-        path: "/chat",
-        query: {
-          jwt: this.props.user.jwt,
-          gameId: this.props.gameId,
-        },
-      });
-      this.setState({ ...this.state, chatSocket });
-      chatSocket.on("message", (action: AnyAction) => {
-        this.props.dispatch(action);
-      });
+    let query: { [key: string]: string | number } = {
+      gameId: this.props.gameId,
+    };
+    if (this.props.user && this.props.user.jwt) {
+      query.jwt = this.props.user.jwt;
     }
+    const chatSocket = io(url, {
+      path: "/chat",
+      query: query,
+    });
+    this.setState({ ...this.state, chatSocket });
+    chatSocket.on("message", (action: AnyAction) => {
+      this.props.dispatch(action);
+    });
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -99,25 +100,26 @@ class Chat extends Component<Props, State> {
 
   render() {
     if (
-      this.props.user &&
-      (this.props.gamePhase === "waiting" ||
+      this.props.gamePhase === "waiting" ||
+      (this.props.user &&
         this.props.players.find((player) => player.id === this.props.user.id))
     ) {
       return (
         <div className="chat">
-          {this.props.players.find(
-            (player) => player.id === this.props.user.id
-          ) && (
-            <form onSubmit={this.onSubmit}>
-              <input
-                autoComplete="off"
-                name="message"
-                onChange={this.onChange}
-                value={this.state.message}
-              ></input>
-              <button disabled={!this.state.message}>↑</button>
-            </form>
-          )}
+          {this.props.user &&
+            this.props.players.find(
+              (player) => player.id === this.props.user.id
+            ) && (
+              <form onSubmit={this.onSubmit}>
+                <input
+                  autoComplete="off"
+                  name="message"
+                  onChange={this.onChange}
+                  value={this.state.message}
+                ></input>
+                <button disabled={!this.state.message}>↑</button>
+              </form>
+            )}
           {this.props.chat.map((message, index) => (
             <p key={index}>
               {message.name}: {message.text}
