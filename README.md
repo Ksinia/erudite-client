@@ -6,7 +6,7 @@ This is the frontend of Eridite game application.
 ## [Check out the deployed version here!](https://erudit.netlify.app)
 
 This is a Russian Scrabble-like game which is made in accordance with the rules of the board version.
-[Rules in Russian can be found here.](https://cdn.mosigra.ru/mosigra.product.other/399/712/erudit.pdf)
+[Rules in Russian can be found here.](https://www.mosigra.ru/image/data/mosigra.product.other/399/712/erudit.pdf)
 
 ## Installation
 
