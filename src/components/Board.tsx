@@ -145,9 +145,7 @@ class Board extends Component<Props> {
                           : this.props.board[yIndex][xIndex];
                       return (
                         <td
-                          className={`board-table-cell center-${
-                            yIndex === 7 && xIndex === 7
-                          }`}
+                          className={`board-table-cell`}
                           data-letter={cell.letter}
                           data-x={xIndex}
                           data-y={yIndex}
@@ -155,7 +153,9 @@ class Board extends Component<Props> {
                           onClick={this.props.clickBoard}
                         >
                           <div
-                            className={`cell ${
+                            className={`cell  
+                            center-${yIndex === 7 && xIndex === 7} 
+                            ${
                               cell.className
                             } user-letter-${!!this.props.userBoard[yIndex][
                               xIndex
