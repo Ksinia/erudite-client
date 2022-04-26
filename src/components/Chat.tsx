@@ -26,13 +26,13 @@ interface StateProps {
 type Props = StateProps & DispatchProps & OwnProps;
 
 type State = {
-  chatSocket: any | undefined;
+  socket: any | undefined;
   message: string;
 };
 
 class Chat extends Component<Props, State> {
   readonly state: State = {
-    chatSocket: undefined,
+    socket: undefined,
     message: "",
   };
 
@@ -46,7 +46,7 @@ class Chat extends Component<Props, State> {
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     try {
-      this.state.chatSocket.send(this.state.message);
+      this.state.socket.send({ type: "NEW_MESSAGE", payload: this.state.message });
       this.setState({ ...this.state, message: "" });
     } catch (error) {
       console.log("error test:", error);
@@ -60,12 +60,12 @@ class Chat extends Component<Props, State> {
     if (this.props.user && this.props.user.jwt) {
       query.jwt = this.props.user.jwt;
     }
-    const chatSocket = io(url, {
-      path: "/chat",
+    const socket = io(url, {
+      path: "/socket",
       query: query,
     });
-    this.setState({ ...this.state, chatSocket });
-    chatSocket.on("message", (action: AnyAction) => {
+    this.setState({ ...this.state, socket });
+    socket.on("message", (action: AnyAction) => {
       this.props.dispatch(action);
     });
   }
@@ -80,20 +80,20 @@ class Chat extends Component<Props, State> {
             gameId: this.props.gameId,
           },
         });
-        this.setState({ ...this.state, chatSocket });
+        this.setState({ ...this.state, socket: chatSocket });
         chatSocket.on("message", (action: AnyAction) => {
           this.props.dispatch(action);
         });
-      } else if (this.state.chatSocket) {
-        this.state.chatSocket.close();
-        this.setState({ ...this.state, chatSocket: undefined });
+      } else if (this.state.socket) {
+        this.state.socket.close();
+        this.setState({ ...this.state, socket: undefined });
       }
     }
   }
 
   componentWillUnmount() {
-    if (this.state.chatSocket) {
-      this.state.chatSocket.close();
+    if (this.state.socket) {
+      this.state.socket.close();
     }
     this.props.dispatch(clearMessages());
   }
