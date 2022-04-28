@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { connect } from "react-redux";
-import io from "socket.io-client";
 
 import { RootState } from "../reducer";
-import { url } from "../url";
 import { User, Message } from "../reducer/types";
 import { clearMessages } from "../actions/chat";
 import "./Chat.css";
@@ -19,20 +17,20 @@ interface OwnProps {
 interface DispatchProps {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
+// TODO: check which should be named StateProps and which should be named OwnProps
 interface StateProps {
   user: User;
   chat: Message[];
+  socket: SocketIOClient.Socket;
 }
 type Props = StateProps & DispatchProps & OwnProps;
 
 type State = {
-  socket: any | undefined;
   message: string;
 };
 
 class Chat extends Component<Props, State> {
   readonly state: State = {
-    socket: undefined,
     message: "",
   };
 
@@ -46,7 +44,10 @@ class Chat extends Component<Props, State> {
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     try {
-      this.state.socket.send({ type: "NEW_MESSAGE", payload: this.state.message });
+      this.props.socket.send({
+        type: "NEW_MESSAGE",
+        payload: this.state.message,
+      });
       this.setState({ ...this.state, message: "" });
     } catch (error) {
       console.log("error test:", error);
@@ -60,41 +61,9 @@ class Chat extends Component<Props, State> {
     if (this.props.user && this.props.user.jwt) {
       query.jwt = this.props.user.jwt;
     }
-    const socket = io(url, {
-      path: "/socket",
-      query: query,
-    });
-    this.setState({ ...this.state, socket });
-    socket.on("message", (action: AnyAction) => {
-      this.props.dispatch(action);
-    });
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.user !== prevProps.user) {
-      if (this.props.user) {
-        const chatSocket = io(url, {
-          path: "/chat",
-          query: {
-            jwt: this.props.user.jwt,
-            gameId: this.props.gameId,
-          },
-        });
-        this.setState({ ...this.state, socket: chatSocket });
-        chatSocket.on("message", (action: AnyAction) => {
-          this.props.dispatch(action);
-        });
-      } else if (this.state.socket) {
-        this.state.socket.close();
-        this.setState({ ...this.state, socket: undefined });
-      }
-    }
   }
 
   componentWillUnmount() {
-    if (this.state.socket) {
-      this.state.socket.close();
-    }
     this.props.dispatch(clearMessages());
   }
 
@@ -136,6 +105,7 @@ function MapStateToProps(state: RootState) {
   return {
     user: state.user,
     chat: state.chat,
+    socket: state.socket,
   };
 }
 

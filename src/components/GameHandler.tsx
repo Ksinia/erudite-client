@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps } from "react-router-dom";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { connect } from "react-redux";
@@ -7,6 +7,10 @@ import { connect } from "react-redux";
 import { RootState } from "../reducer";
 import { url } from "../url";
 import { Game } from "../reducer/types";
+import {
+  ADD_GAME_TO_SOCKET,
+  REMOVE_GAME_FROM_SOCKET,
+} from "../actions/outgoingMessageTypes";
 import GameContainer from "./GameContainer";
 import RoomContainer from "./RoomContainer";
 import TranslationContainer from "./Translation/TranslationContainer";
@@ -19,6 +23,7 @@ interface DispatchProps {
 }
 interface StateProps {
   games: { [key: number]: Game };
+  socket: SocketIOClient.Socket;
 }
 type Props = StateProps & DispatchProps & RouteComponentProps<MatchParams>;
 
@@ -34,6 +39,13 @@ class GameHandler extends Component<Props, State> {
   };
 
   componentDidMount() {
+    if (this.props.socket) {
+      this.props.socket.send({
+        type: ADD_GAME_TO_SOCKET,
+        payload: this.state.gameId,
+      });
+    }
+
     const gameStream = new EventSource(`${url}/game/${this.state.gameId}`);
     this.setState({ ...this.state, gameStream });
     document.title = `Game ${this.state.gameId} | Erudite`;
@@ -61,12 +73,24 @@ class GameHandler extends Component<Props, State> {
           this.props.dispatch(action);
         };
       }
+      if (this.props.socket && this.props.socket !== prevProps.socket) {
+        this.props.socket.send({
+          type: ADD_GAME_TO_SOCKET,
+          payload: this.state.gameId,
+        });
+      }
     }
   }
 
   componentWillUnmount() {
     if (this.state.gameStream) {
       this.state.gameStream.close();
+    }
+    if (this.props.socket) {
+      this.props.socket.send({
+        type: REMOVE_GAME_FROM_SOCKET,
+        payload: this.state.gameId,
+      });
     }
   }
 
@@ -105,6 +129,7 @@ class GameHandler extends Component<Props, State> {
 function MapStateToProps(state: RootState) {
   return {
     games: state.games,
+    socket: state.socket,
   };
 }
 
