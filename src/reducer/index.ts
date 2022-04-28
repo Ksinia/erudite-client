@@ -10,6 +10,7 @@ import finishedGames from "./finishedGames";
 import archivedGames from "./archivedGames";
 import chat from "./chat";
 import messagesCount from "./messagesCount";
+import socket from "./socket";
 
 export const rootReducer = combineReducers({
   user,
@@ -22,6 +23,7 @@ export const rootReducer = combineReducers({
   archivedGames,
   chat,
   messagesCount,
+  socket,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

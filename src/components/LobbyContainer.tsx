@@ -3,7 +3,6 @@ import superagent from "superagent";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { AnyAction, Dispatch } from "redux";
-import io from "socket.io-client";
 
 import { url } from "../url";
 import { RootState } from "../reducer";
@@ -13,6 +12,7 @@ import Lobby from "./Lobby";
 interface OwnProps {
   lobby: GameType[];
   user: User;
+  socket: SocketIOClient.Socket;
 }
 
 type State = {
@@ -20,7 +20,6 @@ type State = {
     maxPlayers: number;
     language: string;
   };
-  socket: any | undefined;
   sendingFormEnabled: boolean;
 };
 
@@ -48,7 +47,6 @@ class LobbyContainer extends Component<Props, State> {
       maxPlayers: 2,
       language: this.getLanguage(),
     },
-    socket: undefined,
     sendingFormEnabled: true,
   };
 
@@ -92,46 +90,15 @@ class LobbyContainer extends Component<Props, State> {
       const action = JSON.parse(data);
       this.props.dispatch(action);
     };
-    if (this.props.user) {
-      const lobbySocket = io(url, {
-        path: "/socket",
-        query: {
-          jwt: this.props.user.jwt,
-        },
+    this.props.socket &&
+      this.props.socket.send({
+        type: "ENTER_LOBBY",
       });
-      this.setState({ ...this.state, socket: lobbySocket });
-      lobbySocket.on("message", (action: AnyAction) => {
-        this.props.dispatch(action);
-      });
-    }
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.user !== prevProps.user) {
-      if (this.props.user) {
-        const socket = io(url, {
-          path: "/socket",
-          query: {
-            jwt: this.props.user.jwt,
-          },
-        });
-        this.setState({ ...this.state, socket });
-        socket.on("message", (action: AnyAction) => {
-          this.props.dispatch(action);
-        });
-      } else if (this.state.socket) {
-        this.state.socket.close();
-        this.setState({ ...this.state, socket: undefined });
-      }
-    }
   }
 
   componentWillUnmount() {
     if (this.stream) {
       this.stream.close();
-    }
-    if (this.state.socket) {
-      this.state.socket.close();
     }
   }
 
@@ -191,6 +158,7 @@ function mapStateToProps(state: RootState) {
   return {
     lobby: state.lobby,
     user: state.user,
+    socket: state.socket,
   };
 }
 export default connect(mapStateToProps)(LobbyContainer);
