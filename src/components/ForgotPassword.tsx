@@ -28,15 +28,11 @@ class ForgotPassword extends Component<Props, State> {
   };
 
   onSubmit = async (event: React.SyntheticEvent) => {
-    console.log("event.constructor.name", event.constructor.name);
     event.preventDefault();
     this.setState({ ...this.state, result: "" });
     const url = `${baseUrl}/generate-link`;
     try {
-      const response = await superagent
-        .post(url)
-        .send({ name: this.state.name });
-      console.log("response test: ", response);
+      await superagent.post(url).send({ name: this.state.name });
       this.setState({
         name: "",
         result: `The link for changing password was created. 

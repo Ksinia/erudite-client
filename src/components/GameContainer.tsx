@@ -268,11 +268,10 @@ class GameContainer extends Component<Props, State> {
   validateTurn = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const { name } = event.target as HTMLButtonElement;
     try {
-      const response = await superagent
+      await superagent
         .post(`${url}/game/${this.props.game.id}/approve`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ validation: name });
-      console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
     }
@@ -292,10 +291,9 @@ class GameContainer extends Component<Props, State> {
 
   undo = async () => {
     try {
-      const response = await superagent
+      await superagent
         .post(`${url}/game/${this.props.game.id}/undo`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`);
-      console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
     }
@@ -303,13 +301,12 @@ class GameContainer extends Component<Props, State> {
 
   change = async () => {
     try {
-      const response = await superagent
+      await superagent
         .post(`${url}/game/${this.props.game.id}/change`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({
           letters: this.props.game.letters[this.props.user.id],
         });
-      console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
     }
@@ -346,7 +343,6 @@ class GameContainer extends Component<Props, State> {
           language: this.props.game.language,
           players: this.props.game.turnOrder,
         });
-      console.log("response test: ", response);
       this.props.history.push(`/game/${response.body.id}`);
     } catch (error) {
       console.warn("error test:", error);
@@ -467,6 +463,9 @@ class GameContainer extends Component<Props, State> {
           wildCardLetters={this.state.wildCardLetters}
           wildCardOnBoard={this.state.wildCardOnBoard}
           duplicatedWords={this.props.duplicatedWords}
+          userBoardEmpty={
+            !this.state.userBoard.some((row: string[]) => !!row.join(""))
+          }
         />
       </div>
     );

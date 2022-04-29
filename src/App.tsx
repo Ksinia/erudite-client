@@ -11,7 +11,6 @@ import Toolbar from "./components/Toolbar";
 import LobbyContainer from "./components/LobbyContainer";
 import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization";
-import { connectToSocket } from "./actions/user";
 import UserPage from "./components/UserPage/UserPage";
 import GameHandler from "./components/GameHandler";
 import "./App.css";
@@ -19,11 +18,10 @@ import { User } from "./reducer/types";
 import {
   ADD_USER_TO_SOCKET,
   REMOVE_USER_FROM_SOCKET,
-} from "./actions/outgoingMessageTypes";
+} from "./constants/outgoingMessageTypes";
 
 interface OwnProps {
   user: User;
-  socket: SocketIOClient.Socket;
 }
 
 type DispatchProps = {
@@ -36,27 +34,24 @@ class App extends Component<Props> {
   componentDidMount() {
     document.addEventListener("touchstart", function () {}, true);
     this.props.dispatch(getProfileFetch(localStorage.jwt));
-
-    // TODO: do I need dispatch here? Or just function?
-    this.props.dispatch(connectToSocket(localStorage.jwt));
+    if (this.props.user) {
+      this.props.dispatch({
+        type: ADD_USER_TO_SOCKET,
+        payload: this.props.user.jwt,
+      });
+    }
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.socket && prevProps.user !== this.props.user) {
+    if (prevProps.user !== this.props.user) {
       if (this.props.user) {
-        this.props.socket.send({
+        this.props.dispatch({
           type: ADD_USER_TO_SOCKET,
           payload: this.props.user.jwt,
         });
       } else {
-        this.props.socket.send({ type: REMOVE_USER_FROM_SOCKET });
+        this.props.dispatch({ type: REMOVE_USER_FROM_SOCKET });
       }
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.props.socket) {
-      this.props.socket.close();
     }
   }
 
@@ -86,7 +81,6 @@ class App extends Component<Props> {
 function mapStateToProps(state: RootState) {
   return {
     user: state.user,
-    socket: state.socket,
   };
 }
 export default connect(mapStateToProps)(App);

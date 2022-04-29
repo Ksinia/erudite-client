@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 
-import { FINISHED_GAMES } from "../actions/user";
+import { FINISHED_GAMES } from "../constants/internalMessageTypes";
 import { Game } from "./types";
 
 export default function reducer(

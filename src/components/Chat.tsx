@@ -7,21 +7,19 @@ import { RootState } from "../reducer";
 import { User, Message } from "../reducer/types";
 import { clearMessages } from "../actions/chat";
 import "./Chat.css";
+import { SEND_CHAT_MESSAGE } from "../constants/outgoingMessageTypes";
 
 interface OwnProps {
   gameId: number;
   players: User[];
   gamePhase: string;
 }
-
 interface DispatchProps {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
-// TODO: check which should be named StateProps and which should be named OwnProps
 interface StateProps {
   user: User;
   chat: Message[];
-  socket: SocketIOClient.Socket;
 }
 type Props = StateProps & DispatchProps & OwnProps;
 
@@ -44,8 +42,8 @@ class Chat extends Component<Props, State> {
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     try {
-      this.props.socket.send({
-        type: "NEW_MESSAGE",
+      this.props.dispatch({
+        type: SEND_CHAT_MESSAGE,
         payload: this.state.message,
       });
       this.setState({ ...this.state, message: "" });
@@ -53,15 +51,6 @@ class Chat extends Component<Props, State> {
       console.log("error test:", error);
     }
   };
-
-  componentDidMount() {
-    let query: { [key: string]: string | number } = {
-      gameId: this.props.gameId,
-    };
-    if (this.props.user && this.props.user.jwt) {
-      query.jwt = this.props.user.jwt;
-    }
-  }
 
   componentWillUnmount() {
     this.props.dispatch(clearMessages());
@@ -105,7 +94,6 @@ function MapStateToProps(state: RootState) {
   return {
     user: state.user,
     chat: state.chat,
-    socket: state.socket,
   };
 }
 

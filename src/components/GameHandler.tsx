@@ -5,12 +5,12 @@ import { AnyAction } from "redux";
 import { connect } from "react-redux";
 
 import { RootState } from "../reducer";
-import { url } from "../url";
-import { Game } from "../reducer/types";
+import { Game, User } from "../reducer/types";
 import {
   ADD_GAME_TO_SOCKET,
   REMOVE_GAME_FROM_SOCKET,
-} from "../actions/outgoingMessageTypes";
+} from "../constants/outgoingMessageTypes";
+import { fetchGame } from "../actions/game";
 import GameContainer from "./GameContainer";
 import RoomContainer from "./RoomContainer";
 import TranslationContainer from "./Translation/TranslationContainer";
@@ -23,75 +23,63 @@ interface DispatchProps {
 }
 interface StateProps {
   games: { [key: number]: Game };
-  socket: SocketIOClient.Socket;
+  socketConnected: boolean;
+  user: User;
 }
 type Props = StateProps & DispatchProps & RouteComponentProps<MatchParams>;
 
 type State = {
-  gameStream: EventSource | undefined;
   gameId: number;
 };
 
 class GameHandler extends Component<Props, State> {
   readonly state: State = {
-    gameStream: undefined,
     gameId: parseInt(this.props.match.params.game),
   };
 
   componentDidMount() {
-    if (this.props.socket) {
-      this.props.socket.send({
+    document.title = `Game ${this.state.gameId} | Erudite`;
+    const jwt = this.props.user && this.props.user.jwt;
+    this.props.dispatch(fetchGame(this.state.gameId, jwt));
+    this.props.socketConnected &&
+      this.props.dispatch({
+        type: ADD_GAME_TO_SOCKET,
+        payload: this.state.gameId,
+      });
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>) {
+    if (!prevProps.socketConnected && this.props.socketConnected) {
+      this.props.dispatch({
         type: ADD_GAME_TO_SOCKET,
         payload: this.state.gameId,
       });
     }
-
-    const gameStream = new EventSource(`${url}/game/${this.state.gameId}`);
-    this.setState({ ...this.state, gameStream });
-    document.title = `Game ${this.state.gameId} | Erudite`;
-    gameStream.onmessage = (event) => {
-      const { data } = event;
-      const action = JSON.parse(data);
-      this.props.dispatch(action);
-    };
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (this.props !== prevProps) {
-      const prevGameId = this.state.gameId;
-      const gameId = parseInt(this.props.match.params.game);
-      if (gameId !== prevGameId) {
-        if (this.state.gameStream) {
-          this.state.gameStream.close();
-        }
-        const gameStream = new EventSource(`${url}/game/${gameId}`);
-        document.title = `Game ${gameId} | Erudite`;
-        this.setState({ gameId, gameStream });
-        gameStream.onmessage = (event) => {
-          const { data } = event;
-          const action = JSON.parse(data);
-          this.props.dispatch(action);
-        };
-      }
-      if (this.props.socket && this.props.socket !== prevProps.socket) {
-        this.props.socket.send({
+    if (prevProps.match.params.game !== this.props.match.params.game) {
+      this.setState({
+        gameId: parseInt(this.props.match.params.game),
+      });
+      const jwt = this.props.user && this.props.user.jwt;
+      this.props.dispatch(
+        fetchGame(parseInt(this.props.match.params.game), jwt)
+      );
+      this.props.socketConnected &&
+        this.props.dispatch({
           type: ADD_GAME_TO_SOCKET,
-          payload: this.state.gameId,
+          payload: this.props.match.params.game,
         });
-      }
+      this.props.dispatch({
+        type: REMOVE_GAME_FROM_SOCKET,
+        payload: prevProps.match.params.game,
+      });
     }
   }
 
   componentWillUnmount() {
-    if (this.state.gameStream) {
-      this.state.gameStream.close();
-    }
-    if (this.props.socket) {
-      this.props.socket.send({
-        type: REMOVE_GAME_FROM_SOCKET,
-        payload: this.state.gameId,
-      });
-    }
+    this.props.dispatch({
+      type: REMOVE_GAME_FROM_SOCKET,
+      payload: this.state.gameId,
+    });
   }
 
   render() {
@@ -129,7 +117,8 @@ class GameHandler extends Component<Props, State> {
 function MapStateToProps(state: RootState) {
   return {
     games: state.games,
-    socket: state.socket,
+    socketConnected: state.socketConnected,
+    user: state.user,
   };
 }
 

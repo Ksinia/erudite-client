@@ -26,22 +26,20 @@ type Props = StateProps & DispatchProps & OwnProps;
 class RoomContainer extends Component<Props> {
   onClickStart = async (): Promise<void> => {
     try {
-      const response = await superagent
+      await superagent
         .post(`${url}/start`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ gameId: this.props.game.id });
-      console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
     }
   };
   onClickJoin = async (): Promise<void> => {
     try {
-      const response = await superagent
+      await superagent
         .put(`${url}/join`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ gameId: this.props.game.id });
-      console.log("response test: ", response);
     } catch (error) {
       console.warn("error test:", error);
     }

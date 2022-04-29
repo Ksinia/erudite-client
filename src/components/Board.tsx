@@ -186,7 +186,7 @@ class Board extends Component<Props> {
             </tbody>
           </table>
         ) : (
-          "Loading Board"
+          <TranslationContainer translationKey="loading" />
         )}
       </div>
     );

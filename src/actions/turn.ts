@@ -1,20 +1,9 @@
 import superagent from "superagent";
-import { AnyAction } from "redux";
 
 import { url } from "../url";
 import { MyThunkAction } from "../reducer/types";
 import { WildCardOnBoard } from "../components/GameContainer";
-
-export const DUPLICATED_WORDS = "DUPLICATED_WORDS";
-
-export const duplicatedWords = (words: string[]): AnyAction => {
-  return {
-    type: DUPLICATED_WORDS,
-    payload: words,
-  };
-};
-
-export const NO_DUPLICATIONS = "NO_DUPLICATIONS";
+import { NO_DUPLICATIONS } from "../constants/incomingMessageTypes";
 
 export const clearDuplicatedWordsError = () => {
   return {
@@ -36,7 +25,6 @@ export const sendTurn = (
         userBoard,
         wildCardOnBoard,
       });
-    console.log("response test: ", response);
     const action = JSON.parse(response.text);
     dispatch(action);
   } catch (error) {
