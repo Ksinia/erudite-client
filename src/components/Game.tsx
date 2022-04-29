@@ -100,7 +100,11 @@ function Game(props: OwnProps) {
                 (letterObject) => letterObject.letter === ""
               )}
             >
-              <TranslationContainer translationKey="confirm" />
+              {props.userBoardEmpty ? (
+                <TranslationContainer translationKey="pass" />
+              ) : (
+                <TranslationContainer translationKey="confirm" />
+              )}
             </button>
           )}
         {props.user &&
