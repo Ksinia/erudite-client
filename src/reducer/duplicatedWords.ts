@@ -1,6 +1,9 @@
 import { AnyAction } from "redux";
 
-import { DUPLICATED_WORDS, NO_DUPLICATIONS } from "../actions/turn";
+import {
+  DUPLICATED_WORDS,
+  NO_DUPLICATIONS,
+} from "../constants/incomingMessageTypes";
 
 export default function reducer(state = null, action: AnyAction) {
   switch (action.type) {

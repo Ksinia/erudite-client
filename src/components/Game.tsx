@@ -12,6 +12,7 @@ type OwnProps = {
   userLetters: string[];
   chosenLetterIndex: number | null;
   userBoard: string[][];
+  userBoardEmpty: boolean;
   user: User;
   clickBoard: (event: React.SyntheticEvent<HTMLDivElement>) => void;
   clickLetter: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -104,7 +105,8 @@ function Game(props: OwnProps) {
           )}
         {props.user &&
           props.game.turnOrder.includes(props.user.id) &&
-          props.game.phase !== "finished" && (
+          props.game.phase !== "finished" &&
+          !props.userBoardEmpty && (
             <button key="return" onClick={props.returnLetters}>
               <TranslationContainer translationKey="return" />
             </button>

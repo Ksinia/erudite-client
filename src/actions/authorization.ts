@@ -5,10 +5,11 @@ import { History } from "history";
 import { url as baseUrl } from "../url";
 import { MyThunkAction } from "../reducer/types";
 
-export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-//this action is created on server side
-
-export const LOGIN_OR_SIGNUP_ERROR = "LOGIN_OR_SIGNUP_ERROR";
+import {
+  LOGIN_OR_SIGNUP_ERROR,
+  CLEAR_ERROR,
+  LOGOUT,
+} from "../constants/internalMessageTypes";
 
 export const loginError = (error: string): AnyAction => {
   return {
@@ -17,15 +18,11 @@ export const loginError = (error: string): AnyAction => {
   };
 };
 
-export const CLEAR_ERROR = "CLEAR_ERROR";
-
 export const clearError = () => {
   return {
     type: CLEAR_ERROR,
   };
 };
-
-export const LOGOUT = "LOGOUT";
 
 export const logOut = () => {
   localStorage.removeItem("jwt");

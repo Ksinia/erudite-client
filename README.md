@@ -28,4 +28,4 @@ If you want to install backend for this app:
 
 - react
 - redux
-- sse
+- web sockets

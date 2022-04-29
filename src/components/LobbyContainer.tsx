@@ -7,12 +7,14 @@ import { AnyAction, Dispatch } from "redux";
 import { url } from "../url";
 import { RootState } from "../reducer";
 import { Game as GameType, User } from "../reducer/types";
+import { ENTER_LOBBY } from "../constants/outgoingMessageTypes";
 import Lobby from "./Lobby";
+import TranslationContainer from "./Translation/TranslationContainer";
 
-interface OwnProps {
+interface StateProps {
   lobby: GameType[];
   user: User;
-  socket: SocketIOClient.Socket;
+  socketConnected: boolean;
 }
 
 type State = {
@@ -27,11 +29,9 @@ interface DispatchProps {
   dispatch: Dispatch<AnyAction>;
 }
 
-type Props = OwnProps & DispatchProps & RouteComponentProps;
+type Props = StateProps & DispatchProps & RouteComponentProps;
 
 class LobbyContainer extends Component<Props, State> {
-  stream: EventSource | undefined = undefined;
-
   getLanguage = () => {
     if (localStorage.language) {
       return localStorage.language;
@@ -59,7 +59,6 @@ class LobbyContainer extends Component<Props, State> {
           .post(`${url}/create`)
           .set("Authorization", `Bearer ${this.props.user.jwt}`)
           .send(this.state.formFields);
-        console.log("response test: ", response);
         localStorage.setItem("language", this.state.formFields.language);
         this.props.history.push(`/game/${response.body.id}`);
       } catch (error) {
@@ -84,21 +83,16 @@ class LobbyContainer extends Component<Props, State> {
 
   componentDidMount() {
     document.title = `Erudite`;
-    this.stream = new EventSource(`${url}/stream`);
-    this.stream.onmessage = (event) => {
-      const { data } = event;
-      const action = JSON.parse(data);
-      this.props.dispatch(action);
-    };
-    this.props.socket &&
-      this.props.socket.send({
-        type: "ENTER_LOBBY",
-      });
+    this.props.dispatch({
+      type: ENTER_LOBBY,
+    });
   }
 
-  componentWillUnmount() {
-    if (this.stream) {
-      this.stream.close();
+  componentDidUpdate(prevProps: Readonly<Props>) {
+    if (!prevProps.socketConnected && this.props.socketConnected) {
+      this.props.dispatch({
+        type: ENTER_LOBBY,
+      });
     }
   }
 
@@ -136,8 +130,7 @@ class LobbyContainer extends Component<Props, State> {
         other: [],
       }
     );
-
-    return (
+    return this.props.lobby.length > 0 ? (
       <Lobby
         onChange={this.onChange}
         onSubmit={this.onSubmit}
@@ -150,6 +143,8 @@ class LobbyContainer extends Component<Props, State> {
         user={this.props.user}
         sendingFormEnabled={this.state.sendingFormEnabled}
       />
+    ) : (
+      <TranslationContainer translationKey="loading" />
     );
   }
 }
@@ -158,7 +153,7 @@ function mapStateToProps(state: RootState) {
   return {
     lobby: state.lobby,
     user: state.user,
-    socket: state.socket,
+    socketConnected: state.socketConnected,
   };
 }
 export default connect(mapStateToProps)(LobbyContainer);

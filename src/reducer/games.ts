@@ -1,5 +1,6 @@
 import { AnyAction } from "redux";
 
+import { GAME_UPDATED } from "../constants/incomingMessageTypes";
 import { Game } from "./types";
 
 export default function reducer(
@@ -7,7 +8,7 @@ export default function reducer(
   action: AnyAction
 ) {
   switch (action.type) {
-    case "GAME_UPDATED": {
+    case GAME_UPDATED: {
       return { ...state, [action.payload.gameId]: action.payload.game };
     }
     default:
