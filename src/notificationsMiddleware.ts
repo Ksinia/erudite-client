@@ -8,9 +8,6 @@ type Options = {
   subtitle?: string;
   message?: string;
   duration?: number;
-  icon?: string;
-  vibrate?: number | number[];
-  silent?: boolean;
   onClick?: onClickType;
   requireInteraction?: boolean;
 };
@@ -21,17 +18,7 @@ type onClickType = voidFunc | eventFunc | undefined;
 const defaultDuration = 3000;
 
 const addNotification = async (options: Options): Promise<void> => {
-  const {
-    title,
-    subtitle,
-    message,
-    duration,
-    icon,
-    vibrate,
-    silent,
-    onClick,
-    requireInteraction,
-  } = options;
+  const { title, message, duration, onClick, requireInteraction } = options;
   if (
     Notification.permission === "default" ||
     Notification.permission === "denied"
@@ -41,10 +28,6 @@ const addNotification = async (options: Options): Promise<void> => {
   if (Notification.permission === "granted") {
     const not: Notification = new Notification(title, {
       body: message,
-      data: subtitle,
-      icon,
-      vibrate,
-      silent,
       requireInteraction,
     });
     not.onclick = onClick || null;
