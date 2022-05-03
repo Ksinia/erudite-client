@@ -39,8 +39,8 @@ const notificationsMiddleware = (store: any) => (next: Dispatch) => (
   action: AnyAction
 ) => {
   if (
-    store.getState().notificationsSupported &&
-    action.type === PUSH_NOTIFICATION
+    action.type === PUSH_NOTIFICATION &&
+    store.getState().notificationsSupported
   ) {
     addNotification({
       title: action.payload.title,
