@@ -45,6 +45,7 @@ const addNotification = async (options: Options): Promise<void> => {
       icon,
       vibrate,
       silent,
+      requireInteraction,
     });
     not.onclick = onClick || null;
     setTimeout(not.close.bind(not), duration || defaultDuration);

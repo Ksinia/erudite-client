@@ -40,13 +40,17 @@ socket.on("reconnect", () => {
       payload: store.getState().user.jwt,
     });
   }
-  // TODO: add game to socket on reconnect
-  // if (?) {
-  //   store.dispatch({
-  //     type: ADD_GAME_TO_SOCKET,
-  //     payload: ?,
-  //   });
-  // }
+  const locationArray = window.location.pathname.split("/");
+  let payload;
+  if (locationArray[1] === "game") {
+    payload = locationArray[2];
+  } else if (locationArray[1] === "") {
+    payload = "lobby";
+  }
+  store.dispatch({
+    type: ADD_GAME_TO_SOCKET,
+    payload,
+  });
   store.dispatch({
     type: SOCKET_CONNECTED,
   });
