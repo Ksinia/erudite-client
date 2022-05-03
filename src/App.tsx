@@ -19,6 +19,7 @@ import {
   ADD_USER_TO_SOCKET,
   REMOVE_USER_FROM_SOCKET,
 } from "./constants/outgoingMessageTypes";
+import { NOTIFICATIONS_SUPPORTED } from "./constants/internalMessageTypes";
 
 interface OwnProps {
   user: User;
@@ -34,6 +35,9 @@ class App extends Component<Props> {
   componentDidMount() {
     document.addEventListener("touchstart", function () {}, true);
     this.props.dispatch(getProfileFetch(localStorage.jwt));
+    if ("Notification" in window) {
+      this.props.dispatch({ type: NOTIFICATIONS_SUPPORTED });
+    }
     if (this.props.user) {
       this.props.dispatch({
         type: ADD_USER_TO_SOCKET,

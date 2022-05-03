@@ -77,7 +77,7 @@ function Game(props: OwnProps) {
           wildCardLetters={props.wildCardLetters}
           alphabet={Object.keys(letterValues[props.game.language])}
         />
-        {props.game.phase === "finished" && (
+        {props.game.phase === "finished" && props.user && (
           <button key="again" onClick={props.playAgainWithSamePlayers}>
             <TranslationContainer translationKey="play_again" />
           </button>
