@@ -130,7 +130,7 @@ class LobbyContainer extends Component<Props, State> {
         other: [],
       }
     );
-    return this.props.lobby.length > 0 ? (
+    return Array.isArray(this.props.lobby) ? (
       <Lobby
         onChange={this.onChange}
         onSubmit={this.onSubmit}
