@@ -5,7 +5,7 @@ function getJWT(): string | null {
     return localStorage.getItem("jwt")
 }
 
-async function callApi(method: keyof Pick<typeof superagent, 'get' | 'post'>, path: string, body?: object) {
+async function callApi(method: keyof Pick<typeof superagent, 'get' | 'post'>, path: string, body?: object | string) {
     const jwt = getJWT()
     if (jwt) {
         const response = await superagent[method](`${baseUrl}/${path}`)
@@ -19,5 +19,5 @@ async function callApi(method: keyof Pick<typeof superagent, 'get' | 'post'>, pa
 }
 
 export async function saveSubscription(subscription: PushSubscription) {
-    return callApi('post', 'subscribe', subscription) // TODO: Check return code
+    return callApi('post', 'subscribe', JSON.parse(JSON.stringify(subscription))) // TODO: Check return code
 }
