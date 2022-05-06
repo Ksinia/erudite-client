@@ -1,4 +1,4 @@
-# :pencil2: Erudite game :pencil2:
+# :pencil2: Erudite game :pencil2: [![Netlify Status](https://api.netlify.com/api/v1/badges/f940aa5f-74b8-4fad-b4bf-7914c30f8d34/deploy-status)](https://app.netlify.com/sites/erudit/deploys)
 
 This is the frontend of Eridite game application.
 [Here is the backend](https://github.com/Ksinia/erudite-server).
