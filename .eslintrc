@@ -1,5 +1,8 @@
 {
-  "ignorePatterns": ["*.css", "*.svg"],
+  "ignorePatterns": [
+    "*.css",
+    "*.svg"
+  ],
   "env": {
     "browser": true,
     "node": true
@@ -10,8 +13,9 @@
     "ecmaVersion": 2020
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:prettier/recommended",
+    "react-app",
+    //"eslint:recommended" - this is uselss and requires more overrides becasue "react-app" already has tuned rules for CRA
+    //"plugin:prettier/recommended", -- TODO: Reenable it back. Goes haywire after react-script upgrade
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",

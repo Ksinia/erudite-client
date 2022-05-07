@@ -69,7 +69,7 @@ class ChangePassword extends Component<Props, State> {
       } else {
         this.props.dispatch(loginError(JSON.parse(response.text).message));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("error test:", error);
       if (error.response) {
         this.props.dispatch(loginError(error.response.body.message));

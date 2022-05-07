@@ -1,13 +1,13 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Dispatch, AnyAction } from "redux";
 import { Link } from "react-router-dom";
 
 import { User, Game } from "../reducer/types";
 import "./RoomTile.css";
-import TranslationContainer from "./Translation/TranslationContainer";
-import { Dispatch, AnyAction } from "redux";
 import { RootState } from "../reducer";
-import { connect } from "react-redux";
 import { colors } from "../colors";
+import TranslationContainer from "./Translation/TranslationContainer";
 
 type OwnProps = {
   room: Game;
