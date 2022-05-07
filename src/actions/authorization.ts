@@ -54,7 +54,7 @@ export const loginSignupFunction = (
     } else {
       history.push("/");
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log("error test:", error);
     if (error.response) {
       dispatch(loginError(error.response.body.message));
@@ -73,7 +73,7 @@ export const getProfileFetch = (jwt: string): MyThunkAction => async (
         .set("Authorization", `Bearer ${jwt}`);
       const action = JSON.parse(response.text);
       dispatch(action);
-    } catch (error) {
+    } catch (error: any) {
       if (error.response) {
         dispatch(loginError(error.response.body.message));
       }

@@ -39,7 +39,7 @@ class ForgotPassword extends Component<Props, State> {
         Please contact Ksenia Gulyaeva to get the link. The 
         link expires after 1 hour`,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log("error test:", error);
       this.setState({
         ...this.state,
