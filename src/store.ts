@@ -8,6 +8,7 @@ import { url } from "./url";
 import {
   ADD_USER_TO_SOCKET,
   ADD_GAME_TO_SOCKET,
+  ENTER_LOBBY,
   socketActions,
 } from "./constants/outgoingMessageTypes";
 import {
@@ -41,16 +42,16 @@ socket.on("reconnect", () => {
     });
   }
   const locationArray = window.location.pathname.split("/");
-  let payload;
   if (locationArray[1] === "game") {
-    payload = locationArray[2];
+    store.dispatch({
+      type: ADD_GAME_TO_SOCKET,
+      payload: locationArray[2],
+    });
   } else if (locationArray[1] === "") {
-    payload = "lobby";
+    store.dispatch({
+      type: ENTER_LOBBY,
+    });
   }
-  store.dispatch({
-    type: ADD_GAME_TO_SOCKET,
-    payload,
-  });
   store.dispatch({
     type: SOCKET_CONNECTED,
   });
