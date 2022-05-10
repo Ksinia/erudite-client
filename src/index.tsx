@@ -24,5 +24,7 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
 serviceWorker.register({
-  onSuccess: syncSubscription
+  onSuccess: syncSubscription,
+  onUpdate: syncSubscription,
+  onLoad: syncSubscription
 });
