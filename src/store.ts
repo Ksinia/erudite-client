@@ -15,7 +15,6 @@ import {
   SOCKET_CONNECTED,
   SOCKET_DISCONNECTED,
 } from "./constants/internalMessageTypes";
-import notificationsMiddleware from "./notificationsMiddleware";
 
 const socket = io(url, {
   path: "/socket",
@@ -60,7 +59,7 @@ socket.on("reconnect", () => {
 const store = createStore(
   rootReducer,
   composeWithDevTools(
-    applyMiddleware(ReduxThunk, socketIoMiddleware, notificationsMiddleware)
+    applyMiddleware(ReduxThunk, socketIoMiddleware)
   )
 );
 
