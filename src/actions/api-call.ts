@@ -1,5 +1,6 @@
 import superagent from "superagent";
 import { url as baseUrl } from "../url";
+import { SUBSCRIPTION_REGISTERED } from "../constants/internalMessageTypes";
 
 function getJWT(): string | null {
     return localStorage.getItem("jwt")
@@ -18,6 +19,15 @@ async function callApi(method: keyof Pick<typeof superagent, 'get' | 'post'>, pa
     }
 }
 
-export async function saveSubscription(subscription: PushSubscription) {
-    return callApi('post', 'subscribe', JSON.parse(JSON.stringify(subscription))) // TODO: Check return code
+export const saveSubscriptionForUser = async (subscription: PushSubscription, userAgent: string) => {
+    try {
+        return callApi('post', 'subscribe', JSON.parse(JSON.stringify({ subscription, userAgent }))) // TODO: Check return code
+    } catch (error: any) {
+        console.warn(error)
+    }
 }
+
+export const storeSubscription = (subscription: PushSubscription) => ({
+    type: SUBSCRIPTION_REGISTERED,
+    payload: subscription,
+})
