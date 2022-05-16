@@ -1,4 +1,5 @@
 import superagent from "superagent";
+import parser from 'ua-parser-js'
 import { url as baseUrl } from "../url";
 import { SUBSCRIPTION_REGISTERED } from "../constants/internalMessageTypes";
 
@@ -19,7 +20,9 @@ async function callApi(method: keyof Pick<typeof superagent, 'get' | 'post'>, pa
     }
 }
 
-export const saveSubscriptionForUser = async (subscription: PushSubscription, userAgent: string) => {
+export const saveSubscriptionForUser = async (subscription: PushSubscription) => {
+    const ua = parser(window.navigator.userAgent)
+    const userAgent = `${ua.browser.name} on ${ua.os.name}`
     try {
         return callApi('post', 'subscribe', JSON.parse(JSON.stringify({ subscription, userAgent }))) // TODO: Check return code
     } catch (error: any) {

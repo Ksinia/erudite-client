@@ -103,7 +103,7 @@ self.addEventListener("notificationclick", function (event) {
       .then(function (clientList: readonly WindowClient[]) {
         const gameId = event.notification.tag;
         const gameUrl = `/game/${gameId}`; // TODO: What if no game id???
-        for (var i = 0; i < clientList.length; i++) {
+        for (let i = 0; i < clientList.length; i++) {
           if (new URL(clientList[i].url).pathname.startsWith(gameUrl))
             return clientList[i].focus();
         }
