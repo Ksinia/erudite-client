@@ -7,32 +7,36 @@ import { ThunkDispatch } from "redux-thunk";
 import { url as baseUrl } from "../../url";
 import { RootState } from "../../reducer";
 import {
-  getProfileFetch,
   loginError,
   clearError,
 } from "../../actions/authorization";
 import { User } from "../../reducer/types";
+import TranslationContainer from "../Translation/TranslationContainer";
 
 interface StateProps {
   user: User;
   error: string;
 }
 
+interface OwnProps {
+  jwtFromUrl: string;
+}
+
 interface DispatchProps {
   dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
 
-type Props = StateProps & DispatchProps;
+type Props = StateProps & DispatchProps & OwnProps;
 
 interface State {
   password: string;
-  result: string;
+  changed: boolean;
 }
 
 class ChangePassword extends Component<Props, State> {
   readonly state: State = {
     password: "",
-    result: "",
+    changed: false,
   };
 
   onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,26 +49,24 @@ class ChangePassword extends Component<Props, State> {
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     this.props.dispatch(clearError());
-    if (!this.props.user) {
-      this.setState({
-        ...this.state,
-        result: "Only logged in user can change password",
-      });
+    if (!this.props.user && !this.props.jwtFromUrl) {
+      this.props.dispatch(loginError("Only logged in user can change password"));
       return;
     }
+    const jwt = this.props.jwtFromUrl || (this.props.user && this.props.user.jwt);
 
-    this.setState({ ...this.state, result: "" });
+    this.setState({ ...this.state, changed: false });
     const url = `${baseUrl}/change-password`;
     try {
       const response = await superagent
         .post(url)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .set("Authorization", `Bearer ${jwt}`)
         .send({ password: this.state.password });
 
       if (response.ok) {
         this.setState({
           password: "",
-          result: "Password was successfully changed",
+          changed: true,
         });
       } else {
         this.props.dispatch(loginError(JSON.parse(response.text).message));
@@ -79,27 +81,23 @@ class ChangePassword extends Component<Props, State> {
 
   componentDidMount() {
     this.props.dispatch(clearError());
-    const jwtFromUrl = new URL(window.location.href).searchParams.get("jwt");
-    if (jwtFromUrl) {
-      this.props.dispatch(getProfileFetch(jwtFromUrl));
-    }
   }
 
   render() {
     return (
       <div>
-        <h3>Change password</h3>
+        <h3><TranslationContainer translationKey="change_password"/></h3>
         <form onSubmit={this.onSubmit}>
-          <label>Enter new password:</label>
+          <label><TranslationContainer translationKey="enter_new_password"/></label>
           <input
             type="password"
             name="password"
             onChange={this.onChange}
             value={this.state.password}
           ></input>
-          <button>Submit</button>
+          <button><TranslationContainer translationKey="confirm"/></button>
         </form>
-        {this.state.result && <p>{this.state.result}</p>}
+        {this.state.changed && <p><TranslationContainer translationKey="password_changed"/></p>}
         {this.props.error && <p>{this.props.error}</p>}
       </div>
     );

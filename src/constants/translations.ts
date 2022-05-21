@@ -72,9 +72,17 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     to_validate: "Words to be validated: {}",
     expand_archived: "Expand archived games",
     collapse_archived: "Collapse archived games",
+    please_login: "Please log in or sign up",
+    link_generated: "The link for changing password was created. Please contact Ksenia Gulyaeva to get the link. The link expires after 1 hour",
+    link_sent: "The link for changing password was sent to your email. The link expires after 1 hour",
+    enter_name: "Please enter your name to receive password change link",
+    enter_new_password: "Please enter your new password",
+    change_password: "Password change",
+    password_changed: "Password successfully changed",
+
   },
   ru_RU: {
-    create_room: "Пожалуйста, создайте комнату или войдите в существующую.",
+    create_room: "Пожалуйста, создайте комнату или войдите в существующую",
     toolbar_list: "Список игр",
     welcome: "Привет,",
     log_in: "Войти",
@@ -146,6 +154,15 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     to_validate: "Слова для подтверждения: {}",
     expand_archived: "Развернуть архивные игры",
     collapse_archived: "Cвернуть архивные игры",
+    please_login: "Пожалуйста, войдите или зарегистрируйтесь",
+    link_generated: "Ссылка для смены пароля сгенерирована. Пожалуйста, свяжитесь с Ксенией Гуляевой для получения ссылки. Ссылка действительна в течение часа",
+    link_sent: "Ссылка для смены пароля выслана на ваш email. Ссылка действительна в течение часа",
+    enter_name: "Пожалуйста, введите ваше имя, чтобы получить ссылку для смены пароля",
+    enter_new_password: "Пожалуйста, введите новый пароль",
+    change_password: "Смена пароля",
+    password_changed: "Пароль успешно изменен",
+
+
   },
 };
 export const LANG_NAMES: { locale: string; name: string }[] = [
