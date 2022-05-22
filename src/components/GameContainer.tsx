@@ -6,7 +6,7 @@ import { History } from "history";
 import "./Game.css";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { url } from "../url";
+import { backendUrl } from "../backendUrl";
 import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
 import { sendTurn, clearDuplicatedWordsError } from "../actions/turn";
@@ -269,7 +269,7 @@ class GameContainer extends Component<Props, State> {
     const { name } = event.target as HTMLButtonElement;
     try {
       await superagent
-        .post(`${url}/game/${this.props.game.id}/approve`)
+        .post(`${backendUrl}/game/${this.props.game.id}/approve`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ validation: name });
     } catch (error) {
@@ -292,7 +292,7 @@ class GameContainer extends Component<Props, State> {
   undo = async () => {
     try {
       await superagent
-        .post(`${url}/game/${this.props.game.id}/undo`)
+        .post(`${backendUrl}/game/${this.props.game.id}/undo`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`);
     } catch (error) {
       console.warn("error test:", error);
@@ -302,7 +302,7 @@ class GameContainer extends Component<Props, State> {
   change = async () => {
     try {
       await superagent
-        .post(`${url}/game/${this.props.game.id}/change`)
+        .post(`${backendUrl}/game/${this.props.game.id}/change`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({
           letters: this.props.game.letters[this.props.user.id],
@@ -336,7 +336,7 @@ class GameContainer extends Component<Props, State> {
   playAgainWithSamePlayers = async () => {
     try {
       const response = await superagent
-        .post(`${url}/create`)
+        .post(`${backendUrl}/create`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({
           maxPlayers: this.props.game.maxPlayers,

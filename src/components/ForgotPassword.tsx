@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import superagent from "superagent";
 import { connect, DispatchProp } from "react-redux";
-import { url as baseUrl } from "../url";
+import { backendUrl as baseUrl } from "../backendUrl";
 import { RootState } from "../reducer";
 import { User } from "../reducer/types";
 import { clearError, loginError } from "../actions/authorization";
@@ -32,6 +32,7 @@ class ForgotPassword extends Component<Props, State> {
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     this.setState({ ...this.state, result: "" });
+    this.props.dispatch(clearError());
     const url = `${baseUrl}/generate-link`;
     try {
       const response = await superagent.post(url).send({ name: this.state.name });

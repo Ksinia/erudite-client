@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { AnyAction, Dispatch } from "redux";
 
-import { url } from "../url";
+import { backendUrl } from "../backendUrl";
 import { RootState } from "../reducer";
 import { Game as GameType, User } from "../reducer/types";
 import { ENTER_LOBBY } from "../constants/outgoingMessageTypes";
@@ -56,7 +56,7 @@ class LobbyContainer extends Component<Props, State> {
       this.setState({ ...this.state, sendingFormEnabled: false });
       try {
         const response = await superagent
-          .post(`${url}/create`)
+          .post(`${backendUrl}/create`)
           .set("Authorization", `Bearer ${this.props.user.jwt}`)
           .send(this.state.formFields);
         localStorage.setItem("language", this.state.formFields.language);

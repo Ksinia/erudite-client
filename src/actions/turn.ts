@@ -1,6 +1,6 @@
 import superagent from "superagent";
 
-import { url } from "../url";
+import { backendUrl } from "../backendUrl";
 import { MyThunkAction } from "../reducer/types";
 import { WildCardOnBoard } from "../components/GameContainer";
 import { NO_DUPLICATIONS } from "../constants/incomingMessageTypes";
@@ -19,7 +19,7 @@ export const sendTurn = (
 ): MyThunkAction => async (dispatch) => {
   try {
     const response = await superagent
-      .post(`${url}/game/${gameId}/turn`)
+      .post(`${backendUrl}/game/${gameId}/turn`)
       .set("Authorization", `Bearer ${jwt}`)
       .send({
         userBoard,

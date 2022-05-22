@@ -3,7 +3,7 @@
 This is the frontend of Eridite game application.
 [Here is the backend](https://github.com/Ksinia/erudite-server).
 
-## [Check out the deployed version here!](https://erudit.netlify.app)
+## [Check out the deployed version here!](https://erudit.ksinia.net)
 
 This is a Russian Scrabble-like game which is made in accordance with the rules of the board version.
 [Rules in Russian can be found here.](https://www.mosigra.ru/image/data/mosigra.product.other/399/712/erudit.pdf)

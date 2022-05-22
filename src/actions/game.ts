@@ -1,6 +1,6 @@
 import superagent from "superagent";
 
-import { url } from "../url";
+import { backendUrl } from "../backendUrl";
 import { MyThunkAction } from "../reducer/types";
 
 export const fetchGame = (
@@ -11,10 +11,10 @@ export const fetchGame = (
     let response;
     if (jwt) {
       response = await superagent
-        .get(`${url}/game/${gameId}`)
+        .get(`${backendUrl}/game/${gameId}`)
         .set("Authorization", `Bearer ${jwt}`);
     } else {
-      response = await superagent.get(`${url}/game/${gameId}`);
+      response = await superagent.get(`${backendUrl}/game/${gameId}`);
     }
     const action = JSON.parse(response.text);
     dispatch(action);

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import superagent from "superagent";
 import { Dispatch, AnyAction } from "redux";
 
-import { url } from "../url";
+import { backendUrl } from "../backendUrl";
 import "./Game.css";
 import { RootState } from "../reducer";
 import { User, Game } from "../reducer/types";
@@ -27,7 +27,7 @@ class RoomContainer extends Component<Props> {
   onClickStart = async (): Promise<void> => {
     try {
       await superagent
-        .post(`${url}/start`)
+        .post(`${backendUrl}/start`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ gameId: this.props.game.id });
     } catch (error) {
@@ -37,7 +37,7 @@ class RoomContainer extends Component<Props> {
   onClickJoin = async (): Promise<void> => {
     try {
       await superagent
-        .put(`${url}/join`)
+        .put(`${backendUrl}/join`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ gameId: this.props.game.id });
     } catch (error) {

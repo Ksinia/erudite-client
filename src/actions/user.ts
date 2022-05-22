@@ -1,7 +1,7 @@
 import superagent from "superagent";
 import { AnyAction } from "redux";
 
-import { url } from "../url";
+import { backendUrl } from "../backendUrl";
 import { Game, MyThunkAction } from "../reducer/types";
 import {
   FINISHED_GAMES,
@@ -20,7 +20,7 @@ export const loadFinishGames = (jwt: string): MyThunkAction => async (
 ) => {
   try {
     const response = await superagent
-      .get(`${url}/my/finished-games`)
+      .get(`${backendUrl}/my/finished-games`)
       .set("Authorization", `Bearer ${jwt}`);
 
     const action = finishedGamesLoaded(response.body);
@@ -41,7 +41,7 @@ export const loadArchivedGames = (jwt: string): MyThunkAction => async (
 ) => {
   try {
     const response = await superagent
-      .get(`${url}/my/archived-games`)
+      .get(`${backendUrl}/my/archived-games`)
       .set("Authorization", `Bearer ${jwt}`);
 
     const action = archivedGamesLoaded(response.body);

@@ -2,7 +2,7 @@ import superagent from "superagent";
 import { AnyAction } from "redux";
 import { History } from "history";
 
-import { url as baseUrl } from "../url";
+import { backendUrl as baseUrl } from "../backendUrl";
 import { MyThunkAction } from "../reducer/types";
 
 import {

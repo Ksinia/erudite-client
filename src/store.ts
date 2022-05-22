@@ -4,7 +4,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import createSocketIoMiddleware from "redux-socket.io";
 import io from "socket.io-client";
 import { rootReducer } from "./reducer";
-import { url } from "./url";
+import { backendUrl } from "./backendUrl";
 import {
   ADD_USER_TO_SOCKET,
   ADD_GAME_TO_SOCKET,
@@ -16,7 +16,7 @@ import {
   SOCKET_DISCONNECTED,
 } from "./constants/internalMessageTypes";
 
-const socket = io(url, {
+const socket = io(backendUrl, {
   path: "/socket",
 });
 const socketIoMiddleware = createSocketIoMiddleware(socket, socketActions, {
