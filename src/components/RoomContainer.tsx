@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import superagent from "superagent";
 import { Dispatch, AnyAction } from "redux";
 
-import { backendUrl } from "../backendUrl";
+import { backendUrl } from "../runtime";
 import "./Game.css";
 import { RootState } from "../reducer";
 import { User, Game } from "../reducer/types";

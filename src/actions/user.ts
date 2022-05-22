@@ -1,7 +1,7 @@
 import superagent from "superagent";
 import { AnyAction } from "redux";
 
-import { backendUrl } from "../backendUrl";
+import { backendUrl } from "../runtime";
 import { Game, MyThunkAction } from "../reducer/types";
 import {
   FINISHED_GAMES,

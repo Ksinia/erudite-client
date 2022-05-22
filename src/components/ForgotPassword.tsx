@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import superagent from "superagent";
 import { connect, DispatchProp } from "react-redux";
-import { backendUrl as baseUrl } from "../backendUrl";
+import { backendUrl as baseUrl } from "../runtime";
 import { RootState } from "../reducer";
 import { User } from "../reducer/types";
 import { clearError, loginError } from "../actions/authorization";

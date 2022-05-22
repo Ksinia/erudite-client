@@ -1,6 +1,6 @@
 import superagent from "superagent";
 import parser from 'ua-parser-js'
-import { backendUrl as baseUrl } from "../backendUrl";
+import { backendUrl as baseUrl } from "../runtime";
 import { SUBSCRIPTION_REGISTERED } from "../constants/internalMessageTypes";
 
 function getJWT(): string | null {

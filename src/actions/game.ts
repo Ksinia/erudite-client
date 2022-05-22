@@ -1,6 +1,6 @@
 import superagent from "superagent";
 
-import { backendUrl } from "../backendUrl";
+import { backendUrl } from "../runtime";
 import { MyThunkAction } from "../reducer/types";
 
 export const fetchGame = (

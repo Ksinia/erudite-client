@@ -6,7 +6,7 @@ import { History } from "history";
 import "./Game.css";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { backendUrl } from "../backendUrl";
+import { backendUrl } from "../runtime";
 import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
 import { sendTurn, clearDuplicatedWordsError } from "../actions/turn";

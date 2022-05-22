@@ -4,7 +4,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import createSocketIoMiddleware from "redux-socket.io";
 import io from "socket.io-client";
 import { rootReducer } from "./reducer";
-import { backendUrl } from "./backendUrl";
+import { backendUrl } from "./runtime";
 import {
   ADD_USER_TO_SOCKET,
   ADD_GAME_TO_SOCKET,

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { AnyAction, Dispatch } from "redux";
 
-import { backendUrl } from "../backendUrl";
+import { backendUrl } from "../runtime";
 import { RootState } from "../reducer";
 import { Game as GameType, User } from "../reducer/types";
 import { ENTER_LOBBY } from "../constants/outgoingMessageTypes";

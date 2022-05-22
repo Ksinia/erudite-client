@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { backendUrl as baseUrl } from "../../backendUrl";
+import { backendUrl as baseUrl } from "../../runtime";
 import { RootState } from "../../reducer";
 import {
   loginError,
