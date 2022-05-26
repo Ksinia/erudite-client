@@ -79,6 +79,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     enter_new_password: "Please enter your new password",
     change_password: "Password change",
     password_changed: "Password successfully changed",
+    email: "Email",
 
   },
   ru_RU: {
@@ -161,8 +162,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     enter_new_password: "Пожалуйста, введите новый пароль",
     change_password: "Смена пароля",
     password_changed: "Пароль успешно изменен",
-
-
+    email: "Почта",
   },
 };
 export const LANG_NAMES: { locale: string; name: string }[] = [

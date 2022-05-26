@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (event: React.SyntheticEvent) => void;
-  values: { name: string; password: string };
+  values: { name: string; email: string; password: string };
   error: string;
 };
 
@@ -70,6 +70,19 @@ export default function SignUp(props: Props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label={<TranslationContainer translationKey="email" />}
+                  name="email"
+                  autoComplete="email"
+                  value={props.values.email}
+                  onChange={props.onChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
                 variant="outlined"
                 required
                 fullWidth
@@ -96,7 +109,7 @@ export default function SignUp(props: Props) {
           >
             <TranslationContainer translationKey="sign_up" />
           </Button>
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             <Grid item>
               <Link to="/login">
                 <TranslationContainer translationKey="already_signed_up" />

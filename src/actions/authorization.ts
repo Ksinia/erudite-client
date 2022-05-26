@@ -35,11 +35,17 @@ export const loginSignupFunction = (
   type: string,
   name: string,
   password: string,
-  history: History
+  history: History,
+  email?: string,
 ): MyThunkAction => async (dispatch) => {
   const url = `${baseUrl}/${type}`;
   try {
-    const response = await superagent.post(url).send({ name, password });
+    let response = {text: ""};
+    if (type === "login") {
+      response = await superagent.post(url).send({ name, password });
+    } else if (type === "signup") {
+      response = await superagent.post(url).send({ name, password, email });
+    }
     const action = JSON.parse(response.text);
     localStorage.setItem("jwt", action.payload.jwt);
     dispatch(action);
