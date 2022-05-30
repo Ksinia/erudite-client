@@ -13,6 +13,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import { getProfileFetch } from "./actions/authorization";
 import UserPage from "./components/UserPage/UserPage";
 import GameHandler from "./components/GameHandler";
+import ConfirmEmail from "./components/ConfirmEmail";
 import "./App.css";
 import { User } from "./reducer/types";
 import {
@@ -76,6 +77,7 @@ class App extends Component<Props> {
           <Route path="/user" component={UserPage} />
           <Route path="/forgot-password" component={ForgotPassword} />
           <Route path="/game/:game" component={GameHandler} />
+          <Route path="/confirm-email" component={ConfirmEmail} />
           <Route path="/" component={LobbyContainer} />
         </Switch>
       </div>,
