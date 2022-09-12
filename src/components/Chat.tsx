@@ -8,6 +8,7 @@ import { User, Message } from "../reducer/types";
 import { clearMessages } from "../actions/chat";
 import "./Chat.css";
 import { SEND_CHAT_MESSAGE } from "../constants/outgoingMessageTypes";
+import {errorFromServer} from "../actions/errorHandling";
 
 interface OwnProps {
   gameId: number;
@@ -48,7 +49,7 @@ class Chat extends Component<Props, State> {
       });
       this.setState({ ...this.state, message: "" });
     } catch (error) {
-      console.log("error test:", error);
+      this.props.dispatch(errorFromServer(error, "chat"));
     }
   };
 

@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import superagent from "superagent";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
-import { AnyAction, Dispatch } from "redux";
+import { AnyAction } from "redux";
 
+import {ThunkDispatch} from "redux-thunk";
 import { backendUrl } from "../runtime";
 import { RootState } from "../reducer";
 import { Game as GameType, User } from "../reducer/types";
 import { ENTER_LOBBY } from "../constants/outgoingMessageTypes";
+import {errorFromServer} from "../actions/errorHandling";
 import Lobby from "./Lobby";
 import TranslationContainer from "./Translation/TranslationContainer";
 
@@ -26,7 +28,7 @@ type State = {
 };
 
 interface DispatchProps {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
 
 type Props = StateProps & DispatchProps & RouteComponentProps;
@@ -62,7 +64,7 @@ class LobbyContainer extends Component<Props, State> {
         localStorage.setItem("language", this.state.formFields.language);
         this.props.history.push(`/game/${response.body.id}`);
       } catch (error) {
-        console.warn("error test:", error);
+        this.props.dispatch(errorFromServer(error, "create game onSubmit"));
       }
     }
   };

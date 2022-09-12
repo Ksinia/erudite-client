@@ -7,11 +7,11 @@ import { ThunkDispatch } from "redux-thunk";
 import { backendUrl as baseUrl } from "../../runtime";
 import { RootState } from "../../reducer";
 import {
-  loginError,
   clearError,
 } from "../../actions/authorization";
 import { User } from "../../reducer/types";
 import TranslationContainer from "../Translation/TranslationContainer";
+import {errorFromServer} from "../../actions/errorHandling";
 
 interface StateProps {
   user: User;
@@ -50,7 +50,7 @@ class ChangePassword extends Component<Props, State> {
     event.preventDefault();
     this.props.dispatch(clearError());
     if (!this.props.user && !this.props.jwtFromUrl) {
-      this.props.dispatch(loginError("Only logged in user can change password"));
+      this.props.dispatch(errorFromServer("Only logged in user can change password", "new password onSubmit"));
       return;
     }
     const jwt = this.props.jwtFromUrl || (this.props.user && this.props.user.jwt);
@@ -69,14 +69,11 @@ class ChangePassword extends Component<Props, State> {
           changed: true,
         });
       } else {
-        this.props.dispatch(loginError(JSON.parse(response.text).message));
+        this.props.dispatch(errorFromServer(JSON.parse(response.text).message, "new password onSubmit"));
       }
-    } catch (error: any) {
-      console.log("error test:", error);
-      if (error.response) {
-        this.props.dispatch(loginError(error.response.body.message));
+    } catch (error) {
+      this.props.dispatch(errorFromServer(error, "new password onSubmit"));
       }
-    }
   };
 
   componentDidMount() {

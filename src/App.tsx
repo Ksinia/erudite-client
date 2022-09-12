@@ -43,7 +43,7 @@ class App extends Component<Props> {
         payload: this.props.user.jwt,
       });
       if (this.props.subscription){
-        saveSubscriptionForUser(this.props.subscription as PushSubscription)
+        this.props.dispatch(saveSubscriptionForUser(this.props.subscription as PushSubscription))
       }
     }
   }
@@ -56,14 +56,14 @@ class App extends Component<Props> {
           payload: this.props.user.jwt,
         });
         if (this.props.subscription){
-          saveSubscriptionForUser(this.props.subscription as PushSubscription)
+          this.props.dispatch(saveSubscriptionForUser(this.props.subscription as PushSubscription))
         }
       } else {
         this.props.dispatch({ type: REMOVE_USER_FROM_SOCKET });
       }
     }
     if (!prevProps.subscription && this.props.subscription && this.props.user) {
-      saveSubscriptionForUser(this.props.subscription as PushSubscription)
+      this.props.dispatch(saveSubscriptionForUser(this.props.subscription as PushSubscription))
     }
   }
 

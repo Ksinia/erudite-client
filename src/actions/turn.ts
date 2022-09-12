@@ -4,6 +4,7 @@ import { backendUrl } from "../runtime";
 import { MyThunkAction } from "../reducer/types";
 import { WildCardOnBoard } from "../components/GameContainer";
 import { NO_DUPLICATIONS } from "../constants/incomingMessageTypes";
+import {errorFromServer} from "./errorHandling";
 
 export const clearDuplicatedWordsError = () => {
   return {
@@ -28,6 +29,6 @@ export const sendTurn = (
     const action = JSON.parse(response.text);
     dispatch(action);
   } catch (error) {
-    console.warn("error test:", error);
+    dispatch(errorFromServer(error, "turn"));
   }
 };

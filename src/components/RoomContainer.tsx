@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import superagent from "superagent";
-import { Dispatch, AnyAction } from "redux";
+import {  AnyAction } from "redux";
 
+import {ThunkDispatch} from "redux-thunk";
 import { backendUrl } from "../runtime";
 import "./Game.css";
 import { RootState } from "../reducer";
-import { User, Game } from "../reducer/types";
+import {User, Game} from "../reducer/types";
+import { errorFromServer } from "../actions/errorHandling";
 import Room from "./Room";
 
 interface OwnProps {
@@ -18,7 +20,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
@@ -31,7 +33,7 @@ class RoomContainer extends Component<Props> {
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ gameId: this.props.game.id });
     } catch (error) {
-      console.warn("error test:", error);
+      this.props.dispatch(errorFromServer(error, "onClickStart"));
     }
   };
   onClickJoin = async (): Promise<void> => {
@@ -41,7 +43,7 @@ class RoomContainer extends Component<Props> {
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ gameId: this.props.game.id });
     } catch (error) {
-      console.warn("error test:", error);
+      this.props.dispatch(errorFromServer(error, "onClickJoin"));
     }
   };
 

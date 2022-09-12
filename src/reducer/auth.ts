@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 
-import { LOGIN_SUCCESS } from "../constants/incomingMessageTypes";
+import { LOGIN_SUCCESS, ERROR } from "../constants/incomingMessageTypes";
 import { LOGOUT } from "../constants/internalMessageTypes";
 import { User } from "./types";
 
@@ -10,6 +10,9 @@ export default function reducer(state: User | null = null, action: AnyAction) {
       return action.payload;
     }
     case LOGOUT: {
+      return null;
+    }
+    case ERROR: {
       return null;
     }
     default:
