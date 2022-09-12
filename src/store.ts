@@ -22,17 +22,8 @@ const socket = io(backendUrl, {
 const socketIoMiddleware = createSocketIoMiddleware(socket, socketActions, {
   eventName: "message",
 });
-socket.on("connect", () => {
-  store.dispatch({
-    type: SOCKET_CONNECTED,
-  });
-});
-socket.on("disconnect", () => {
-  const action = {
-    type: SOCKET_DISCONNECTED,
-  };
-  store.dispatch(action);
-});
+socket.on("connect", () => { store.dispatch({ type: SOCKET_CONNECTED })});
+socket.on("disconnect", () => {  store.dispatch({ type: SOCKET_DISCONNECTED })});
 socket.on("reconnect", () => {
   if (store.getState().user) {
     store.dispatch({

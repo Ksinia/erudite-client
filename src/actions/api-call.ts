@@ -2,6 +2,8 @@ import superagent from "superagent";
 import parser from 'ua-parser-js'
 import { backendUrl as baseUrl } from "../runtime";
 import { SUBSCRIPTION_REGISTERED } from "../constants/internalMessageTypes";
+import {MyThunkAction} from "../reducer/types";
+import {errorFromServer} from "./errorHandling";
 
 function getJWT(): string | null {
     return localStorage.getItem("jwt")
@@ -20,13 +22,13 @@ async function callApi(method: keyof Pick<typeof superagent, 'get' | 'post'>, pa
     }
 }
 
-export const saveSubscriptionForUser = async (subscription: PushSubscription) => {
+export const saveSubscriptionForUser = (subscription: PushSubscription): MyThunkAction => async dispatch => {
     const ua = parser(window.navigator.userAgent)
     const userAgent = `${ua.browser.name} on ${ua.os.name}`
     try {
         return callApi('post', 'subscribe', JSON.parse(JSON.stringify({ subscription, userAgent }))) // TODO: Check return code
-    } catch (error: any) {
-        console.warn(error)
+    } catch (error) {
+        dispatch(errorFromServer(error, 'loginSignupFunction'));
     }
 }
 

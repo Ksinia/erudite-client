@@ -7,6 +7,7 @@ import {
   FINISHED_GAMES,
   ARCHIVED_GAMES,
 } from "../constants/internalMessageTypes";
+import {errorFromServer} from "./errorHandling";
 
 export const finishedGamesLoaded = (games: Game[]): AnyAction => {
   return {
@@ -26,7 +27,7 @@ export const loadFinishGames = (jwt: string): MyThunkAction => async (
     const action = finishedGamesLoaded(response.body);
     dispatch(action);
   } catch (error) {
-    console.warn("error test:", error);
+    dispatch(errorFromServer(error, "my finished games"));
   }
 };
 export const archivedGamesLoaded = (games: Game[]): AnyAction => {
@@ -47,6 +48,6 @@ export const loadArchivedGames = (jwt: string): MyThunkAction => async (
     const action = archivedGamesLoaded(response.body);
     dispatch(action);
   } catch (error) {
-    console.warn("error test:", error);
+    dispatch(errorFromServer(error, "my archived games"));
   }
 };

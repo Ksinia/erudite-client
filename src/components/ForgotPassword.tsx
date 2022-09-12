@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import superagent from "superagent";
-import { connect, DispatchProp } from "react-redux";
+import { connect } from "react-redux";
+import {ThunkDispatch} from "redux-thunk";
+import {AnyAction} from "redux";
 import { backendUrl as baseUrl } from "../runtime";
 import { RootState } from "../reducer";
 import { User } from "../reducer/types";
-import { clearError, loginError } from "../actions/authorization";
+import { clearError } from "../actions/authorization";
+import {errorFromServer} from "../actions/errorHandling";
 import TranslationContainer from "./Translation/TranslationContainer";
 
 interface StateProps {
@@ -12,7 +15,11 @@ interface StateProps {
   error: string;
 }
 
-type Props = StateProps & DispatchProp;
+interface DispatchProps {
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+}
+
+type Props = StateProps & DispatchProps;
 
 interface State {
   name: string;
@@ -40,8 +47,8 @@ class ForgotPassword extends Component<Props, State> {
         name: "",
         result: response.text,
       });
-    } catch (error: any) {
-      this.props.dispatch(loginError(JSON.parse(error.response.text).message));
+    } catch (error) {
+      this.props.dispatch(errorFromServer(error, "generate link"));
     }
   };
 

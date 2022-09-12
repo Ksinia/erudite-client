@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
+import {ThunkDispatch} from "redux-thunk";
+import {AnyAction} from "redux";
 import { TRANSLATIONS } from "../../constants/translations";
 import { RootState } from "../../reducer";
+import {errorFromServer} from "../../actions/errorHandling";
 import Translation from "./Translation";
 
 interface StateProps {
@@ -13,8 +16,11 @@ interface OwnProps {
   translationKey: string;
   args?: string[];
 }
+interface DispatchProps {
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+}
 
-type Props = StateProps & OwnProps;
+type Props = StateProps & OwnProps & DispatchProps;
 
 interface State {
   translation: string;
@@ -61,7 +67,8 @@ class TranslationContainer extends Component<Props, State> {
           translation,
         });
       } catch (error) {
-        console.log(error);
+        this.props.dispatch(errorFromServer(error, '_updateTranslation'));
+
       }
     }
   }

@@ -1,22 +1,14 @@
 import superagent from "superagent";
-import { AnyAction } from "redux";
 import { History } from "history";
 
 import { backendUrl as baseUrl } from "../runtime";
 import { MyThunkAction } from "../reducer/types";
 
 import {
-  LOGIN_OR_SIGNUP_ERROR,
   CLEAR_ERROR,
   LOGOUT,
 } from "../constants/internalMessageTypes";
-
-export const loginError = (error: string): AnyAction => {
-  return {
-    type: LOGIN_OR_SIGNUP_ERROR,
-    payload: error,
-  };
-};
+import {errorFromServer} from "./errorHandling";
 
 export const clearError = () => {
   return {
@@ -60,12 +52,9 @@ export const loginSignupFunction = (
     } else {
       history.push("/");
     }
-  } catch (error: any) {
-    console.log("error test:", error);
-    if (error.response) {
-      dispatch(loginError(error.response.body.message));
+  } catch (error) {
+      dispatch(errorFromServer(error, 'loginSignupFunction'));
     }
-  }
 };
 
 export const getProfileFetch = (jwt: string): MyThunkAction => async (
@@ -79,11 +68,10 @@ export const getProfileFetch = (jwt: string): MyThunkAction => async (
         .set("Authorization", `Bearer ${jwt}`);
       const action = JSON.parse(response.text);
       dispatch(action);
-    } catch (error: any) {
-      if (error.response) {
-        dispatch(loginError(error.response.body.message));
-      }
-      localStorage.removeItem("jwt");
+    } catch (error) {
+        dispatch(errorFromServer(error, 'getProfileFetch'));
+      // TODO: check if it is needed
+        localStorage.removeItem("jwt");
     }
   }
 };

@@ -10,6 +10,7 @@ import { backendUrl } from "../runtime";
 import { RootState } from "../reducer";
 import { User, Game as GameType } from "../reducer/types";
 import { sendTurn, clearDuplicatedWordsError } from "../actions/turn";
+import { errorFromServer } from "../actions/errorHandling";
 import Game from "./Game";
 
 /**
@@ -66,6 +67,7 @@ const getPreviousLetters = (
 interface StateProps {
   user: User;
   duplicatedWords: string[];
+  error: unknown;
 }
 
 export type WildCardOnBoard = { [key: number]: { [key: number]: string } };
@@ -273,7 +275,7 @@ class GameContainer extends Component<Props, State> {
         .set("Authorization", `Bearer ${this.props.user.jwt}`)
         .send({ validation: name });
     } catch (error) {
-      console.warn("error test:", error);
+      this.props.dispatch(errorFromServer(error, 'validateTurn'))
     }
   };
 
@@ -295,9 +297,9 @@ class GameContainer extends Component<Props, State> {
         .post(`${backendUrl}/game/${this.props.game.id}/undo`)
         .set("Authorization", `Bearer ${this.props.user.jwt}`);
     } catch (error) {
-      console.warn("error test:", error);
+        this.props.dispatch(errorFromServer(error, 'undo'))
     }
-  };
+  }
 
   change = async () => {
     try {
@@ -308,7 +310,7 @@ class GameContainer extends Component<Props, State> {
           letters: this.props.game.letters[this.props.user.id],
         });
     } catch (error) {
-      console.warn("error test:", error);
+      this.props.dispatch(errorFromServer(error, 'pass and change letters'))
     }
   };
 
@@ -317,7 +319,7 @@ class GameContainer extends Component<Props, State> {
     if (user !== undefined) {
       return user;
     }
-    console.log("findTurnUser did not find a user. This shouldn't happen");
+    console.warn("findTurnUser did not find a user. This shouldn't happen");
     return { id: -1, name: "" };
   };
 
@@ -345,7 +347,7 @@ class GameContainer extends Component<Props, State> {
         });
       this.props.history.push(`/game/${response.body.id}`);
     } catch (error) {
-      console.warn("error test:", error);
+      this.props.dispatch(errorFromServer(error, 'playAgainWithSamePlayers'))
     }
   };
 
@@ -376,7 +378,7 @@ class GameContainer extends Component<Props, State> {
       const game = this.props.game;
       const { userBoard, wildCardOnBoard, userLetters } = this.state;
 
-      // if player has less letters than on server, just add letters from server
+      // if player has fewer letters than on server, just add letters from server
       const prevLetters = getPreviousLetters(
         userBoard,
         wildCardOnBoard,

@@ -2,6 +2,7 @@ import superagent from "superagent";
 
 import { backendUrl } from "../runtime";
 import { MyThunkAction } from "../reducer/types";
+import {errorFromServer} from "./errorHandling";
 
 export const fetchGame = (
   gameId: number,
@@ -19,6 +20,6 @@ export const fetchGame = (
     const action = JSON.parse(response.text);
     dispatch(action);
   } catch (error) {
-    console.warn("error test:", error);
+    dispatch(errorFromServer(error, "fetch game"));
   }
 };
