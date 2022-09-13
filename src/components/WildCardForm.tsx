@@ -1,5 +1,5 @@
-import React from "react";
-import TranslationContainer from "./Translation/TranslationContainer";
+import React from 'react';
+import TranslationContainer from './Translation/TranslationContainer';
 
 type OwnProps = {
   wildCardLetters: { letter: string; x: number; y: number }[];
@@ -11,7 +11,7 @@ function WildCardForm(props: OwnProps) {
     return null;
   }
   const options = props.alphabet.sort().map((letter) => {
-    if (letter !== "*") {
+    if (letter !== '*') {
       return (
         <option key={letter} value={letter}>
           {letter}

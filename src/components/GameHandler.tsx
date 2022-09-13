@@ -1,20 +1,20 @@
-import React, { Component, Fragment } from "react";
-import { RouteComponentProps } from "react-router-dom";
-import { ThunkDispatch } from "redux-thunk";
-import { AnyAction } from "redux";
-import { connect } from "react-redux";
+import React, { Component, Fragment } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { connect } from 'react-redux';
 
-import { RootState } from "../reducer";
-import { Game, User } from "../reducer/types";
+import { RootState } from '../reducer';
+import { Game, User } from '../reducer/types';
 import {
   ADD_GAME_TO_SOCKET,
   REMOVE_GAME_FROM_SOCKET,
-} from "../constants/outgoingMessageTypes";
-import { fetchGame } from "../actions/game";
-import GameContainer from "./GameContainer";
-import RoomContainer from "./RoomContainer";
-import TranslationContainer from "./Translation/TranslationContainer";
-import Chat from "./Chat";
+} from '../constants/outgoingMessageTypes';
+import { fetchGame } from '../actions/game';
+import GameContainer from './GameContainer';
+import RoomContainer from './RoomContainer';
+import TranslationContainer from './Translation/TranslationContainer';
+import Chat from './Chat';
 
 type MatchParams = { game: string };
 
@@ -95,7 +95,7 @@ class GameHandler extends Component<Props, State> {
     const game = this.props.games[this.state.gameId];
     return (
       <Fragment>
-        {game.phase === "waiting" || game.phase === "ready" ? (
+        {game.phase === 'waiting' || game.phase === 'ready' ? (
           <RoomContainer key={this.state.gameId} game={game} />
         ) : (
           <GameContainer

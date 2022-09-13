@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import superagent from "superagent";
-import { connect } from "react-redux";
-import { RouteComponentProps } from "react-router-dom";
-import { AnyAction } from "redux";
+import React, { Component } from 'react';
+import superagent from 'superagent';
+import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
+import { AnyAction } from 'redux';
 
-import {ThunkDispatch} from "redux-thunk";
-import { backendUrl } from "../runtime";
-import { RootState } from "../reducer";
-import { Game as GameType, User } from "../reducer/types";
-import { ENTER_LOBBY } from "../constants/outgoingMessageTypes";
-import {errorFromServer} from "../actions/errorHandling";
-import Lobby from "./Lobby";
-import TranslationContainer from "./Translation/TranslationContainer";
+import { ThunkDispatch } from 'redux-thunk';
+import { backendUrl } from '../runtime';
+import { RootState } from '../reducer';
+import { Game as GameType, User } from '../reducer/types';
+import { ENTER_LOBBY } from '../constants/outgoingMessageTypes';
+import { errorFromServer } from '../actions/errorHandling';
+import Lobby from './Lobby';
+import TranslationContainer from './Translation/TranslationContainer';
 
 interface StateProps {
   lobby: GameType[];
@@ -37,10 +37,10 @@ class LobbyContainer extends Component<Props, State> {
   getLanguage = () => {
     if (localStorage.language) {
       return localStorage.language;
-    } else if (window.navigator.language.slice(0, 2) === "ru") {
-      return "ru";
+    } else if (window.navigator.language.slice(0, 2) === 'ru') {
+      return 'ru';
     } else {
-      return "en";
+      return 'en';
     }
   };
 
@@ -59,12 +59,12 @@ class LobbyContainer extends Component<Props, State> {
       try {
         const response = await superagent
           .post(`${backendUrl}/create`)
-          .set("Authorization", `Bearer ${this.props.user.jwt}`)
+          .set('Authorization', `Bearer ${this.props.user.jwt}`)
           .send(this.state.formFields);
-        localStorage.setItem("language", this.state.formFields.language);
+        localStorage.setItem('language', this.state.formFields.language);
         this.props.history.push(`/game/${response.body.id}`);
       } catch (error) {
-        this.props.dispatch(errorFromServer(error, "create game onSubmit"));
+        this.props.dispatch(errorFromServer(error, 'create game onSubmit'));
       }
     }
   };
@@ -84,7 +84,7 @@ class LobbyContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
-    document.title = `Erudite`;
+    document.title = 'Erudite';
     this.props.dispatch({
       type: ENTER_LOBBY,
     });
@@ -104,7 +104,7 @@ class LobbyContainer extends Component<Props, State> {
         if (
           this.props.user &&
           game.users.find((user) => user.id === this.props.user.id) &&
-          (game.phase === "turn" || game.phase === "validation")
+          (game.phase === 'turn' || game.phase === 'validation')
         ) {
           if (this.props.user.id === game.activeUserId) {
             allGames.userTurn.push(game);
@@ -113,11 +113,11 @@ class LobbyContainer extends Component<Props, State> {
           }
         } else if (
           this.props.user &&
-          (game.phase === "waiting" || game.phase === "ready") &&
+          (game.phase === 'waiting' || game.phase === 'ready') &&
           game.users.find((user) => user.id === this.props.user.id)
         ) {
           allGames.userWaiting.push(game);
-        } else if (game.phase === "waiting") {
+        } else if (game.phase === 'waiting') {
           allGames.otherWaiting.push(game);
         } else {
           allGames.other.push(game);

@@ -57,7 +57,8 @@ registerRoute(
 // precache, in this case same-origin .png requests like those from in public/
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'),
+  ({ url }) =>
+    url.origin === self.location.origin && url.pathname.endsWith('.png'),
   // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new StaleWhileRevalidate({
     cacheName: 'images',
@@ -78,13 +79,13 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-self.addEventListener("push", (event: PushEvent) => {
+self.addEventListener('push', (event: PushEvent) => {
   var data: any = {};
   if (event.data) {
     data = event.data.json();
   }
   event.waitUntil(
-    self.registration.showNotification(data.title || "just a title", {
+    self.registration.showNotification(data.title || 'just a title', {
       body: data.message,
       tag: data.gameId,
       requireInteraction: true,
@@ -93,13 +94,13 @@ self.addEventListener("push", (event: PushEvent) => {
   );
 });
 
-self.addEventListener("notificationclick", function (event) {
-  event.preventDefault()
+self.addEventListener('notificationclick', function (event) {
+  event.preventDefault();
   event.notification.close();
   event.waitUntil(
     self.clients
       .matchAll({
-        type: "window",
+        type: 'window',
       })
       .then(function (clientList: readonly WindowClient[]) {
         const gameId = event.notification.tag;

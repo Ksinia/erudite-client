@@ -1,8 +1,8 @@
-import { AnyAction } from "redux";
+import { AnyAction } from 'redux';
 
-import { LOGIN_SUCCESS, ERROR } from "../constants/incomingMessageTypes";
-import { LOGOUT } from "../constants/internalMessageTypes";
-import { User } from "./types";
+import { LOGIN_SUCCESS, ERROR } from '../constants/incomingMessageTypes';
+import { LOGOUT } from '../constants/internalMessageTypes';
+import { User } from './types';
 
 export default function reducer(state: User | null = null, action: AnyAction) {
   switch (action.type) {

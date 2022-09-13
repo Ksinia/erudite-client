@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import superagent from "superagent";
-import { History } from "history";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import superagent from 'superagent';
+import { History } from 'history';
 
-import "./Game.css";
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { backendUrl } from "../runtime";
-import { RootState } from "../reducer";
-import { User, Game as GameType } from "../reducer/types";
-import { sendTurn, clearDuplicatedWordsError } from "../actions/turn";
-import { errorFromServer } from "../actions/errorHandling";
-import Game from "./Game";
+import './Game.css';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { backendUrl } from '../runtime';
+import { RootState } from '../reducer';
+import { User, Game as GameType } from '../reducer/types';
+import { sendTurn, clearDuplicatedWordsError } from '../actions/turn';
+import { errorFromServer } from '../actions/errorHandling';
+import Game from './Game';
 
 /**
  * extract added letters from whole new hand
@@ -43,7 +43,7 @@ const getPreviousLetters = (
 ) => {
   const putLetters = userBoard.reduce((acc: string[], row) => {
     return acc
-      .concat(row.filter((letter) => letter !== ""))
+      .concat(row.filter((letter) => letter !== ''))
       .map((letter) => letter[0]);
   }, []);
   const changedLetters = Object.keys(wildCardOnBoard).reduce((acc, y) => {
@@ -57,7 +57,7 @@ const getPreviousLetters = (
   let prevLetters = userLetters.concat(putLetters).concat(changedLetters);
   if (changedLetters.length > 0) {
     prevLetters = arrayDifference(
-      Array(changedLetters.length).fill("*"),
+      Array(changedLetters.length).fill('*'),
       prevLetters
     );
   }
@@ -93,7 +93,7 @@ type Props = StateProps & DispatchProps & OwnProps;
 class GameContainer extends Component<Props, State> {
   emptyUserBoard = Array(15)
     .fill(null)
-    .map((_) => Array(15).fill(""));
+    .map((_) => Array(15).fill(''));
 
   readonly state: State = {
     chosenLetterIndex: null,
@@ -106,9 +106,9 @@ class GameContainer extends Component<Props, State> {
   clickBoard = (event: React.SyntheticEvent<HTMLDivElement>) => {
     if (
       event.currentTarget.dataset.x === undefined ||
-      event.currentTarget.dataset.x === "" ||
+      event.currentTarget.dataset.x === '' ||
       event.currentTarget.dataset.y === undefined ||
-      event.currentTarget.dataset.y === ""
+      event.currentTarget.dataset.y === ''
     ) {
       return;
     }
@@ -126,8 +126,8 @@ class GameContainer extends Component<Props, State> {
     // for the same letter and *  should be used on the same turn
     if (
       letterOnBoard &&
-      letterOnBoard[0] === "*" &&
-      this.props.game.phase === "turn" &&
+      letterOnBoard[0] === '*' &&
+      this.props.game.phase === 'turn' &&
       this.props.user &&
       this.props.user.id === this.props.game.turnOrder[this.props.game.turn] &&
       this.state.chosenLetterIndex !== null &&
@@ -137,7 +137,7 @@ class GameContainer extends Component<Props, State> {
         this.state.chosenLetterIndex,
         1
       )[0];
-      updUserLetters.push("*");
+      updUserLetters.push('*');
       wildCardOnBoard[y] = wildCardOnBoard[y] || {};
       wildCardOnBoard[y][x] = putLetter;
       this.setState({
@@ -155,16 +155,16 @@ class GameContainer extends Component<Props, State> {
         1
       )[0];
       // if user put * on the board, increase the qty of *
-      if (putLetter === "*") {
-        wildCardLetters.push({ letter: "", y, x });
+      if (putLetter === '*') {
+        wildCardLetters.push({ letter: '', y, x });
       }
 
       // TODO: dedublicate code
       // If there is userLetter in that cell, put it back into userLetters
 
-      if (userLetterOnBoard !== "") {
+      if (userLetterOnBoard !== '') {
         updUserLetters.push(userLetterOnBoard[0]);
-        if (userLetterOnBoard[0] === "*") {
+        if (userLetterOnBoard[0] === '*') {
           wildCardLetters = this.state.wildCardLetters.filter(
             (letterObject) => letterObject.x !== x || letterObject.y !== y
           );
@@ -183,10 +183,10 @@ class GameContainer extends Component<Props, State> {
       letterOnBoard === null &&
       this.state.chosenLetterIndex === null
     ) {
-      if (userLetterOnBoard !== "") {
+      if (userLetterOnBoard !== '') {
         updUserLetters.push(userLetterOnBoard[0]);
-        updatedUserBoard[y][x] = "";
-        if (userLetterOnBoard[0] === "*") {
+        updatedUserBoard[y][x] = '';
+        if (userLetterOnBoard[0] === '*') {
           wildCardLetters = this.state.wildCardLetters.filter(
             (letterObject) => letterObject.x !== x || letterObject.y !== y
           );
@@ -244,17 +244,16 @@ class GameContainer extends Component<Props, State> {
 
   confirmTurn = async () => {
     // TODO: move this constant transformation logic to backend
-    const userBoardWithNulls = this.state.userBoard.map((row) =>
+    const userBoardToSend = this.state.userBoard.map((row) =>
       row.map((cell) => {
-        if (cell === "") {
+        if (cell === '') {
           return null;
         } else {
           return cell;
         }
       })
     );
-    // if player uses wild cards he must choose a letter for it before submiting a turn
-    let userBoardToSend = userBoardWithNulls;
+    // if player uses wild cards he must choose a letter for it before submitting a turn
     if (this.props.user.jwt) {
       this.props.dispatch(
         sendTurn(
@@ -271,10 +270,10 @@ class GameContainer extends Component<Props, State> {
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/approve`)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .set('Authorization', `Bearer ${this.props.user.jwt}`)
         .send({ validation: name });
     } catch (error) {
-      this.props.dispatch(errorFromServer(error, 'validateTurn'))
+      this.props.dispatch(errorFromServer(error, 'validateTurn'));
     }
   };
 
@@ -294,22 +293,22 @@ class GameContainer extends Component<Props, State> {
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/undo`)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`);
+        .set('Authorization', `Bearer ${this.props.user.jwt}`);
     } catch (error) {
-        this.props.dispatch(errorFromServer(error, 'undo'))
+      this.props.dispatch(errorFromServer(error, 'undo'));
     }
-  }
+  };
 
   change = async () => {
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/change`)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .set('Authorization', `Bearer ${this.props.user.jwt}`)
         .send({
           letters: this.props.game.letters[this.props.user.id],
         });
     } catch (error) {
-      this.props.dispatch(errorFromServer(error, 'pass and change letters'))
+      this.props.dispatch(errorFromServer(error, 'pass and change letters'));
     }
   };
 
@@ -319,7 +318,7 @@ class GameContainer extends Component<Props, State> {
       return user;
     }
     console.warn("findTurnUser did not find a user. This shouldn't happen");
-    return { id: -1, name: "" };
+    return { id: -1, name: '' };
   };
 
   onChangeWildCard = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -338,7 +337,7 @@ class GameContainer extends Component<Props, State> {
     try {
       const response = await superagent
         .post(`${backendUrl}/create`)
-        .set("Authorization", `Bearer ${this.props.user.jwt}`)
+        .set('Authorization', `Bearer ${this.props.user.jwt}`)
         .send({
           maxPlayers: this.props.game.maxPlayers,
           language: this.props.game.language,
@@ -346,7 +345,7 @@ class GameContainer extends Component<Props, State> {
         });
       this.props.history.push(`/game/${response.body.id}`);
     } catch (error) {
-      this.props.dispatch(errorFromServer(error, 'playAgainWithSamePlayers'))
+      this.props.dispatch(errorFromServer(error, 'playAgainWithSamePlayers'));
     }
   };
 
@@ -404,13 +403,13 @@ class GameContainer extends Component<Props, State> {
           line.map((cell, xIndex) => {
             if (cell && game.board[yIndex][xIndex] !== null) {
               userLetters.push(cell[0]);
-              if (cell[0] === "*") {
+              if (cell[0] === '*') {
                 wildCardLetters = this.state.wildCardLetters.filter(
                   (letterObject) =>
                     letterObject.x !== xIndex || letterObject.y !== yIndex
                 );
               }
-              return "";
+              return '';
             } else {
               return cell;
             }
@@ -465,7 +464,7 @@ class GameContainer extends Component<Props, State> {
           wildCardOnBoard={this.state.wildCardOnBoard}
           duplicatedWords={this.props.duplicatedWords}
           userBoardEmpty={
-            !this.state.userBoard.some((row: string[]) => !!row.join(""))
+            !this.state.userBoard.some((row: string[]) => !!row.join(''))
           }
         />
       </div>

@@ -1,11 +1,11 @@
-import { AnyAction } from "redux";
+import { AnyAction } from 'redux';
 
 import {
   ALL_GAMES,
   UPDATED_GAME_IN_LOBBY,
   DELETE_GAME_IN_LOBBY,
-} from "../constants/incomingMessageTypes";
-import { Game } from "./types";
+} from '../constants/incomingMessageTypes';
+import { Game } from './types';
 
 export default function reducer(state: Game[] = [], action: AnyAction) {
   switch (action.type) {

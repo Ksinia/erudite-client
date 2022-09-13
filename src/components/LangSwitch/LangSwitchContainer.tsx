@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { bindActionCreators, Dispatch } from "redux";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
+import { connect } from 'react-redux';
 
-import * as translationActions from "../Translation/actions";
-import { RootState } from "../../reducer";
-import LangSwitch from "./LangSwitch";
+import * as translationActions from '../Translation/actions';
+import { RootState } from '../../reducer';
+import LangSwitch from './LangSwitch';
 
 interface StateProps {
   locale: string;

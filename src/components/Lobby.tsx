@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { User, Game } from "../reducer/types";
-import RoomTile from "./RoomTile";
-import TranslationContainer from "./Translation/TranslationContainer";
+import { User, Game } from '../reducer/types';
+import RoomTile from './RoomTile';
+import TranslationContainer from './Translation/TranslationContainer';
 
 type OwnProps = {
   onChange: (
@@ -30,7 +30,7 @@ function Lobby(props: OwnProps) {
       {props.user && (
         <form onSubmit={props.onSubmit}>
           <label htmlFor="maxPlayers">
-            {" "}
+            {' '}
             <TranslationContainer translationKey="qty" />
           </label>
           <input
@@ -43,7 +43,7 @@ function Lobby(props: OwnProps) {
             value={props.values.maxPlayers}
           ></input>
           <label htmlFor="language">
-            {" "}
+            {' '}
             <TranslationContainer translationKey="language" />
           </label>
           <select

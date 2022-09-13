@@ -1,6 +1,6 @@
-import { AnyAction } from "redux";
+import { AnyAction } from 'redux';
 
-import { SET_LANGUAGE } from "../../constants/generalConstants";
+import { SET_LANGUAGE } from '../../constants/generalConstants';
 
 export function setLanguage(locale: string): AnyAction {
   return {

@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Dispatch, AnyAction } from "redux";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Dispatch, AnyAction } from 'redux';
+import { Link } from 'react-router-dom';
 
-import { User, Game } from "../reducer/types";
-import "./RoomTile.css";
-import { RootState } from "../reducer";
-import { colors } from "../colors";
-import TranslationContainer from "./Translation/TranslationContainer";
+import { User, Game } from '../reducer/types';
+import './RoomTile.css';
+import { RootState } from '../reducer';
+import { colors } from '../colors';
+import TranslationContainer from './Translation/TranslationContainer';
 
 type OwnProps = {
   room: Game;
@@ -28,18 +28,18 @@ function getActiveUserName(game: Game): string {
   if (user) {
     return user.name;
   }
-  return "";
+  return '';
 }
 
 function getWinnerName(game: Game): string {
   return game.users
     .filter((user) => game.result.winner.includes(user.id.toString()))
     .map((user) => user.name)
-    .join(", ");
+    .join(', ');
 }
 
 function getTileColor(props: Props): string {
-  if (props.room.phase === "finished") {
+  if (props.room.phase === 'finished') {
     return props.room.users
       .filter((user) => props.room.result.winner.includes(user.id.toString()))
       .map((user) => user.id)
@@ -55,19 +55,13 @@ function getTileColor(props: Props): string {
       ? colors.red
       : colors.orange;
   }
-  return props.room.phase === "waiting" ? colors.green : colors.blue;
+  return props.room.phase === 'waiting' ? colors.green : colors.blue;
 }
 
 class RoomTile extends Component<Props> {
   render() {
-    const {
-      id,
-      maxPlayers,
-      users,
-      phase,
-      language,
-      turnOrder,
-    } = this.props.room;
+    const { id, maxPlayers, users, phase, language, turnOrder } =
+      this.props.room;
     return (
       <Link to={`/game/${id}`}>
         <div className="room-tile">
@@ -77,25 +71,25 @@ class RoomTile extends Component<Props> {
           >
             <p className="number">{id}</p>
             <p className="status">
-              {phase === "waiting" && (
+              {phase === 'waiting' && (
                 <TranslationContainer
                   translationKey="waiting_for"
                   args={[String(maxPlayers - users.length)]}
                 />
               )}
-              {phase === "ready" && (
+              {phase === 'ready' && (
                 <TranslationContainer translationKey="ready" />
               )}
-              {phase !== "finished" &&
+              {phase !== 'finished' &&
               this.props.user &&
               this.props.room.activeUserId === this.props.user.id ? (
                 <TranslationContainer translationKey="your_turn" />
               ) : (
                 getActiveUserName(this.props.room)
               )}
-              {phase === "finished" &&
+              {phase === 'finished' &&
                 getWinnerName(this.props.room) &&
-                "\uD83C\uDFC6 " + getWinnerName(this.props.room)}
+                '\uD83C\uDFC6 ' + getWinnerName(this.props.room)}
             </p>
             <p className="language">
               {language.toUpperCase()}
@@ -110,11 +104,11 @@ class RoomTile extends Component<Props> {
                     .map((userId) =>
                       users
                         .find((user) => user.id === userId)
-                        ?.name.replace(" ", " ")
+                        ?.name.replace(' ', ' ')
                     )
-                    .join(" • ")
+                    .join(' • ')
                 : // replace space with U+00A0, non-breaking space
-                  users.map((user) => user.name.replace(" ", " ")).join(" • ")}
+                  users.map((user) => user.name.replace(' ', ' ')).join(' • ')}
             </p>
           </div>
           {this.props.messagesCount[id] > 0 && (

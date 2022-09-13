@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { ThunkDispatch } from "redux-thunk";
-import { AnyAction } from "redux";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { connect } from 'react-redux';
 
-import { RootState } from "../reducer";
-import { User, Message } from "../reducer/types";
-import { clearMessages } from "../actions/chat";
-import "./Chat.css";
-import { SEND_CHAT_MESSAGE } from "../constants/outgoingMessageTypes";
-import {errorFromServer} from "../actions/errorHandling";
+import { RootState } from '../reducer';
+import { User, Message } from '../reducer/types';
+import { clearMessages } from '../actions/chat';
+import './Chat.css';
+import { SEND_CHAT_MESSAGE } from '../constants/outgoingMessageTypes';
+import { errorFromServer } from '../actions/errorHandling';
 
 interface OwnProps {
   gameId: number;
@@ -30,7 +30,7 @@ type State = {
 
 class Chat extends Component<Props, State> {
   readonly state: State = {
-    message: "",
+    message: '',
   };
 
   onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,9 +47,9 @@ class Chat extends Component<Props, State> {
         type: SEND_CHAT_MESSAGE,
         payload: this.state.message,
       });
-      this.setState({ ...this.state, message: "" });
+      this.setState({ ...this.state, message: '' });
     } catch (error) {
-      this.props.dispatch(errorFromServer(error, "chat"));
+      this.props.dispatch(errorFromServer(error, 'chat'));
     }
   };
 
@@ -59,7 +59,7 @@ class Chat extends Component<Props, State> {
 
   render() {
     if (
-      this.props.gamePhase === "waiting" ||
+      this.props.gamePhase === 'waiting' ||
       (this.props.user &&
         this.props.players.find((player) => player.id === this.props.user.id))
     ) {

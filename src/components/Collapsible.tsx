@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import "./Collapsible.css";
-import TranslationContainer from "./Translation/TranslationContainer";
+import './Collapsible.css';
+import TranslationContainer from './Translation/TranslationContainer';
 
 type Props = {
   component: JSX.Element;
@@ -33,7 +33,7 @@ class Collapsible extends Component<Props, State> {
             }
           />
         </button>
-        <div id="demo" className={"collapse" + (this.state.open ? " in" : "")}>
+        <div id="demo" className={'collapse' + (this.state.open ? ' in' : '')}>
           {this.props.component}
         </div>
       </div>

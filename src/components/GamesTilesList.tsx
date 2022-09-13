@@ -1,7 +1,7 @@
-import React from "react";
-import { Game, User } from "../reducer/types";
-import RoomTile from "./RoomTile";
-import TranslationContainer from "./Translation/TranslationContainer";
+import React from 'react';
+import { Game, User } from '../reducer/types';
+import RoomTile from './RoomTile';
+import TranslationContainer from './Translation/TranslationContainer';
 
 type OwnProps = {
   gamesList: Game[];

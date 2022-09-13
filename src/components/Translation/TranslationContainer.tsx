@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import {ThunkDispatch} from "redux-thunk";
-import {AnyAction} from "redux";
-import { TRANSLATIONS } from "../../constants/translations";
-import { RootState } from "../../reducer";
-import {errorFromServer} from "../../actions/errorHandling";
-import Translation from "./Translation";
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { TRANSLATIONS } from '../../constants/translations';
+import { RootState } from '../../reducer';
+import { errorFromServer } from '../../actions/errorHandling';
+import Translation from './Translation';
 
 interface StateProps {
   locale: string;
@@ -27,7 +27,7 @@ interface State {
 }
 
 class TranslationContainer extends Component<Props, State> {
-  readonly state: State = { translation: "" };
+  readonly state: State = { translation: '' };
 
   componentDidMount() {
     this._updateTranslation(
@@ -61,20 +61,19 @@ class TranslationContainer extends Component<Props, State> {
       try {
         let translation = TRANSLATIONS[activeLanguageCode][translationKey];
         if (args && args.length > 0) {
-          args.forEach((arg) => (translation = translation.replace("{}", arg)));
+          args.forEach((arg) => (translation = translation.replace('{}', arg)));
         }
         this.setState({
           translation,
         });
       } catch (error) {
         this.props.dispatch(errorFromServer(error, '_updateTranslation'));
-
       }
     }
   }
 
   render() {
-    if (!this.state.translation || this.state.translation === "") return null;
+    if (!this.state.translation || this.state.translation === '') return null;
     return <Translation translation={this.state.translation} />;
   }
 }

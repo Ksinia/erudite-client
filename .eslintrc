@@ -15,8 +15,7 @@
   },
   "extends": [
     "react-app",
-    //"eslint:recommended" - this is uselss and requires more overrides becasue "react-app" already has tuned rules for CRA
-    //"plugin:prettier/recommended", -- TODO: Reenable it back. Goes haywire after react-script upgrade
+    "plugin:prettier/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
@@ -25,6 +24,19 @@
   "rules": {
     "no-duplicate-imports": 2,
     "no-unused-vars": 0,
-    "import/order": 2
+    "import/order": 2,
+    "quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true
+      }
+    ]
   }
 }

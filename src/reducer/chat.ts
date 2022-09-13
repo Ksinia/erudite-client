@@ -1,8 +1,8 @@
-import { AnyAction } from "redux";
+import { AnyAction } from 'redux';
 
-import { ALL_MESSAGES, NEW_MESSAGE } from "../constants/incomingMessageTypes";
-import { CLEAR_MESSAGES } from "../constants/internalMessageTypes";
-import { Message } from "./types";
+import { ALL_MESSAGES, NEW_MESSAGE } from '../constants/incomingMessageTypes';
+import { CLEAR_MESSAGES } from '../constants/internalMessageTypes';
+import { Message } from './types';
 
 export default function reducer(state: Message[] = [], action: AnyAction) {
   switch (action.type) {

@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { ThunkDispatch } from "redux-thunk";
+import React, { Component } from 'react';
+import { ThunkDispatch } from 'redux-thunk';
 
-import { AnyAction } from "redux";
-import { connect } from "react-redux";
-import { RootState } from "../../reducer";
-import { loadArchivedGames } from "../../actions/user";
-import GamesTilesList from "../GamesTilesList";
-import { Game, User } from "../../reducer/types";
+import { AnyAction } from 'redux';
+import { connect } from 'react-redux';
+import { RootState } from '../../reducer';
+import { loadArchivedGames } from '../../actions/user';
+import GamesTilesList from '../GamesTilesList';
+import { Game, User } from '../../reducer/types';
 
 interface OwnProps {
   jwt: string;
@@ -31,7 +31,7 @@ class ArchivedGamesContainer extends Component<Props> {
       <GamesTilesList
         gamesList={this.props.gamesList}
         user={this.props.user}
-        category={"archived"}
+        category={'archived'}
       />
     );
   }

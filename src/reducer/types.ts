@@ -1,11 +1,11 @@
-import { Action, AnyAction } from "redux";
-import { ThunkAction } from "redux-thunk";
+import { Action, AnyAction } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 
-import { RootState } from "../reducer";
+import { RootState } from './index';
 
 enum Language {
-  "ru",
-  "en",
+  'ru',
+  'en',
 }
 
 export interface Room {
@@ -36,16 +36,16 @@ type Turn = {
 export interface Game {
   id: number;
   phase: string;
-  turnOrder: User["id"][];
-  turn: User["id"];
+  turnOrder: User['id'][];
+  turn: User['id'];
   validated: string;
   language: string;
   maxPlayers: number;
   users: User[];
   archived: boolean;
-  letters: { [key in User["id"] | "pot"]: string[] };
+  letters: { [key in User['id'] | 'pot']: string[] };
   passedCount: number;
-  score: { [key in User["id"]]: number };
+  score: { [key in User['id']]: number };
   turns: Turn[];
   result: {
     winner: string[]; // TODO: it should be a number

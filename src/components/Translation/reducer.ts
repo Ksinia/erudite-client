@@ -1,11 +1,11 @@
-import { SET_LANGUAGE } from "../../constants/generalConstants";
+import { SET_LANGUAGE } from '../../constants/generalConstants';
 
 // Initial state
 const defaultLocale: string = localStorage.locale
   ? localStorage.locale
-  : window.navigator.language.slice(0, 2) === "ru"
-  ? "ru_RU"
-  : "en_US";
+  : window.navigator.language.slice(0, 2) === 'ru'
+  ? 'ru_RU'
+  : 'en_US';
 const initialState = {
   locale: defaultLocale,
 };

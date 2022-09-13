@@ -1,6 +1,6 @@
-import { AnyAction } from "redux";
+import { AnyAction } from 'redux';
 
-import { MESSAGES_COUNT } from "../constants/incomingMessageTypes";
+import { MESSAGES_COUNT } from '../constants/incomingMessageTypes';
 
 export default function reducer(
   state: { [key: number]: number } = {},

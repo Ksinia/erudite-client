@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import { letterValues } from "../constants/letterValues";
-import { Game as GameType, User } from "../reducer/types";
-import Board from "./Board";
-import Results from "./Results";
-import TranslationContainer from "./Translation/TranslationContainer";
-import WildCardForm from "./WildCardForm";
+import { letterValues } from '../constants/letterValues';
+import { Game as GameType, User } from '../reducer/types';
+import Board from './Board';
+import Results from './Results';
+import TranslationContainer from './Translation/TranslationContainer';
+import WildCardForm from './WildCardForm';
 
 type OwnProps = {
   game: GameType;
@@ -53,7 +53,7 @@ function Game(props: OwnProps) {
             {props.userLetters.map((letter, index) => {
               let style = {};
               if (index === props.chosenLetterIndex) {
-                style = { background: "whitesmoke" };
+                style = { background: 'whitesmoke' };
               }
               return (
                 <div
@@ -77,27 +77,27 @@ function Game(props: OwnProps) {
           wildCardLetters={props.wildCardLetters}
           alphabet={Object.keys(letterValues[props.game.language])}
         />
-        {props.game.phase === "finished" && props.user && (
+        {props.game.phase === 'finished' && props.user && (
           <button key="again" onClick={props.playAgainWithSamePlayers}>
             <TranslationContainer translationKey="play_again" />
           </button>
         )}
         {props.duplicatedWords && props.duplicatedWords.length > 0 && (
-          <p style={{ color: "red" }}>
+          <p style={{ color: 'red' }}>
             <TranslationContainer
               translationKey="duplicated"
-              args={[props.duplicatedWords.join(", ")]}
+              args={[props.duplicatedWords.join(', ')]}
             />
           </p>
         )}
         {props.user &&
           props.game.turnOrder[props.game.turn] === props.user.id &&
-          props.game.phase === "turn" && (
+          props.game.phase === 'turn' && (
             <button
               key="confirm"
               onClick={props.confirmTurn}
               disabled={props.wildCardLetters.some(
-                (letterObject) => letterObject.letter === ""
+                (letterObject) => letterObject.letter === ''
               )}
             >
               {props.userBoardEmpty ? (
@@ -109,7 +109,7 @@ function Game(props: OwnProps) {
           )}
         {props.user &&
           props.game.turnOrder.includes(props.user.id) &&
-          props.game.phase !== "finished" &&
+          props.game.phase !== 'finished' &&
           !props.userBoardEmpty && (
             <button key="return" onClick={props.returnLetters}>
               <TranslationContainer translationKey="return" />
@@ -117,18 +117,18 @@ function Game(props: OwnProps) {
           )}
         {props.user &&
           props.game.turnOrder[props.game.turn] === props.user.id &&
-          props.game.phase === "turn" &&
+          props.game.phase === 'turn' &&
           props.game.letters.pot.length > 0 && [
             <button key="change" onClick={props.change}>
               <TranslationContainer translationKey="change" />
             </button>,
           ]}
-        {props.game.phase === "validation" &&
+        {props.game.phase === 'validation' &&
           props.game.wordsForValidation.length > 0 && (
             <p>
               <TranslationContainer
                 translationKey="to_validate"
-                args={[props.game.wordsForValidation.join(", ")]}
+                args={[props.game.wordsForValidation.join(', ')]}
               />
             </p>
           )}
@@ -137,7 +137,7 @@ function Game(props: OwnProps) {
           props.game.turnOrder.includes(props.user.id) &&
           props.user.id ===
             props.game.turnOrder[props.getNextTurn(props.game)] &&
-          props.game.phase === "validation" && [
+          props.game.phase === 'validation' && [
             <button key="yes" name="yes" onClick={props.validateTurn}>
               <TranslationContainer
                 translationKey="i_confirm"
@@ -161,8 +161,8 @@ function Game(props: OwnProps) {
               />
             </button>,
           ]}
-        {props.game.phase === "validation" &&
-          props.game.validated === "no" && [
+        {props.game.phase === 'validation' &&
+          props.game.validated === 'no' && [
             <p key="disagree">
               <TranslationContainer
                 translationKey="disagree"
@@ -185,8 +185,8 @@ function Game(props: OwnProps) {
                 </button>
               ),
           ]}
-        {props.game.phase !== "finished" ? (
-          props.game.phase === "validation" ? (
+        {props.game.phase !== 'finished' ? (
+          props.game.phase === 'validation' ? (
             <p key="validation_of">
               <TranslationContainer
                 translationKey="validation"
@@ -238,7 +238,7 @@ function Game(props: OwnProps) {
             ))}
           </tbody>
         </table>
-        {props.game.phase === "finished" && "result" in props.game && (
+        {props.game.phase === 'finished' && 'result' in props.game && (
           <Results game={props.game} />
         )}
         <p key="letters">
@@ -278,7 +278,7 @@ function Game(props: OwnProps) {
                           <div key={index} className="turn">
                             <p>
                               {turn.score}
-                              {": "}
+                              {': '}
                               {turn.words
                                 .map(
                                   (word) =>
@@ -286,7 +286,7 @@ function Game(props: OwnProps) {
                                       word[Object.keys(word)[0]]
                                     }`
                                 )
-                                .join(", ")}
+                                .join(', ')}
                             </p>
                           </div>
                         ) : (

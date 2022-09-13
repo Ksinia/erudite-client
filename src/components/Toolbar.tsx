@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { connect, DispatchProp } from "react-redux";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect, DispatchProp } from 'react-redux';
 
-import { logOut } from "../actions/authorization";
-import "./Toolbar.css";
-import { RootState } from "../reducer";
-import LangSwitchContainer from "./LangSwitch/LangSwitchContainer";
-import TranslationContainer from "./Translation/TranslationContainer";
+import { logOut } from '../actions/authorization';
+import './Toolbar.css';
+import { RootState } from '../reducer';
+import LangSwitchContainer from './LangSwitch/LangSwitchContainer';
+import TranslationContainer from './Translation/TranslationContainer';
 
 interface StateProps {
   user: { name: string };
@@ -39,7 +39,7 @@ class Toolbar extends Component<Props> {
 
         {this.props.user && (
           <Link to="/user">
-            <TranslationContainer translationKey="welcome" />{" "}
+            <TranslationContainer translationKey="welcome" />{' '}
             {this.props.user.name}!
           </Link>
         )}

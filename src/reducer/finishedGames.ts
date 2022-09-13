@@ -1,7 +1,7 @@
-import { AnyAction } from "redux";
+import { AnyAction } from 'redux';
 
-import { FINISHED_GAMES } from "../constants/internalMessageTypes";
-import { Game } from "./types";
+import { FINISHED_GAMES } from '../constants/internalMessageTypes';
+import { Game } from './types';
 
 export default function reducer(
   state: Game[] | null = null,

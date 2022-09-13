@@ -1,4 +1,4 @@
-import { CLEAR_MESSAGES } from "../constants/internalMessageTypes";
+import { CLEAR_MESSAGES } from '../constants/internalMessageTypes';
 
 export const clearMessages = () => {
   return {

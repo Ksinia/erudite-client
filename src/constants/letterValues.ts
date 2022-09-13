@@ -1,6 +1,6 @@
 export const letterValues: { [key: string]: { [key: string]: number } } = {
   ru: {
-    "*": 0,
+    '*': 0,
     а: 1,
     б: 3,
     в: 2,
@@ -35,7 +35,7 @@ export const letterValues: { [key: string]: { [key: string]: number } } = {
     я: 3,
   },
   en: {
-    "*": 0,
+    '*': 0,
     e: 1,
     a: 1,
     i: 1,

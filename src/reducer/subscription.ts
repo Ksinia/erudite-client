@@ -1,6 +1,6 @@
-import { AnyAction } from "redux";
+import { AnyAction } from 'redux';
 
-import { SUBSCRIPTION_REGISTERED } from "../constants/internalMessageTypes";
+import { SUBSCRIPTION_REGISTERED } from '../constants/internalMessageTypes';
 
 export default function reducer(
   state: PushSubscription | null = null,

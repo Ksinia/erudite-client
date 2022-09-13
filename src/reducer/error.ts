@@ -1,10 +1,10 @@
-import { AnyAction } from "redux";
+import { AnyAction } from 'redux';
 
 import {
   LOGIN_OR_SIGNUP_ERROR,
   CLEAR_ERROR,
-} from "../constants/internalMessageTypes";
-import { LOGIN_SUCCESS } from "../constants/incomingMessageTypes";
+} from '../constants/internalMessageTypes';
+import { LOGIN_SUCCESS } from '../constants/incomingMessageTypes';
 
 export default function reducer(state = null, action: AnyAction) {
   switch (action.type) {

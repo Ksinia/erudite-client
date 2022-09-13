@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { User, Game as GameType } from "../reducer/types";
-import TranslationContainer from "./Translation/TranslationContainer";
+import { User, Game as GameType } from '../reducer/types';
+import TranslationContainer from './Translation/TranslationContainer';
 
 type Props = {
   room: GameType;
@@ -18,7 +18,7 @@ function Room(props: Props) {
         <TranslationContainer
           translationKey="room_for"
           args={[String(props.room.id), String(props.room.maxPlayers)]}
-        />{" "}
+        />{' '}
         ({props.room.language})
       </p>
       {props.room.users.length > 0 ? (
@@ -47,14 +47,14 @@ function Room(props: Props) {
         </p>
       ) : (
         [
-          props.room.phase === "waiting" &&
+          props.room.phase === 'waiting' &&
             !props.room.users.find((user) => user.id === props.user.id) && (
               <button key="join" onClick={props.onClickJoin}>
                 <TranslationContainer translationKey="join" />
               </button>
             ),
           props.room.users.find((user) => user.id === props.user.id) &&
-            props.room.phase === "ready" && (
+            props.room.phase === 'ready' && (
               <button key="start" onClick={props.onClickStart}>
                 <TranslationContainer translationKey="start" />
               </button>

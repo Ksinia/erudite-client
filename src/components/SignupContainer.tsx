@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { History } from "history";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { History } from 'history';
 
-import { loginSignupFunction, clearError } from "../actions/authorization";
-import { RootState } from "../reducer";
-import Signup from "./Signup";
+import { loginSignupFunction, clearError } from '../actions/authorization';
+import { RootState } from '../reducer';
+import Signup from './Signup';
 
 interface StateProps {
   error: string;
@@ -31,9 +31,9 @@ interface State {
 
 class SignupContainer extends Component<Props, State> {
   readonly state: State = {
-    name: "",
-    email: "",
-    password: "",
+    name: '',
+    email: '',
+    password: '',
   };
   onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ ...this.state, [event.target.name]: event.target.value });
@@ -43,17 +43,17 @@ class SignupContainer extends Component<Props, State> {
     event.preventDefault();
     this.props.dispatch(
       loginSignupFunction(
-        "signup",
+        'signup',
         this.state.name,
         this.state.password,
         this.props.history,
-        this.state.email,
+        this.state.email
       )
     );
   };
 
   componentDidMount() {
-    document.title = `Sign up | Erudite`;
+    document.title = 'Sign up | Erudite';
   }
 
   componentWillUnmount() {
