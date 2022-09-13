@@ -23,7 +23,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "tsc": "./node_modules/.bin/tsc --build tsconfig.json"
   },
   "browserslist": {
     "production": [

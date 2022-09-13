@@ -67,7 +67,6 @@ const getPreviousLetters = (
 interface StateProps {
   user: User;
   duplicatedWords: string[];
-  error: unknown;
 }
 
 export type WildCardOnBoard = { [key: number]: { [key: number]: string } };
