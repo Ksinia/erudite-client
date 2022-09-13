@@ -19,7 +19,7 @@ interface DispatchProps {
 type Props = OwnProps & DispatchProps;
 
 
-export default function ConfirmEmail(props: Props) {
+export default function ConfirmEmail({history, dispatch}: Props) {
     const jwtFromUrl = new URL(window.location.href).searchParams.get("jwt");
 
     useEffect(() => {
@@ -28,13 +28,13 @@ export default function ConfirmEmail(props: Props) {
                 await superagent
                     .get(`${baseUrl}/confirm-email`)
                     .set("Authorization", `Bearer ${jwtFromUrl}`)
-                    props.history.push("/");
+                    history.push("/");
             } catch (error) {
                 // TODO: send error and handle it on frontend
-                props.dispatch(errorFromServer(error, "confirm email"));
+                dispatch(errorFromServer(error, "confirm email"));
             }
         }
         confirmEmail();
-    },[jwtFromUrl, props.history])
+    },[jwtFromUrl, history, dispatch])
     return (<TranslationContainer translationKey="loading" />)
 }
