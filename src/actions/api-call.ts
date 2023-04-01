@@ -4,6 +4,7 @@ import { backendUrl as baseUrl } from '../runtime';
 import { SUBSCRIPTION_REGISTERED } from '../constants/internalMessageTypes';
 import { MyThunkAction } from '../reducer/types';
 import { errorFromServer } from './errorHandling';
+import { loginSignupFunctionErrorCtx } from './authorization';
 
 function getJWT(): string | null {
   return localStorage.getItem('jwt');
@@ -38,7 +39,7 @@ export const saveSubscriptionForUser =
         JSON.parse(JSON.stringify({ subscription, userAgent }))
       ); // TODO: Check return code
     } catch (error) {
-      dispatch(errorFromServer(error, 'loginSignupFunction'));
+      dispatch(errorFromServer(error, loginSignupFunctionErrorCtx));
     }
   };
 

@@ -2,7 +2,7 @@ import { ResponseError } from 'superagent';
 import { MyThunkAction } from '../reducer/types';
 import { ERROR } from '../constants/incomingMessageTypes';
 import { LOGIN_OR_SIGNUP_ERROR } from '../constants/internalMessageTypes';
-import { logOut } from './authorization';
+import { loginSignupFunctionErrorCtx, logOut } from './authorization';
 
 export const errorFromServer =
   (error: unknown, context: string): MyThunkAction =>
@@ -19,7 +19,12 @@ export const errorFromServer =
 
     console.debug(`error on ${context}`, errorMessage);
     let errType = ERROR;
-    if (errorMessage.includes('TokenExpiredError')) {
+    // token can expire on any page, so we need to show an error message on login page.
+    // also show any error from login/signup function there
+    if (
+      errorMessage.includes('TokenExpiredError') ||
+      context === loginSignupFunctionErrorCtx
+    ) {
       errType = LOGIN_OR_SIGNUP_ERROR;
       dispatch(logOut());
     }

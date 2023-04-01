@@ -20,6 +20,8 @@ export const logOut = () => {
   };
 };
 
+export const loginSignupFunctionErrorCtx = 'loginSignupFunction';
+
 export const loginSignupFunction =
   (
     type: string,
@@ -54,7 +56,7 @@ export const loginSignupFunction =
         history.push('/');
       }
     } catch (error) {
-      dispatch(errorFromServer(error, 'loginSignupFunction'));
+      dispatch(errorFromServer(error, loginSignupFunctionErrorCtx));
     }
   };
 
