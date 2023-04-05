@@ -21,6 +21,7 @@ import {
   REMOVE_USER_FROM_SOCKET,
 } from './constants/outgoingMessageTypes';
 import { saveSubscriptionForUser } from './actions/api-call';
+import Rules from './components/Rules';
 
 interface OwnProps {
   user: User;
@@ -84,6 +85,7 @@ class App extends Component<Props> {
           <Route path="/forgot-password" component={ForgotPassword} />
           <Route path="/game/:game" component={GameHandler} />
           <Route path="/confirm-email" component={ConfirmEmail} />
+          <Route path="/rules" component={Rules} />
           <Route path="/" component={LobbyContainer} />
         </Switch>
       </div>,

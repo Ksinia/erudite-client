@@ -45,7 +45,11 @@ class UserPage extends Component<Props> {
       <>
         {jwt && (
           <>
-            <FinishedGamesContainer jwt={jwt} />
+            <Collapsible
+              translationKeyExpand="expand_finished"
+              translationKeyCollapse="collapse_finished"
+              component={<FinishedGamesContainer jwt={jwt} />}
+            />
             <Collapsible
               translationKeyExpand="expand_archived"
               translationKeyCollapse="collapse_archived"

@@ -81,3 +81,12 @@
     transform: rotate(360deg);
   }
 }
+
+.rules {
+  white-space: pre-line;
+  text-align: justify;
+  width: 85%;
+  margin: auto;
+  line-height: 1.5em;
+  text-indent: 40%;
+}

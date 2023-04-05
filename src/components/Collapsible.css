@@ -5,3 +5,11 @@
 .collapse.in {
   display: initial;
 }
+
+button {
+  margin: 0.5em;
+}
+
+input {
+  margin: 0.5em;
+}

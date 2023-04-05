@@ -24,6 +24,9 @@ class Toolbar extends Component<Props> {
     return (
       <div className="toolbar">
         <LangSwitchContainer />
+        <Link to="/rules">
+          <TranslationContainer translationKey="toolbar_rules" />
+        </Link>
         <Link to="/">
           <TranslationContainer translationKey="toolbar_list" />
         </Link>
