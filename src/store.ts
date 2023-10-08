@@ -39,7 +39,7 @@ socket.on('reconnect', () => {
   if (locationArray[1] === 'game') {
     store.dispatch({
       type: ADD_GAME_TO_SOCKET,
-      payload: locationArray[2],
+      payload: parseInt(locationArray[2]),
     });
   } else if (locationArray[1] === '') {
     store.dispatch({

@@ -66,11 +66,11 @@ class GameHandler extends Component<Props, State> {
       this.props.socketConnected &&
         this.props.dispatch({
           type: ADD_GAME_TO_SOCKET,
-          payload: this.props.match.params.game,
+          payload: parseInt(this.props.match.params.game),
         });
       this.props.dispatch({
         type: REMOVE_GAME_FROM_SOCKET,
-        payload: prevProps.match.params.game,
+        payload: parseInt(prevProps.match.params.game),
       });
     }
   }
