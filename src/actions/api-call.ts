@@ -1,7 +1,10 @@
 import superagent from 'superagent';
 import parser from 'ua-parser-js';
 import { backendUrl as baseUrl } from '../runtime';
-import { SUBSCRIPTION_REGISTERED } from '../constants/internalMessageTypes';
+import {
+  InternalMessageTypes,
+  SUBSCRIPTION_REGISTERED,
+} from '../constants/internalMessageTypes';
 import { MyThunkAction } from '../reducer/types';
 import { errorFromServer } from './errorHandling';
 import { loginSignupFunctionErrorCtx } from './authorization';
@@ -28,8 +31,8 @@ async function callApi(
 }
 
 export const saveSubscriptionForUser =
-  (subscription: PushSubscription): MyThunkAction =>
-  async (dispatch) => {
+  (subscription: PushSubscription): MyThunkAction<SUBSCRIPTION_REGISTERED> =>
+  async (dispatch): Promise<SUBSCRIPTION_REGISTERED | undefined> => {
     const ua = parser(window.navigator.userAgent);
     const userAgent = `${ua.browser.name} on ${ua.os.name}`;
     try {
@@ -43,7 +46,9 @@ export const saveSubscriptionForUser =
     }
   };
 
-export const storeSubscription = (subscription: PushSubscription) => ({
-  type: SUBSCRIPTION_REGISTERED,
+export const storeSubscription = (
+  subscription: PushSubscription
+): SUBSCRIPTION_REGISTERED => ({
+  type: InternalMessageTypes.SUBSCRIPTION_REGISTERED,
   payload: subscription,
 });

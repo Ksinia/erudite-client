@@ -1,14 +1,12 @@
-import { AnyAction } from 'redux';
-
-import { FINISHED_GAMES } from '../constants/internalMessageTypes';
+import {
+  FINISHED_GAMES,
+  InternalMessageTypes,
+} from '../constants/internalMessageTypes';
 import { Game } from './types';
 
-export default function reducer(
-  state: Game[] | null = null,
-  action: AnyAction
-) {
+export default function reducer(state: Game[] = [], action: FINISHED_GAMES) {
   switch (action.type) {
-    case FINISHED_GAMES: {
+    case InternalMessageTypes.FINISHED_GAMES: {
       return action.payload;
     }
     default:

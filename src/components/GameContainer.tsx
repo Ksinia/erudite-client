@@ -65,7 +65,7 @@ const getPreviousLetters = (
 };
 
 interface StateProps {
-  user: User;
+  user: User | null;
   duplicatedWords: string[];
 }
 
@@ -253,12 +253,13 @@ class GameContainer extends Component<Props, State> {
         }
       })
     );
+    const user = this.props.user;
     // if player uses wild cards he must choose a letter for it before submitting a turn
-    if (this.props.user.jwt) {
+    if (user) {
       this.props.dispatch(
         sendTurn(
           this.props.game.id,
-          this.props.user.jwt,
+          user.jwt,
           userBoardToSend,
           this.state.wildCardOnBoard
         )
@@ -266,11 +267,15 @@ class GameContainer extends Component<Props, State> {
     }
   };
   validateTurn = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const user = this.props.user;
+    if (!user) {
+      return;
+    }
     const { name } = event.target as HTMLButtonElement;
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/approve`)
-        .set('Authorization', `Bearer ${this.props.user.jwt}`)
+        .set('Authorization', `Bearer ${user.jwt}`)
         .send({ validation: name });
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'validateTurn'));
@@ -293,19 +298,23 @@ class GameContainer extends Component<Props, State> {
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/undo`)
-        .set('Authorization', `Bearer ${this.props.user.jwt}`);
+        .set('Authorization', `Bearer ${this.props.user?.jwt}`);
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'undo'));
     }
   };
 
   change = async () => {
+    const user = this.props.user;
+    if (!user) {
+      return;
+    }
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/change`)
-        .set('Authorization', `Bearer ${this.props.user.jwt}`)
+        .set('Authorization', `Bearer ${user.jwt}`)
         .send({
-          letters: this.props.game.letters[this.props.user.id],
+          letters: this.props.game.letters[user.id],
         });
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'pass and change letters'));
@@ -318,7 +327,7 @@ class GameContainer extends Component<Props, State> {
       return user;
     }
     console.warn("findTurnUser did not find a user. This shouldn't happen");
-    return { id: -1, name: '' };
+    return { id: -1, name: '', jwt: '' };
   };
 
   onChangeWildCard = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -337,7 +346,7 @@ class GameContainer extends Component<Props, State> {
     try {
       const response = await superagent
         .post(`${backendUrl}/create`)
-        .set('Authorization', `Bearer ${this.props.user.jwt}`)
+        .set('Authorization', `Bearer ${this.props.user?.jwt}`)
         .send({
           maxPlayers: this.props.game.maxPlayers,
           language: this.props.game.language,

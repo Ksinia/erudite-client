@@ -16,7 +16,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  user: User;
+  user: User | null;
 }
 
 interface DispatchProps {
@@ -30,7 +30,7 @@ class RoomContainer extends Component<Props> {
     try {
       await superagent
         .post(`${backendUrl}/start`)
-        .set('Authorization', `Bearer ${this.props.user.jwt}`)
+        .set('Authorization', `Bearer ${this.props.user?.jwt}`)
         .send({ gameId: this.props.game.id });
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'onClickStart'));
@@ -40,7 +40,7 @@ class RoomContainer extends Component<Props> {
     try {
       await superagent
         .put(`${backendUrl}/join`)
-        .set('Authorization', `Bearer ${this.props.user.jwt}`)
+        .set('Authorization', `Bearer ${this.props.user?.jwt}`)
         .send({ gameId: this.props.game.id });
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'onClickJoin'));

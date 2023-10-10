@@ -1,10 +1,11 @@
-import { AnyAction } from 'redux';
+import {
+  InternalMessageTypes,
+  SET_LANGUAGE,
+} from '../../constants/internalMessageTypes';
 
-import { SET_LANGUAGE } from '../../constants/generalConstants';
-
-export function setLanguage(locale: string): AnyAction {
+export function setLanguage(locale: string): SET_LANGUAGE {
   return {
-    type: SET_LANGUAGE,
+    type: InternalMessageTypes.SET_LANGUAGE,
     locale,
   };
 }

@@ -1,18 +1,26 @@
-import { AnyAction } from 'redux';
-
-import { LOGIN_SUCCESS, ERROR } from '../constants/incomingMessageTypes';
-import { LOGOUT } from '../constants/internalMessageTypes';
+import {
+  ERROR,
+  IncomingMessageTypes,
+  LOGIN_SUCCESS,
+} from '../constants/incomingMessageTypes';
+import {
+  InternalMessageTypes,
+  LOGOUT,
+} from '../constants/internalMessageTypes';
 import { User } from './types';
 
-export default function reducer(state: User | null = null, action: AnyAction) {
+export default function reducer(
+  state: User | null = null,
+  action: LOGIN_SUCCESS | LOGOUT | ERROR
+) {
   switch (action.type) {
-    case LOGIN_SUCCESS: {
+    case IncomingMessageTypes.LOGIN_SUCCESS: {
       return action.payload;
     }
-    case LOGOUT: {
+    case InternalMessageTypes.LOGOUT: {
       return null;
     }
-    case ERROR: {
+    case IncomingMessageTypes.ERROR: {
       return null;
     }
     default:

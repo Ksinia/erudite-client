@@ -6,48 +6,44 @@ import io from 'socket.io-client';
 import { rootReducer } from './reducer';
 import { backendUrl } from './runtime';
 import {
-  ADD_USER_TO_SOCKET,
-  ADD_GAME_TO_SOCKET,
-  ENTER_LOBBY,
-  socketActions,
+  outgoingSocketActions,
+  OutgoingMessageTypes,
 } from './constants/outgoingMessageTypes';
-import {
-  SOCKET_CONNECTED,
-  SOCKET_DISCONNECTED,
-} from './constants/internalMessageTypes';
+import { InternalMessageTypes } from './constants/internalMessageTypes';
+import { addGameToSocket } from './actions/game';
+import { addUserToSocket } from './actions/user';
 
 const socket = io(backendUrl, {
   path: '/socket',
 });
-const socketIoMiddleware = createSocketIoMiddleware(socket, socketActions, {
-  eventName: 'message',
-});
+const socketIoMiddleware = createSocketIoMiddleware(
+  socket,
+  outgoingSocketActions,
+  {
+    eventName: 'message',
+  }
+);
 socket.on('connect', () => {
-  store.dispatch({ type: SOCKET_CONNECTED });
+  store.dispatch({ type: InternalMessageTypes.SOCKET_CONNECTED });
 });
 socket.on('disconnect', () => {
-  store.dispatch({ type: SOCKET_DISCONNECTED });
+  store.dispatch({ type: InternalMessageTypes.SOCKET_DISCONNECTED });
 });
 socket.on('reconnect', () => {
-  if (store.getState().user) {
-    store.dispatch({
-      type: ADD_USER_TO_SOCKET,
-      payload: store.getState().user.jwt,
-    });
+  const user = store.getState().user;
+  if (user) {
+    store.dispatch(addUserToSocket(user.jwt));
   }
   const locationArray = window.location.pathname.split('/');
   if (locationArray[1] === 'game') {
-    store.dispatch({
-      type: ADD_GAME_TO_SOCKET,
-      payload: parseInt(locationArray[2]),
-    });
+    store.dispatch(addGameToSocket(parseInt(locationArray[2])));
   } else if (locationArray[1] === '') {
     store.dispatch({
-      type: ENTER_LOBBY,
+      type: OutgoingMessageTypes.ENTER_LOBBY,
     });
   }
   store.dispatch({
-    type: SOCKET_CONNECTED,
+    type: InternalMessageTypes.SOCKET_CONNECTED,
   });
 });
 

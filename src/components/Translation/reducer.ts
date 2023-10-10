@@ -1,4 +1,7 @@
-import { SET_LANGUAGE } from '../../constants/generalConstants';
+import {
+  InternalMessageTypes,
+  SET_LANGUAGE,
+} from '../../constants/internalMessageTypes';
 
 // Initial state
 const defaultLocale: string = localStorage.locale
@@ -11,12 +14,9 @@ const initialState = {
 };
 
 // Reducer
-export default function reducer(
-  state = initialState,
-  action: { type: string; locale: string }
-) {
+export default function reducer(state = initialState, action: SET_LANGUAGE) {
   switch (action.type) {
-    case SET_LANGUAGE:
+    case InternalMessageTypes.SET_LANGUAGE:
       return { ...state, locale: action.locale };
     default:
       return state;

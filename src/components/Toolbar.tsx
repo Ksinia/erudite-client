@@ -5,11 +5,12 @@ import { connect, DispatchProp } from 'react-redux';
 import { logOut } from '../actions/authorization';
 import './Toolbar.css';
 import { RootState } from '../reducer';
+import { User } from '../reducer/types';
 import LangSwitchContainer from './LangSwitch/LangSwitchContainer';
 import TranslationContainer from './Translation/TranslationContainer';
 
 interface StateProps {
-  user: { name: string };
+  user: User | null;
 }
 
 type Props = StateProps & DispatchProp;

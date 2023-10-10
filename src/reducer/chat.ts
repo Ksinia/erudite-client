@@ -1,18 +1,26 @@
-import { AnyAction } from 'redux';
-
-import { ALL_MESSAGES, NEW_MESSAGE } from '../constants/incomingMessageTypes';
-import { CLEAR_MESSAGES } from '../constants/internalMessageTypes';
+import {
+  ALL_MESSAGES,
+  IncomingMessageTypes,
+  NEW_MESSAGE,
+} from '../constants/incomingMessageTypes';
+import {
+  CLEAR_MESSAGES,
+  InternalMessageTypes,
+} from '../constants/internalMessageTypes';
 import { Message } from './types';
 
-export default function reducer(state: Message[] = [], action: AnyAction) {
+export default function reducer(
+  state: Message[] = [],
+  action: ALL_MESSAGES | NEW_MESSAGE | CLEAR_MESSAGES
+) {
   switch (action.type) {
-    case ALL_MESSAGES: {
+    case IncomingMessageTypes.ALL_MESSAGES: {
       return action.payload;
     }
-    case NEW_MESSAGE: {
+    case IncomingMessageTypes.NEW_MESSAGE: {
       return [action.payload, ...state];
     }
-    case CLEAR_MESSAGES: {
+    case InternalMessageTypes.CLEAR_MESSAGES: {
       return [];
     }
     default:

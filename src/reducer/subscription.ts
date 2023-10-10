@@ -1,13 +1,14 @@
-import { AnyAction } from 'redux';
-
-import { SUBSCRIPTION_REGISTERED } from '../constants/internalMessageTypes';
+import {
+  InternalMessageTypes,
+  SUBSCRIPTION_REGISTERED,
+} from '../constants/internalMessageTypes';
 
 export default function reducer(
   state: PushSubscription | null = null,
-  action: AnyAction
+  action: SUBSCRIPTION_REGISTERED
 ) {
   switch (action.type) {
-    case SUBSCRIPTION_REGISTERED: {
+    case InternalMessageTypes.SUBSCRIPTION_REGISTERED: {
       return action.payload;
     }
     default:

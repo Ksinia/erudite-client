@@ -1,14 +1,17 @@
-import { AnyAction } from 'redux';
 import {
+  InternalMessageTypes,
   SOCKET_CONNECTED,
   SOCKET_DISCONNECTED,
 } from '../constants/internalMessageTypes';
-export default function reducer(state: boolean = false, action: AnyAction) {
+export default function reducer(
+  state: boolean = false,
+  action: SOCKET_CONNECTED | SOCKET_DISCONNECTED
+) {
   switch (action.type) {
-    case SOCKET_CONNECTED: {
+    case InternalMessageTypes.SOCKET_CONNECTED: {
       return true;
     }
-    case SOCKET_DISCONNECTED: {
+    case InternalMessageTypes.SOCKET_DISCONNECTED: {
       return false;
     }
     default:

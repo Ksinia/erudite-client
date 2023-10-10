@@ -17,7 +17,7 @@ type OwnProps = {
   userWaitingGames: Game[];
   otherWaitingGames: Game[];
   otherGames: Game[];
-  user: User;
+  user: User | null;
   sendingFormEnabled: boolean;
 };
 

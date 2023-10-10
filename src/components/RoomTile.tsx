@@ -11,7 +11,7 @@ import TranslationContainer from './Translation/TranslationContainer';
 
 type OwnProps = {
   room: Game;
-  user: User;
+  user: User | null;
 };
 interface StateProps {
   messagesCount: { [key: number]: number };
@@ -39,19 +39,17 @@ function getWinnerName(game: Game): string {
 }
 
 function getTileColor(props: Props): string {
-  if (props.room.phase === 'finished') {
+  const propsUser = props.user;
+  if (props.room.phase === 'finished' && propsUser) {
     return props.room.users
       .filter((user) => props.room.result.winner.includes(user.id.toString()))
       .map((user) => user.id)
-      .includes(props.user.id)
+      .includes(propsUser.id)
       ? colors.green
       : colors.red;
   }
-  if (
-    props.user &&
-    props.room.users.some((user) => user.id === props.user.id)
-  ) {
-    return props.room.activeUserId === props.user.id
+  if (propsUser && props.room.users.some((user) => user.id === propsUser.id)) {
+    return props.room.activeUserId === propsUser.id
       ? colors.red
       : colors.orange;
   }

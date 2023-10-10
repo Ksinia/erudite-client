@@ -3,12 +3,16 @@ import superagent from 'superagent';
 import { backendUrl } from '../runtime';
 import { MyThunkAction } from '../reducer/types';
 import { WildCardOnBoard } from '../components/GameContainer';
-import { NO_DUPLICATIONS } from '../constants/incomingMessageTypes';
+import {
+  GAME_UPDATED,
+  IncomingMessageTypes,
+  NO_DUPLICATIONS,
+} from '../constants/incomingMessageTypes';
 import { errorFromServer } from './errorHandling';
 
-export const clearDuplicatedWordsError = () => {
+export const clearDuplicatedWordsError = (): NO_DUPLICATIONS => {
   return {
-    type: NO_DUPLICATIONS,
+    type: IncomingMessageTypes.NO_DUPLICATIONS,
   };
 };
 
@@ -18,7 +22,7 @@ export const sendTurn =
     jwt: string,
     userBoard: (string | null)[][],
     wildCardOnBoard: WildCardOnBoard
-  ): MyThunkAction =>
+  ): MyThunkAction<GAME_UPDATED> =>
   async (dispatch) => {
     try {
       const response = await superagent
@@ -28,7 +32,7 @@ export const sendTurn =
           userBoard,
           wildCardOnBoard,
         });
-      const action = JSON.parse(response.text);
+      const action: GAME_UPDATED = JSON.parse(response.text);
       dispatch(action);
     } catch (error) {
       dispatch(errorFromServer(error, 'turn'));

@@ -1,17 +1,19 @@
-import { AnyAction } from 'redux';
-
 import {
   DUPLICATED_WORDS,
+  IncomingMessageTypes,
   NO_DUPLICATIONS,
 } from '../constants/incomingMessageTypes';
 
-export default function reducer(state = null, action: AnyAction) {
+export default function reducer(
+  state: string[] = [],
+  action: DUPLICATED_WORDS | NO_DUPLICATIONS
+) {
   switch (action.type) {
-    case DUPLICATED_WORDS: {
+    case IncomingMessageTypes.DUPLICATED_WORDS: {
       return action.payload;
     }
-    case NO_DUPLICATIONS: {
-      return null;
+    case IncomingMessageTypes.NO_DUPLICATIONS: {
+      return [];
     }
     default:
       return state;

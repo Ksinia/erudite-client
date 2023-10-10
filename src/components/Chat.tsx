@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 
 import { RootState } from '../reducer';
 import { User, Message } from '../reducer/types';
-import { clearMessages } from '../actions/chat';
 import './Chat.css';
 import { SEND_CHAT_MESSAGE } from '../constants/outgoingMessageTypes';
 import { errorFromServer } from '../actions/errorHandling';
+import {
+  CLEAR_MESSAGES,
+  InternalMessageTypes,
+} from '../constants/internalMessageTypes';
+import { sendMessage } from '../actions/chat';
 
 interface OwnProps {
   gameId: number;
@@ -16,10 +19,14 @@ interface OwnProps {
   gamePhase: string;
 }
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<
+    RootState,
+    unknown,
+    SEND_CHAT_MESSAGE | CLEAR_MESSAGES
+  >;
 }
 interface StateProps {
-  user: User;
+  user: User | null;
   chat: Message[];
 }
 type Props = StateProps & DispatchProps & OwnProps;
@@ -43,10 +50,7 @@ class Chat extends Component<Props, State> {
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     try {
-      this.props.dispatch({
-        type: SEND_CHAT_MESSAGE,
-        payload: this.state.message,
-      });
+      this.props.dispatch(sendMessage(this.state.message));
       this.setState({ ...this.state, message: '' });
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'chat'));
@@ -54,20 +58,20 @@ class Chat extends Component<Props, State> {
   };
 
   componentWillUnmount() {
-    this.props.dispatch(clearMessages());
+    this.props.dispatch({ type: InternalMessageTypes.CLEAR_MESSAGES });
   }
 
   render() {
     if (
       this.props.gamePhase === 'waiting' ||
       (this.props.user &&
-        this.props.players.find((player) => player.id === this.props.user.id))
+        this.props.players.find((player) => player.id === this.props.user?.id))
     ) {
       return (
         <div className="chat">
           {this.props.user &&
             this.props.players.find(
-              (player) => player.id === this.props.user.id
+              (player) => player.id === this.props.user?.id
             ) && (
               <form onSubmit={this.onSubmit}>
                 <input

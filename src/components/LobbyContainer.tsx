@@ -8,14 +8,14 @@ import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl } from '../runtime';
 import { RootState } from '../reducer';
 import { Game as GameType, User } from '../reducer/types';
-import { ENTER_LOBBY } from '../constants/outgoingMessageTypes';
 import { errorFromServer } from '../actions/errorHandling';
+import { OutgoingMessageTypes } from '../constants/outgoingMessageTypes';
 import Lobby from './Lobby';
 import TranslationContainer from './Translation/TranslationContainer';
 
 interface StateProps {
   lobby: GameType[];
-  user: User;
+  user: User | null;
   socketConnected: boolean;
 }
 
@@ -54,7 +54,7 @@ class LobbyContainer extends Component<Props, State> {
 
   onSubmit = async (event: React.SyntheticEvent): Promise<void> => {
     event.preventDefault();
-    if (this.state.sendingFormEnabled) {
+    if (this.state.sendingFormEnabled && this.props.user) {
       this.setState({ ...this.state, sendingFormEnabled: false });
       try {
         const response = await superagent
@@ -86,27 +86,28 @@ class LobbyContainer extends Component<Props, State> {
   componentDidMount() {
     document.title = 'Erudite';
     this.props.dispatch({
-      type: ENTER_LOBBY,
+      type: OutgoingMessageTypes.ENTER_LOBBY,
     });
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
     if (!prevProps.socketConnected && this.props.socketConnected) {
       this.props.dispatch({
-        type: ENTER_LOBBY,
+        type: OutgoingMessageTypes.ENTER_LOBBY,
       });
     }
   }
 
   render() {
+    const propsUser = this.props.user;
     const games = this.props.lobby.reduce(
       (allGames: { [key: string]: GameType[] }, game) => {
         if (
-          this.props.user &&
-          game.users.find((user) => user.id === this.props.user.id) &&
+          propsUser &&
+          game.users.find((user) => user.id === propsUser.id) &&
           (game.phase === 'turn' || game.phase === 'validation')
         ) {
-          if (this.props.user.id === game.activeUserId) {
+          if (propsUser.id === game.activeUserId) {
             allGames.userTurn.push(game);
           } else {
             allGames.otherTurn.push(game);
@@ -114,7 +115,7 @@ class LobbyContainer extends Component<Props, State> {
         } else if (
           this.props.user &&
           (game.phase === 'waiting' || game.phase === 'ready') &&
-          game.users.find((user) => user.id === this.props.user.id)
+          game.users.find((user) => user.id === propsUser?.id)
         ) {
           allGames.userWaiting.push(game);
         } else if (game.phase === 'waiting') {

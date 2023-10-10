@@ -1,18 +1,20 @@
-import { AnyAction } from 'redux';
-
 import {
   ALL_GAMES,
-  UPDATED_GAME_IN_LOBBY,
   DELETE_GAME_IN_LOBBY,
+  IncomingMessageTypes,
+  UPDATED_GAME_IN_LOBBY,
 } from '../constants/incomingMessageTypes';
 import { Game } from './types';
 
-export default function reducer(state: Game[] = [], action: AnyAction) {
+export default function reducer(
+  state: Game[] = [],
+  action: ALL_GAMES | UPDATED_GAME_IN_LOBBY | DELETE_GAME_IN_LOBBY
+) {
   switch (action.type) {
-    case ALL_GAMES: {
+    case IncomingMessageTypes.ALL_GAMES: {
       return action.payload;
     }
-    case UPDATED_GAME_IN_LOBBY: {
+    case IncomingMessageTypes.UPDATED_GAME_IN_LOBBY: {
       const updatedGame = action.payload;
       let gameFound = false;
       let newState = state.map((game) => {
@@ -28,8 +30,8 @@ export default function reducer(state: Game[] = [], action: AnyAction) {
       }
       return newState;
     }
-    case DELETE_GAME_IN_LOBBY: {
-      return state.filter((game) => game.id !== parseInt(action.payload));
+    case IncomingMessageTypes.DELETE_GAME_IN_LOBBY: {
+      return state.filter((game) => game.id !== action.payload);
     }
     default:
       return state;
