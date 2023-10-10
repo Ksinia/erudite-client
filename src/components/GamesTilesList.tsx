@@ -5,7 +5,7 @@ import TranslationContainer from './Translation/TranslationContainer';
 
 type OwnProps = {
   gamesList: Game[];
-  user: User;
+  user: User | null;
   category: string;
 };
 

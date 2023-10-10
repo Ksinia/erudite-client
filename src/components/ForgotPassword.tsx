@@ -11,7 +11,7 @@ import { errorFromServer } from '../actions/errorHandling';
 import TranslationContainer from './Translation/TranslationContainer';
 
 interface StateProps {
-  user: User;
+  user: User | null;
   error: string;
 }
 

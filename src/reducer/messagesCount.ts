@@ -1,13 +1,14 @@
-import { AnyAction } from 'redux';
-
-import { MESSAGES_COUNT } from '../constants/incomingMessageTypes';
+import {
+  IncomingMessageTypes,
+  MESSAGES_COUNT,
+} from '../constants/incomingMessageTypes';
 
 export default function reducer(
   state: { [key: number]: number } = {},
-  action: AnyAction
+  action: MESSAGES_COUNT
 ) {
   switch (action.type) {
-    case MESSAGES_COUNT: {
+    case IncomingMessageTypes.MESSAGES_COUNT: {
       return action.payload;
     }
     default:

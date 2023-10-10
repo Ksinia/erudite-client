@@ -4,19 +4,24 @@ import { History } from 'history';
 import { backendUrl as baseUrl } from '../runtime';
 import { MyThunkAction } from '../reducer/types';
 
-import { CLEAR_ERROR, LOGOUT } from '../constants/internalMessageTypes';
+import {
+  CLEAR_ERROR,
+  InternalMessageTypes,
+  LOGOUT,
+} from '../constants/internalMessageTypes';
+import { LOGIN_SUCCESS } from '../constants/incomingMessageTypes';
 import { errorFromServer } from './errorHandling';
 
-export const clearError = () => {
+export const clearError = (): CLEAR_ERROR => {
   return {
-    type: CLEAR_ERROR,
+    type: InternalMessageTypes.CLEAR_ERROR,
   };
 };
 
-export const logOut = () => {
+export const logOut = (): LOGOUT => {
   localStorage.removeItem('jwt');
   return {
-    type: LOGOUT,
+    type: InternalMessageTypes.LOGOUT,
   };
 };
 
@@ -29,7 +34,7 @@ export const loginSignupFunction =
     password: string,
     history: History,
     email?: string
-  ): MyThunkAction =>
+  ): MyThunkAction<LOGIN_SUCCESS> =>
   async (dispatch) => {
     const url = `${baseUrl}/${type}`;
     try {
@@ -39,7 +44,7 @@ export const loginSignupFunction =
       } else if (type === 'signup') {
         response = await superagent.post(url).send({ name, password, email });
       }
-      const action = JSON.parse(response.text);
+      const action: LOGIN_SUCCESS = JSON.parse(response.text);
       localStorage.setItem('jwt', action.payload.jwt);
       dispatch(action);
       const prevPageUrl = new URL(window.location.href).searchParams.get(
@@ -61,7 +66,7 @@ export const loginSignupFunction =
   };
 
 export const getProfileFetch =
-  (jwt: string): MyThunkAction =>
+  (jwt: string): MyThunkAction<LOGIN_SUCCESS> =>
   async (dispatch) => {
     const url = `${baseUrl}/profile`;
     if (jwt) {
@@ -69,7 +74,7 @@ export const getProfileFetch =
         const response = await superagent
           .get(url)
           .set('Authorization', `Bearer ${jwt}`);
-        const action = JSON.parse(response.text);
+        const action: LOGIN_SUCCESS = JSON.parse(response.text);
         dispatch(action);
       } catch (error) {
         dispatch(errorFromServer(error, 'getProfileFetch'));

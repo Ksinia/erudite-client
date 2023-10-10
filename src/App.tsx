@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
 
 import { RootState } from './reducer';
 import LoginContainer from './components/LoginContainer';
@@ -18,18 +17,25 @@ import './App.css';
 import { User } from './reducer/types';
 import {
   ADD_USER_TO_SOCKET,
+  OutgoingMessageTypes,
   REMOVE_USER_FROM_SOCKET,
 } from './constants/outgoingMessageTypes';
 import { saveSubscriptionForUser } from './actions/api-call';
 import Rules from './components/Rules';
+import { addUserToSocket } from './actions/user';
+import { SUBSCRIPTION_REGISTERED } from './constants/internalMessageTypes';
 
 interface OwnProps {
-  user: User;
-  subscription: PushSubscription;
+  user: User | null;
+  subscription: PushSubscription | null;
 }
 
 type DispatchProps = {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<
+    RootState,
+    unknown,
+    ADD_USER_TO_SOCKET | REMOVE_USER_FROM_SOCKET | SUBSCRIPTION_REGISTERED
+  >;
 };
 
 type Props = DispatchProps & OwnProps;
@@ -38,11 +44,8 @@ class App extends Component<Props> {
   componentDidMount() {
     document.addEventListener('touchstart', function () {}, true);
     this.props.dispatch(getProfileFetch(localStorage.jwt));
-    if (this.props.user) {
-      this.props.dispatch({
-        type: ADD_USER_TO_SOCKET,
-        payload: this.props.user.jwt,
-      });
+    if (this.props.user && this.props.user.jwt) {
+      this.props.dispatch(addUserToSocket(this.props.user.jwt));
       if (this.props.subscription) {
         this.props.dispatch(
           saveSubscriptionForUser(this.props.subscription as PushSubscription)
@@ -53,18 +56,17 @@ class App extends Component<Props> {
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.user !== this.props.user) {
-      if (this.props.user) {
-        this.props.dispatch({
-          type: ADD_USER_TO_SOCKET,
-          payload: this.props.user.jwt,
-        });
+      if (this.props.user && this.props.user.jwt) {
+        this.props.dispatch(addUserToSocket(this.props.user.jwt));
         if (this.props.subscription) {
           this.props.dispatch(
             saveSubscriptionForUser(this.props.subscription as PushSubscription)
           );
         }
       } else {
-        this.props.dispatch({ type: REMOVE_USER_FROM_SOCKET });
+        this.props.dispatch({
+          type: OutgoingMessageTypes.REMOVE_USER_FROM_SOCKET,
+        });
       }
     }
     if (!prevProps.subscription && this.props.subscription && this.props.user) {

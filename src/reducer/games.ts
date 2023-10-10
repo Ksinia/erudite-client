@@ -1,14 +1,15 @@
-import { AnyAction } from 'redux';
-
-import { GAME_UPDATED } from '../constants/incomingMessageTypes';
+import {
+  GAME_UPDATED,
+  IncomingMessageTypes,
+} from '../constants/incomingMessageTypes';
 import { Game } from './types';
 
 export default function reducer(
   state: { [key in Game['id']]: Game } = {},
-  action: AnyAction
+  action: GAME_UPDATED
 ) {
   switch (action.type) {
-    case GAME_UPDATED: {
+    case IncomingMessageTypes.GAME_UPDATED: {
       return { ...state, [action.payload.gameId]: action.payload.game };
     }
     default:

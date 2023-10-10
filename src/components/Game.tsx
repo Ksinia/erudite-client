@@ -13,7 +13,7 @@ type OwnProps = {
   chosenLetterIndex: number | null;
   userBoard: string[][];
   userBoardEmpty: boolean;
-  user: User;
+  user: User | null;
   clickBoard: (event: React.SyntheticEvent<HTMLDivElement>) => void;
   clickLetter: (event: React.MouseEvent<HTMLDivElement>) => void;
   confirmTurn: (event: React.SyntheticEvent<HTMLButtonElement>) => void;

@@ -28,7 +28,6 @@ export async function syncSubscription(
       userVisibleOnly: true,
       applicationServerKey: convertedVapidKey,
     });
-    console.log(JSON.stringify(subscription, null, ' '));
   }
   if (subscription) {
     await store.dispatch(storeSubscription(subscription));

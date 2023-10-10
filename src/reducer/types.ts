@@ -1,4 +1,4 @@
-import { Action, AnyAction } from 'redux';
+import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
 import { RootState } from './index';
@@ -22,7 +22,7 @@ export interface Room {
 export type User = {
   id: number;
   name: string;
-  jwt?: string;
+  jwt: string;
   finishedGamesIds?: number[];
 };
 
@@ -65,7 +65,7 @@ export interface Game {
   activeUserId: null | number;
 }
 
-export type MyThunkAction<A extends Action = AnyAction> = ThunkAction<
+export type MyThunkAction<A extends Action> = ThunkAction<
   void,
   RootState,
   unknown,

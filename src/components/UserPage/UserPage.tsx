@@ -12,7 +12,7 @@ import ChangePassword from './ChangePassword';
 import FinishedGamesContainer from './FinishedGamesContainer';
 
 interface StateProps {
-  user: User;
+  user: User | null;
 }
 interface State {
   jwtFromUrl: string;

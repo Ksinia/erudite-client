@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import { RootState } from '../../reducer';
 import { loadArchivedGames } from '../../actions/user';
 import GamesTilesList from '../GamesTilesList';
 import { Game, User } from '../../reducer/types';
+import { ARCHIVED_GAMES } from '../../constants/internalMessageTypes';
 
 interface OwnProps {
   jwt: string;
 }
 interface StateProps {
   gamesList: Game[];
-  user: User;
+  user: User | null;
 }
 
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<RootState, unknown, ARCHIVED_GAMES>;
 }
 
 type Props = OwnProps & StateProps & DispatchProps;

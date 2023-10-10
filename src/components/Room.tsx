@@ -5,7 +5,7 @@ import TranslationContainer from './Translation/TranslationContainer';
 
 type Props = {
   room: GameType;
-  user: User;
+  user: User | null;
   onClickStart: () => Promise<void>;
   onClickJoin: () => Promise<void>;
 };
@@ -48,12 +48,12 @@ function Room(props: Props) {
       ) : (
         [
           props.room.phase === 'waiting' &&
-            !props.room.users.find((user) => user.id === props.user.id) && (
+            !props.room.users.find((user) => user.id === props.user?.id) && (
               <button key="join" onClick={props.onClickJoin}>
                 <TranslationContainer translationKey="join" />
               </button>
             ),
-          props.room.users.find((user) => user.id === props.user.id) &&
+          props.room.users.find((user) => user.id === props.user?.id) &&
             props.room.phase === 'ready' && (
               <button key="start" onClick={props.onClickStart}>
                 <TranslationContainer translationKey="start" />

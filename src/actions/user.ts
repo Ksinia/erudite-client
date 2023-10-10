@@ -1,23 +1,27 @@
 import superagent from 'superagent';
-import { AnyAction } from 'redux';
 
 import { backendUrl } from '../runtime';
 import { Game, MyThunkAction } from '../reducer/types';
 import {
-  FINISHED_GAMES,
   ARCHIVED_GAMES,
+  FINISHED_GAMES,
+  InternalMessageTypes,
 } from '../constants/internalMessageTypes';
+import {
+  ADD_USER_TO_SOCKET,
+  OutgoingMessageTypes,
+} from '../constants/outgoingMessageTypes';
 import { errorFromServer } from './errorHandling';
 
-export const finishedGamesLoaded = (games: Game[]): AnyAction => {
+export const finishedGamesLoaded = (games: Game[]): FINISHED_GAMES => {
   return {
-    type: FINISHED_GAMES,
+    type: InternalMessageTypes.FINISHED_GAMES,
     payload: games,
   };
 };
 
 export const loadFinishGames =
-  (jwt: string): MyThunkAction =>
+  (jwt: string): MyThunkAction<FINISHED_GAMES> =>
   async (dispatch) => {
     try {
       const response = await superagent
@@ -30,15 +34,15 @@ export const loadFinishGames =
       dispatch(errorFromServer(error, 'my finished games'));
     }
   };
-export const archivedGamesLoaded = (games: Game[]): AnyAction => {
+export const archivedGamesLoaded = (games: Game[]): ARCHIVED_GAMES => {
   return {
-    type: ARCHIVED_GAMES,
+    type: InternalMessageTypes.ARCHIVED_GAMES,
     payload: games,
   };
 };
 
 export const loadArchivedGames =
-  (jwt: string): MyThunkAction =>
+  (jwt: string): MyThunkAction<ARCHIVED_GAMES> =>
   async (dispatch) => {
     try {
       const response = await superagent
@@ -51,3 +55,10 @@ export const loadArchivedGames =
       dispatch(errorFromServer(error, 'my archived games'));
     }
   };
+
+export const addUserToSocket = (jwt: string): ADD_USER_TO_SOCKET => {
+  return {
+    type: OutgoingMessageTypes.ADD_USER_TO_SOCKET,
+    payload: jwt,
+  };
+};

@@ -12,7 +12,7 @@ import TranslationContainer from '../Translation/TranslationContainer';
 import { errorFromServer } from '../../actions/errorHandling';
 
 interface StateProps {
-  user: User;
+  user: User | null;
   error: string;
 }
 
