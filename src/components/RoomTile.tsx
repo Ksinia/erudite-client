@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Dispatch, AnyAction } from 'redux';
 import { Link } from 'react-router-dom';
 
 import { User, Game } from '../reducer/types';
@@ -17,11 +16,7 @@ interface StateProps {
   messagesCount: { [key: number]: number };
 }
 
-interface DispatchProps {
-  dispatch: Dispatch<AnyAction>;
-}
-
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & OwnProps;
 
 function getActiveUserName(game: Game): string {
   const user = game.users.find((user) => user.id === game.activeUserId);
@@ -117,7 +112,7 @@ class RoomTile extends Component<Props> {
     );
   }
 }
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     messagesCount: state.messagesCount,
   };

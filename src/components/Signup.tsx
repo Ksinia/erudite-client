@@ -36,7 +36,7 @@ type Props = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (event: React.SyntheticEvent) => void;
   values: { name: string; email: string; password: string };
-  error: string;
+  error: string | null;
 };
 
 export default function SignUp(props: Props) {

@@ -5,13 +5,12 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducer';
 import { User, Message } from '../reducer/types';
 import './Chat.css';
-import { SEND_CHAT_MESSAGE } from '../constants/outgoingMessageTypes';
-import { errorFromServer } from '../actions/errorHandling';
+import { errorFromServer } from '../thunkActions/errorHandling';
+import { clearMessages, ClearMessagesAction } from '../reducer/chat';
 import {
-  CLEAR_MESSAGES,
-  InternalMessageTypes,
-} from '../constants/internalMessageTypes';
-import { sendMessage } from '../actions/chat';
+  sendChatMessage,
+  SendChatMessageAction,
+} from '../reducer/outgoingMessages';
 
 interface OwnProps {
   gameId: number;
@@ -22,7 +21,7 @@ interface DispatchProps {
   dispatch: ThunkDispatch<
     RootState,
     unknown,
-    SEND_CHAT_MESSAGE | CLEAR_MESSAGES
+    SendChatMessageAction | ClearMessagesAction
   >;
 }
 interface StateProps {
@@ -50,7 +49,7 @@ class Chat extends Component<Props, State> {
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     try {
-      this.props.dispatch(sendMessage(this.state.message));
+      this.props.dispatch(sendChatMessage(this.state.message));
       this.setState({ ...this.state, message: '' });
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'chat'));
@@ -58,7 +57,7 @@ class Chat extends Component<Props, State> {
   };
 
   componentWillUnmount() {
-    this.props.dispatch({ type: InternalMessageTypes.CLEAR_MESSAGES });
+    this.props.dispatch(clearMessages());
   }
 
   render() {
@@ -95,7 +94,7 @@ class Chat extends Component<Props, State> {
   }
 }
 
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
     chat: state.chat,

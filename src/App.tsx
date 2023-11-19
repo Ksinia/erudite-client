@@ -2,30 +2,28 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { ThunkDispatch } from 'redux-thunk';
-
 import { RootState } from './reducer';
 import LoginContainer from './components/LoginContainer';
 import SignupContainer from './components/SignupContainer';
 import Toolbar from './components/Toolbar';
 import LobbyContainer from './components/LobbyContainer';
 import ForgotPassword from './components/ForgotPassword';
-import { getProfileFetch } from './actions/authorization';
+import { getProfileFetch } from './thunkActions/authorization';
 import UserPage from './components/UserPage/UserPage';
 import GameHandler from './components/GameHandler';
 import ConfirmEmail from './components/ConfirmEmail';
 import './App.css';
 import { User } from './reducer/types';
-import {
-  ADD_USER_TO_SOCKET,
-  OutgoingMessageTypes,
-  REMOVE_USER_FROM_SOCKET,
-} from './constants/outgoingMessageTypes';
-import { saveSubscriptionForUser } from './actions/api-call';
+import { saveSubscriptionForUser } from './thunkActions/api-call';
 import Rules from './components/Rules';
-import { addUserToSocket } from './actions/user';
-import { SUBSCRIPTION_REGISTERED } from './constants/internalMessageTypes';
+import {
+  addUserToSocket,
+  AddUserToSocketAction,
+  removeUserFromSocket,
+  RemoveUserFromSocketAction,
+} from './reducer/outgoingMessages';
 
-interface OwnProps {
+interface StateProps {
   user: User | null;
   subscription: PushSubscription | null;
 }
@@ -34,11 +32,11 @@ type DispatchProps = {
   dispatch: ThunkDispatch<
     RootState,
     unknown,
-    ADD_USER_TO_SOCKET | REMOVE_USER_FROM_SOCKET | SUBSCRIPTION_REGISTERED
+    AddUserToSocketAction | RemoveUserFromSocketAction
   >;
 };
 
-type Props = DispatchProps & OwnProps;
+type Props = DispatchProps & StateProps;
 
 class App extends Component<Props> {
   componentDidMount() {
@@ -64,9 +62,7 @@ class App extends Component<Props> {
           );
         }
       } else {
-        this.props.dispatch({
-          type: OutgoingMessageTypes.REMOVE_USER_FROM_SOCKET,
-        });
+        this.props.dispatch(removeUserFromSocket());
       }
     }
     if (!prevProps.subscription && this.props.subscription && this.props.user) {
@@ -101,7 +97,7 @@ class App extends Component<Props> {
   }
 }
 
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
     subscription: state.subscription,

@@ -3,10 +3,10 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { connect } from 'react-redux';
 import { RootState } from '../../reducer';
-import { loadArchivedGames } from '../../actions/user';
+import { loadArchivedGames } from '../../thunkActions/user';
 import GamesTilesList from '../GamesTilesList';
 import { Game, User } from '../../reducer/types';
-import { ARCHIVED_GAMES } from '../../constants/internalMessageTypes';
+import { ArchivedGamesLoadedAction } from '../../reducer/archivedGames';
 
 interface OwnProps {
   jwt: string;
@@ -17,7 +17,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, ARCHIVED_GAMES>;
+  dispatch: ThunkDispatch<RootState, unknown, ArchivedGamesLoadedAction>;
 }
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -36,7 +36,7 @@ class ArchivedGamesContainer extends Component<Props> {
     );
   }
 }
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     gamesList: state.archivedGames,
     user: state.user,

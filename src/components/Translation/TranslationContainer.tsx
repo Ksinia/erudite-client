@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
 import { TRANSLATIONS } from '../../constants/translations';
 import { RootState } from '../../reducer';
-import { errorFromServer } from '../../actions/errorHandling';
+import { errorFromServer } from '../../thunkActions/errorHandling';
+import { ErrorLoadedAction, LogOutAction } from '../../reducer/auth';
+import { LoginOrSignupErrorAction } from '../../reducer/error';
 import Translation from './Translation';
 
 interface StateProps {
@@ -17,7 +17,11 @@ interface OwnProps {
   args?: string[];
 }
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<
+    RootState,
+    unknown,
+    LogOutAction | ErrorLoadedAction | LoginOrSignupErrorAction
+  >;
 }
 
 type Props = StateProps & OwnProps & DispatchProps;

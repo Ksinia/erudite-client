@@ -2,17 +2,22 @@ import { History } from 'history';
 import superagent from 'superagent';
 import React, { useEffect } from 'react';
 import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
 import { backendUrl as baseUrl } from '../runtime';
-import { errorFromServer } from '../actions/errorHandling';
-import { RootState } from '../reducer';
+import { errorFromServer } from '../thunkActions/errorHandling';
+import { RootState } from '../store';
+import { ErrorLoadedAction, LogOutAction } from '../reducer/auth';
+import { LoginOrSignupErrorAction } from '../reducer/error';
 import TranslationContainer from './Translation/TranslationContainer';
 
 interface OwnProps {
   history: History;
 }
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<
+    RootState,
+    unknown,
+    LogOutAction | ErrorLoadedAction | LoginOrSignupErrorAction
+  >;
 }
 
 type Props = OwnProps & DispatchProps;

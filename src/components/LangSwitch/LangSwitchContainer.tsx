@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import * as translationActions from '../Translation/actions';
 import { RootState } from '../../reducer';
+import { setLanguage } from '../Translation/reducer';
 import LangSwitch from './LangSwitch';
 
 interface StateProps {
@@ -11,7 +11,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  translationActions: typeof translationActions;
+  translationActions: typeof setLanguage;
 }
 
 type Props = StateProps & DispatchProps;
@@ -21,13 +21,13 @@ class LangSwitchContainer extends Component<Props> {
     return (
       <LangSwitch
         locale={this.props.locale}
-        setLanguage={this.props.translationActions.setLanguage}
+        setLanguage={this.props.translationActions}
       />
     );
   }
 }
 
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StateProps {
   return {
     locale: state.translation.locale,
   };
@@ -35,7 +35,7 @@ function mapStateToProps(state: RootState) {
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    translationActions: bindActionCreators(translationActions, dispatch),
+    translationActions: bindActionCreators(setLanguage, dispatch),
   };
 }
 

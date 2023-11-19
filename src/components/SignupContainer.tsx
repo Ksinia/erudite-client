@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import { History } from 'history';
 
-import { loginSignupFunction, clearError } from '../actions/authorization';
+import { ThunkDispatch } from 'redux-thunk';
+import { loginSignupFunction } from '../thunkActions/authorization';
 import { RootState } from '../reducer';
+import { clearError, ClearErrorAction } from '../reducer/error';
 import Signup from './Signup';
 
 interface StateProps {
-  error: string;
+  error: string | null;
 }
 
 interface OwnProps {
@@ -18,7 +18,7 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<RootState, unknown, ClearErrorAction>;
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
@@ -72,7 +72,7 @@ class SignupContainer extends Component<Props, State> {
   }
 }
 
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StateProps {
   return {
     error: state.error,
   };

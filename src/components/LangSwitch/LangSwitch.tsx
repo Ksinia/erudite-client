@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { LANG_NAMES } from '../../constants/translations';
-import { setLanguage } from '../Translation/actions';
+import { setLanguage } from '../Translation/reducer';
 
 type Props = {
   locale: string;
@@ -20,7 +20,7 @@ export default class LangSwitch extends Component<Props> {
                 this.props.locale === language.locale ? 'bold' : undefined,
             }}
             onClick={() => {
-              this.props.setLanguage(language.locale);
+              this.props.setLanguage({ locale: language.locale });
               localStorage.setItem('locale', language.locale);
             }}
           >

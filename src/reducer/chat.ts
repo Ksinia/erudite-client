@@ -1,29 +1,26 @@
-import {
-  ALL_MESSAGES,
-  IncomingMessageTypes,
-  NEW_MESSAGE,
-} from '../constants/incomingMessageTypes';
-import {
-  CLEAR_MESSAGES,
-  InternalMessageTypes,
-} from '../constants/internalMessageTypes';
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import { IncomingMessageTypes } from '../constants/incomingMessageTypes';
+import { InternalMessageTypes } from '../constants/internalMessageTypes';
 import { Message } from './types';
 
-export default function reducer(
-  state: Message[] = [],
-  action: ALL_MESSAGES | NEW_MESSAGE | CLEAR_MESSAGES
-) {
-  switch (action.type) {
-    case IncomingMessageTypes.ALL_MESSAGES: {
-      return action.payload;
-    }
-    case IncomingMessageTypes.NEW_MESSAGE: {
-      return [action.payload, ...state];
-    }
-    case InternalMessageTypes.CLEAR_MESSAGES: {
-      return [];
-    }
-    default:
-      return state;
-  }
-}
+export const allMessages = createAction<
+  Message[],
+  IncomingMessageTypes.ALL_MESSAGES
+>(IncomingMessageTypes.ALL_MESSAGES);
+export const newMessage = createAction<
+  Message,
+  IncomingMessageTypes.NEW_MESSAGE
+>(IncomingMessageTypes.NEW_MESSAGE);
+export const clearMessages = createAction<
+  void,
+  InternalMessageTypes.CLEAR_MESSAGES
+>(InternalMessageTypes.CLEAR_MESSAGES);
+
+export type ClearMessagesAction = ReturnType<typeof clearMessages>;
+
+export default createReducer<Message[]>([], (builder) =>
+  builder
+    .addCase(allMessages, (_, action) => action.payload)
+    .addCase(newMessage, (state, action) => [action.payload, ...state])
+    .addCase(clearMessages, () => [])
+);

@@ -1,17 +1,11 @@
-import {
-  IncomingMessageTypes,
-  MESSAGES_COUNT,
-} from '../constants/incomingMessageTypes';
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import { IncomingMessageTypes } from '../constants/incomingMessageTypes';
 
-export default function reducer(
-  state: { [key: number]: number } = {},
-  action: MESSAGES_COUNT
-) {
-  switch (action.type) {
-    case IncomingMessageTypes.MESSAGES_COUNT: {
-      return action.payload;
-    }
-    default:
-      return state;
-  }
-}
+export const messagesCountLoaded = createAction<
+  { [key: number]: number },
+  IncomingMessageTypes.MESSAGES_COUNT
+>(IncomingMessageTypes.MESSAGES_COUNT);
+
+export default createReducer<{ [key: number]: number }>({}, (builder) =>
+  builder.addCase(messagesCountLoaded, (_, action) => action.payload)
+);

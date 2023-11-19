@@ -1,17 +1,15 @@
-import {
-  InternalMessageTypes,
-  SUBSCRIPTION_REGISTERED,
-} from '../constants/internalMessageTypes';
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import { InternalMessageTypes } from '../constants/internalMessageTypes';
 
-export default function reducer(
-  state: PushSubscription | null = null,
-  action: SUBSCRIPTION_REGISTERED
-) {
-  switch (action.type) {
-    case InternalMessageTypes.SUBSCRIPTION_REGISTERED: {
-      return action.payload;
-    }
-    default:
-      return state;
-  }
-}
+export const subscriptionRegistered = createAction<
+  PushSubscription,
+  InternalMessageTypes.SUBSCRIPTION_REGISTERED
+>(InternalMessageTypes.SUBSCRIPTION_REGISTERED);
+
+export type SubscriptionRegisteredAction = ReturnType<
+  typeof subscriptionRegistered
+>;
+
+export default createReducer<PushSubscription | null>(null, (builder) =>
+  builder.addCase(subscriptionRegistered, (_, action) => action.payload)
+);

@@ -4,13 +4,18 @@ import superagent from 'superagent';
 import { History } from 'history';
 
 import './Game.css';
-import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl } from '../runtime';
 import { RootState } from '../reducer';
 import { User, Game as GameType } from '../reducer/types';
-import { sendTurn, clearDuplicatedWordsError } from '../actions/turn';
-import { errorFromServer } from '../actions/errorHandling';
+import { sendTurn } from '../thunkActions/turn';
+import { errorFromServer } from '../thunkActions/errorHandling';
+import {
+  NoDuplicationAction,
+  noDuplications,
+} from '../reducer/duplicatedWords';
+import { ErrorLoadedAction, LogOutAction } from '../reducer/auth';
+import { LoginOrSignupErrorAction } from '../reducer/error';
 import Game from './Game';
 
 /**
@@ -85,7 +90,14 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<
+    RootState,
+    unknown,
+    | LogOutAction
+    | ErrorLoadedAction
+    | LoginOrSignupErrorAction
+    | NoDuplicationAction
+  >;
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
@@ -159,7 +171,7 @@ class GameContainer extends Component<Props, State> {
         wildCardLetters.push({ letter: '', y, x });
       }
 
-      // TODO: dedublicate code
+      // TODO: deduplicate code
       // If there is userLetter in that cell, put it back into userLetters
 
       if (userLetterOnBoard !== '') {
@@ -284,14 +296,6 @@ class GameContainer extends Component<Props, State> {
 
   getNextTurn = (game: GameType) => {
     return (game.turn + 1) % game.turnOrder.length;
-  };
-
-  getPrevTurn = (game: GameType) => {
-    const index = game.turn - 1;
-    if (index < 0) {
-      return index + game.turnOrder.length;
-    }
-    return index;
   };
 
   undo = async () => {
@@ -446,7 +450,7 @@ class GameContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.props.dispatch(clearDuplicatedWordsError());
+    this.props.dispatch(noDuplications());
   }
 
   render() {
@@ -481,7 +485,7 @@ class GameContainer extends Component<Props, State> {
   }
 }
 
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
     duplicatedWords: state.duplicatedWords,

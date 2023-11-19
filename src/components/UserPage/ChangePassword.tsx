@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import superagent from 'superagent';
 import { connect } from 'react-redux';
-import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
 import { backendUrl as baseUrl } from '../../runtime';
 import { RootState } from '../../reducer';
-import { clearError } from '../../actions/authorization';
 import { User } from '../../reducer/types';
 import TranslationContainer from '../Translation/TranslationContainer';
-import { errorFromServer } from '../../actions/errorHandling';
+import { errorFromServer } from '../../thunkActions/errorHandling';
+import {
+  clearError,
+  ClearErrorAction,
+  LoginOrSignupErrorAction,
+} from '../../reducer/error';
+import { ErrorLoadedAction, LogOutAction } from '../../reducer/auth';
 
 interface StateProps {
   user: User | null;
-  error: string;
+  error: string | null;
 }
 
 interface OwnProps {
@@ -21,7 +24,14 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<
+    RootState,
+    unknown,
+    | LogOutAction
+    | ErrorLoadedAction
+    | LoginOrSignupErrorAction
+    | ClearErrorAction
+  >;
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
@@ -119,7 +129,7 @@ class ChangePassword extends Component<Props, State> {
     );
   }
 }
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
     error: state.error,

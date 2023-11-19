@@ -1,5 +1,5 @@
-import { storeSubscription } from './actions/api-call';
 import store from './store';
+import { subscriptionRegistered } from './reducer/subscription';
 
 function urlBase64ToUint8Array(base64String: String) {
   var padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -30,6 +30,6 @@ export async function syncSubscription(
     });
   }
   if (subscription) {
-    await store.dispatch(storeSubscription(subscription));
+    store.dispatch(subscriptionRegistered(subscription));
   }
 }

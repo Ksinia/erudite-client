@@ -2,21 +2,20 @@ import React, { Component } from 'react';
 import superagent from 'superagent';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { AnyAction } from 'redux';
-
 import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl } from '../runtime';
 import { RootState } from '../reducer';
 import { Game as GameType, User } from '../reducer/types';
-import { errorFromServer } from '../actions/errorHandling';
-import { OutgoingMessageTypes } from '../constants/outgoingMessageTypes';
+import { errorFromServer } from '../thunkActions/errorHandling';
+import { LogOutAction } from '../reducer/auth';
+import { enterLobby, EnterLobbyAction } from '../reducer/outgoingMessages';
 import Lobby from './Lobby';
 import TranslationContainer from './Translation/TranslationContainer';
 
 interface StateProps {
   lobby: GameType[];
   user: User | null;
-  socketConnected: boolean;
+  socketConnectionState: boolean;
 }
 
 type State = {
@@ -28,7 +27,7 @@ type State = {
 };
 
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<RootState, unknown, LogOutAction | EnterLobbyAction>;
 }
 
 type Props = StateProps & DispatchProps & RouteComponentProps;
@@ -85,16 +84,12 @@ class LobbyContainer extends Component<Props, State> {
 
   componentDidMount() {
     document.title = 'Erudite';
-    this.props.dispatch({
-      type: OutgoingMessageTypes.ENTER_LOBBY,
-    });
+    this.props.dispatch(enterLobby());
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
-    if (!prevProps.socketConnected && this.props.socketConnected) {
-      this.props.dispatch({
-        type: OutgoingMessageTypes.ENTER_LOBBY,
-      });
+    if (!prevProps.socketConnectionState && this.props.socketConnectionState) {
+      this.props.dispatch(enterLobby());
     }
   }
 
@@ -152,11 +147,11 @@ class LobbyContainer extends Component<Props, State> {
   }
 }
 
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StateProps {
   return {
     lobby: state.lobby,
     user: state.user,
-    socketConnected: state.socketConnected,
+    socketConnectionState: state.socketConnectionState,
   };
 }
 export default connect(mapStateToProps)(LobbyContainer);
