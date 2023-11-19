@@ -1,21 +1,20 @@
-import {
-  DUPLICATED_WORDS,
-  IncomingMessageTypes,
-  NO_DUPLICATIONS,
-} from '../constants/incomingMessageTypes';
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import { IncomingMessageTypes } from '../constants/incomingMessageTypes';
 
-export default function reducer(
-  state: string[] = [],
-  action: DUPLICATED_WORDS | NO_DUPLICATIONS
-) {
-  switch (action.type) {
-    case IncomingMessageTypes.DUPLICATED_WORDS: {
-      return action.payload;
-    }
-    case IncomingMessageTypes.NO_DUPLICATIONS: {
-      return [];
-    }
-    default:
-      return state;
-  }
-}
+export const duplicatedWordsLoaded = createAction<
+  string[],
+  IncomingMessageTypes.DUPLICATED_WORDS
+>(IncomingMessageTypes.DUPLICATED_WORDS);
+
+export const noDuplications = createAction<
+  void,
+  IncomingMessageTypes.NO_DUPLICATIONS
+>(IncomingMessageTypes.NO_DUPLICATIONS);
+
+export type NoDuplicationAction = ReturnType<typeof noDuplications>;
+
+export default createReducer<string[]>([], (builder) =>
+  builder
+    .addCase(duplicatedWordsLoaded, (_, action) => action.payload)
+    .addCase(noDuplications, () => [])
+);

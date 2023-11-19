@@ -1,11 +1,8 @@
 import superagent from 'superagent';
 import parser from 'ua-parser-js';
 import { backendUrl as baseUrl } from '../runtime';
-import {
-  InternalMessageTypes,
-  SUBSCRIPTION_REGISTERED,
-} from '../constants/internalMessageTypes';
 import { MyThunkAction } from '../reducer/types';
+import { SubscriptionRegisteredAction } from '../reducer/subscription';
 import { errorFromServer } from './errorHandling';
 import { loginSignupFunctionErrorCtx } from './authorization';
 
@@ -26,13 +23,15 @@ async function callApi(
 
     return JSON.parse(response.text);
   } else {
-    throw new Error('unauthorzied');
+    throw new Error('unauthorized');
   }
 }
 
 export const saveSubscriptionForUser =
-  (subscription: PushSubscription): MyThunkAction<SUBSCRIPTION_REGISTERED> =>
-  async (dispatch): Promise<SUBSCRIPTION_REGISTERED | undefined> => {
+  (
+    subscription: PushSubscription
+  ): MyThunkAction<SubscriptionRegisteredAction> =>
+  async (dispatch): Promise<SubscriptionRegisteredAction | undefined> => {
     const ua = parser(window.navigator.userAgent);
     const userAgent = `${ua.browser.name} on ${ua.os.name}`;
     try {
@@ -45,10 +44,3 @@ export const saveSubscriptionForUser =
       dispatch(errorFromServer(error, loginSignupFunctionErrorCtx));
     }
   };
-
-export const storeSubscription = (
-  subscription: PushSubscription
-): SUBSCRIPTION_REGISTERED => ({
-  type: InternalMessageTypes.SUBSCRIPTION_REGISTERED,
-  payload: subscription,
-});

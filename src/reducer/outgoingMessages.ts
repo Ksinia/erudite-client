@@ -1,17 +1,47 @@
-import {
-  ADD_GAME_TO_SOCKET,
-  ADD_USER_TO_SOCKET,
-  ENTER_LOBBY,
-} from '../constants/outgoingMessageTypes';
+import { createAction } from '@reduxjs/toolkit';
+import { OutgoingMessageTypes } from '../constants/outgoingMessageTypes';
 
-// this reducer doesn't do anything, but exists just to allow dispatching outgoing message types for socket
-// to the store, otherwise TypeScript will complain
-export default function reducer(
-  state = null,
-  action: ADD_GAME_TO_SOCKET | ENTER_LOBBY | ADD_USER_TO_SOCKET
-) {
-  switch (action.type) {
-    default:
-      return state;
-  }
-}
+export const addGameToSocket = createAction<
+  number,
+  OutgoingMessageTypes.ADD_GAME_TO_SOCKET
+>(OutgoingMessageTypes.ADD_GAME_TO_SOCKET);
+
+export type AddGameToSocketAction = ReturnType<typeof addGameToSocket>;
+
+export const enterLobby = createAction<void, OutgoingMessageTypes.ENTER_LOBBY>(
+  OutgoingMessageTypes.ENTER_LOBBY
+);
+
+export type EnterLobbyAction = ReturnType<typeof enterLobby>;
+
+export const addUserToSocket = createAction<
+  string,
+  OutgoingMessageTypes.ADD_USER_TO_SOCKET
+>(OutgoingMessageTypes.ADD_USER_TO_SOCKET);
+
+export type AddUserToSocketAction = ReturnType<typeof addUserToSocket>;
+
+export const removeGameFromSocket = createAction<
+  number,
+  OutgoingMessageTypes.REMOVE_GAME_FROM_SOCKET
+>(OutgoingMessageTypes.REMOVE_GAME_FROM_SOCKET);
+
+export type RemoveGameFromSocketAction = ReturnType<
+  typeof removeGameFromSocket
+>;
+
+export const removeUserFromSocket = createAction<
+  void,
+  OutgoingMessageTypes.REMOVE_USER_FROM_SOCKET
+>(OutgoingMessageTypes.REMOVE_USER_FROM_SOCKET);
+
+export type RemoveUserFromSocketAction = ReturnType<
+  typeof removeUserFromSocket
+>;
+
+export const sendChatMessage = createAction<
+  string,
+  OutgoingMessageTypes.SEND_CHAT_MESSAGE
+>(OutgoingMessageTypes.SEND_CHAT_MESSAGE);
+
+export type SendChatMessageAction = ReturnType<typeof sendChatMessage>;

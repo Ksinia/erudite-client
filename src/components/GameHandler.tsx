@@ -5,15 +5,13 @@ import { connect } from 'react-redux';
 
 import { RootState } from '../reducer';
 import { Game, User } from '../reducer/types';
-import {
-  ADD_GAME_TO_SOCKET,
-  REMOVE_GAME_FROM_SOCKET,
-} from '../constants/outgoingMessageTypes';
+import { fetchGame } from '../thunkActions/game';
 import {
   addGameToSocket,
-  fetchGame,
+  AddGameToSocketAction,
   removeGameFromSocket,
-} from '../actions/game';
+  RemoveGameFromSocketAction,
+} from '../reducer/outgoingMessages';
 import GameContainer from './GameContainer';
 import RoomContainer from './RoomContainer';
 import TranslationContainer from './Translation/TranslationContainer';
@@ -25,12 +23,12 @@ interface DispatchProps {
   dispatch: ThunkDispatch<
     RootState,
     unknown,
-    ADD_GAME_TO_SOCKET | REMOVE_GAME_FROM_SOCKET
+    AddGameToSocketAction | RemoveGameFromSocketAction
   >;
 }
 interface StateProps {
   games: { [key: number]: Game };
-  socketConnected: boolean;
+  socketConnectionState: boolean;
   user: User | null;
 }
 type Props = StateProps & DispatchProps & RouteComponentProps<MatchParams>;
@@ -48,12 +46,12 @@ class GameHandler extends Component<Props, State> {
     document.title = `Game ${this.state.gameId} | Erudite`;
     const jwt = this.props.user && this.props.user.jwt;
     this.props.dispatch(fetchGame(this.state.gameId, jwt));
-    this.props.socketConnected &&
+    this.props.socketConnectionState &&
       this.props.dispatch(addGameToSocket(this.state.gameId));
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
-    if (!prevProps.socketConnected && this.props.socketConnected) {
+    if (!prevProps.socketConnectionState && this.props.socketConnectionState) {
       this.props.dispatch(addGameToSocket(this.state.gameId));
     }
     if (prevProps.match.params.game !== this.props.match.params.game) {
@@ -64,7 +62,7 @@ class GameHandler extends Component<Props, State> {
       this.props.dispatch(
         fetchGame(parseInt(this.props.match.params.game), jwt)
       );
-      this.props.socketConnected &&
+      this.props.socketConnectionState &&
         this.props.dispatch(
           addGameToSocket(parseInt(this.props.match.params.game))
         );
@@ -110,10 +108,10 @@ class GameHandler extends Component<Props, State> {
   }
 }
 
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     games: state.games,
-    socketConnected: state.socketConnected,
+    socketConnectionState: state.socketConnectionState,
     user: state.user,
   };
 }

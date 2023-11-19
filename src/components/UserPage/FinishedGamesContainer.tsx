@@ -3,10 +3,10 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { connect } from 'react-redux';
 import { RootState } from '../../reducer';
-import { loadFinishGames } from '../../actions/user';
+import { loadFinishGames } from '../../thunkActions/user';
 import GamesTilesList from '../GamesTilesList';
 import { Game, User } from '../../reducer/types';
-import { FINISHED_GAMES } from '../../constants/internalMessageTypes';
+import { FinishedGamesLoadedAction } from '../../reducer/finishedGames';
 
 interface OwnProps {
   jwt: string;
@@ -17,7 +17,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, FINISHED_GAMES>;
+  dispatch: ThunkDispatch<RootState, unknown, FinishedGamesLoadedAction>;
 }
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -36,7 +36,7 @@ class FinishedGamesContainer extends Component<Props> {
     );
   }
 }
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     gamesList: state.finishedGames,
     user: state.user,

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import superagent from 'superagent';
-import { AnyAction } from 'redux';
-
 import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl } from '../runtime';
 import './Game.css';
 import { RootState } from '../reducer';
 import { User, Game } from '../reducer/types';
-import { errorFromServer } from '../actions/errorHandling';
+import { errorFromServer } from '../thunkActions/errorHandling';
+import { LogOutAction } from '../reducer/auth';
 import Room from './Room';
 
 interface OwnProps {
@@ -20,7 +19,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
+  dispatch: ThunkDispatch<RootState, unknown, LogOutAction>;
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
@@ -61,7 +60,7 @@ class RoomContainer extends Component<Props> {
   }
 }
 
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
   };

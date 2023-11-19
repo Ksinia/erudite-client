@@ -1,28 +1,24 @@
-import {
-  CLEAR_ERROR,
-  InternalMessageTypes,
-  LOGIN_OR_SIGNUP_ERROR,
-} from '../constants/internalMessageTypes';
-import {
-  IncomingMessageTypes,
-  LOGIN_SUCCESS,
-} from '../constants/incomingMessageTypes';
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import { InternalMessageTypes } from '../constants/internalMessageTypes';
+import { errorLoaded, loginSuccess } from './auth';
 
-export default function reducer(
-  state = null,
-  action: LOGIN_SUCCESS | LOGIN_OR_SIGNUP_ERROR | CLEAR_ERROR
-) {
-  switch (action.type) {
-    case InternalMessageTypes.LOGIN_OR_SIGNUP_ERROR: {
-      return action.payload;
-    }
-    case IncomingMessageTypes.LOGIN_SUCCESS: {
-      return null;
-    }
-    case InternalMessageTypes.CLEAR_ERROR: {
-      return null;
-    }
-    default:
-      return state;
-  }
-}
+export const loginOrSignupError = createAction<
+  string,
+  InternalMessageTypes.LOGIN_OR_SIGNUP_ERROR
+>(InternalMessageTypes.LOGIN_OR_SIGNUP_ERROR);
+
+export type LoginOrSignupErrorAction = ReturnType<typeof loginOrSignupError>;
+
+export const clearError = createAction<void, InternalMessageTypes.CLEAR_ERROR>(
+  InternalMessageTypes.CLEAR_ERROR
+);
+
+export type ClearErrorAction = ReturnType<typeof clearError>;
+
+export default createReducer<string | null>(null, (builder) =>
+  builder
+    .addCase(loginOrSignupError, (_, action) => action.payload)
+    .addCase(clearError, () => null)
+    .addCase(loginSuccess, () => null)
+    .addCase(errorLoaded, (_, action) => action.payload)
+);

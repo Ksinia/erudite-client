@@ -1,15 +1,14 @@
-import {
-  ARCHIVED_GAMES,
-  InternalMessageTypes,
-} from '../constants/internalMessageTypes';
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import { InternalMessageTypes } from '../constants/internalMessageTypes';
 import { Game } from './types';
 
-export default function reducer(state: Game[] = [], action: ARCHIVED_GAMES) {
-  switch (action.type) {
-    case InternalMessageTypes.ARCHIVED_GAMES: {
-      return action.payload;
-    }
-    default:
-      return state;
-  }
-}
+export const archivedGamesLoaded = createAction<
+  Game[],
+  InternalMessageTypes.ARCHIVED_GAMES
+>(InternalMessageTypes.ARCHIVED_GAMES);
+
+export type ArchivedGamesLoadedAction = ReturnType<typeof archivedGamesLoaded>;
+
+export default createReducer<Game[]>([], (builder) =>
+  builder.addCase(archivedGamesLoaded, (_, action) => action.payload)
+);

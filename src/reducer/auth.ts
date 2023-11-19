@@ -1,29 +1,33 @@
-import {
-  ERROR,
-  IncomingMessageTypes,
-  LOGIN_SUCCESS,
-} from '../constants/incomingMessageTypes';
-import {
-  InternalMessageTypes,
-  LOGOUT,
-} from '../constants/internalMessageTypes';
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import { InternalMessageTypes } from '../constants/internalMessageTypes';
+import { IncomingMessageTypes } from '../constants/incomingMessageTypes';
 import { User } from './types';
 
-export default function reducer(
-  state: User | null = null,
-  action: LOGIN_SUCCESS | LOGOUT | ERROR
-) {
-  switch (action.type) {
-    case IncomingMessageTypes.LOGIN_SUCCESS: {
-      return action.payload;
-    }
-    case InternalMessageTypes.LOGOUT: {
+export const loginSuccess = createAction<
+  User,
+  IncomingMessageTypes.LOGIN_SUCCESS
+>(IncomingMessageTypes.LOGIN_SUCCESS);
+
+export type LoginSuccessAction = ReturnType<typeof loginSuccess>;
+
+export const errorLoaded = createAction<string, IncomingMessageTypes.ERROR>(
+  IncomingMessageTypes.ERROR
+);
+
+export type ErrorLoadedAction = ReturnType<typeof errorLoaded>;
+
+export const logOut = createAction<void, InternalMessageTypes.LOGOUT>(
+  InternalMessageTypes.LOGOUT
+);
+
+export type LogOutAction = ReturnType<typeof logOut>;
+
+export default createReducer<User | null>(null, (builder) =>
+  builder
+    .addCase(loginSuccess, (_, action) => action.payload)
+    .addCase(logOut, () => {
+      localStorage.removeItem('jwt');
       return null;
-    }
-    case IncomingMessageTypes.ERROR: {
-      return null;
-    }
-    default:
-      return state;
-  }
-}
+    })
+    .addCase(errorLoaded, () => null)
+);

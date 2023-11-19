@@ -1,17 +1,19 @@
 import ReduxThunk from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
 import createSocketIoMiddleware from 'redux-socket.io';
 import io from 'socket.io-client';
+import { configureStore } from '@reduxjs/toolkit';
 import { rootReducer } from './reducer';
 import { backendUrl } from './runtime';
+import { outgoingSocketActions } from './constants/outgoingMessageTypes';
 import {
-  outgoingSocketActions,
-  OutgoingMessageTypes,
-} from './constants/outgoingMessageTypes';
-import { InternalMessageTypes } from './constants/internalMessageTypes';
-import { addGameToSocket } from './actions/game';
-import { addUserToSocket } from './actions/user';
+  socketConnected,
+  socketDisconnected,
+} from './reducer/socketConnectionState';
+import {
+  addGameToSocket,
+  addUserToSocket,
+  enterLobby,
+} from './reducer/outgoingMessages';
 
 const socket = io(backendUrl, {
   path: '/socket',
@@ -23,11 +25,19 @@ const socketIoMiddleware = createSocketIoMiddleware(
     eventName: 'message',
   }
 );
+
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware().concat(ReduxThunk, socketIoMiddleware);
+  },
+});
+
 socket.on('connect', () => {
-  store.dispatch({ type: InternalMessageTypes.SOCKET_CONNECTED });
+  store.dispatch(socketConnected());
 });
 socket.on('disconnect', () => {
-  store.dispatch({ type: InternalMessageTypes.SOCKET_DISCONNECTED });
+  store.dispatch(socketDisconnected());
 });
 socket.on('reconnect', () => {
   const user = store.getState().user;
@@ -38,18 +48,11 @@ socket.on('reconnect', () => {
   if (locationArray[1] === 'game') {
     store.dispatch(addGameToSocket(parseInt(locationArray[2])));
   } else if (locationArray[1] === '') {
-    store.dispatch({
-      type: OutgoingMessageTypes.ENTER_LOBBY,
-    });
+    store.dispatch(enterLobby());
   }
-  store.dispatch({
-    type: InternalMessageTypes.SOCKET_CONNECTED,
-  });
+  store.dispatch(socketConnected());
 });
 
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(ReduxThunk, socketIoMiddleware))
-);
+export type RootState = ReturnType<typeof store.getState>;
 
 export default store;

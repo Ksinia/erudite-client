@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect, DispatchProp } from 'react-redux';
 
-import { logOut } from '../actions/authorization';
+import { logOut } from '../reducer/auth';
 import './Toolbar.css';
 import { RootState } from '../reducer';
 import { User } from '../reducer/types';
@@ -67,7 +67,7 @@ class Toolbar extends Component<Props> {
     );
   }
 }
-function mapStateToProps(state: RootState) {
+function mapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
   };

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 
 import { RootState } from '../../reducer';
 import { User } from '../../reducer/types';
@@ -18,11 +16,7 @@ interface State {
   jwtFromUrl: string;
 }
 
-interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, AnyAction>;
-}
-
-type Props = StateProps & DispatchProps;
+type Props = StateProps;
 
 class UserPage extends Component<Props> {
   readonly state: State = {
@@ -62,7 +56,7 @@ class UserPage extends Component<Props> {
     );
   }
 }
-function MapStateToProps(state: RootState) {
+function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
   };
