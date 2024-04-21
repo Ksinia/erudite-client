@@ -77,7 +77,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     collapse_finished: 'Collapse finished games',
     please_login: 'Please log in or sign up',
     link_generated:
-      'The link for changing password was created. Please contact Ksenia Gulyaeva to get the link. The link expires after 1 hour',
+      'The link for changing password was created. Please email Ksenia at xsenia.gulyaeva@gmail.com to get the link. The link expires after 1 hour',
     link_sent:
       'The link for changing password was sent to your email. The link expires after 1 hour',
     enter_name: 'Please enter your name to receive password change link',
@@ -188,7 +188,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     collapse_finished: 'Cвернуть завершенные игры',
     please_login: 'Пожалуйста, войдите или зарегистрируйтесь',
     link_generated:
-      'Ссылка для смены пароля сгенерирована. Пожалуйста, свяжитесь с Ксенией Гуляевой для получения ссылки. Ссылка действительна в течение часа',
+      'Ссылка для смены пароля сгенерирована. Пожалуйста, свяжитесь с Ксенией по адресу xsenia.gulyaeva@gmail.com для получения ссылки. Ссылка действительна в течение часа',
     link_sent:
       'Ссылка для смены пароля выслана на ваш email. Ссылка действительна в течение часа',
     enter_name:
