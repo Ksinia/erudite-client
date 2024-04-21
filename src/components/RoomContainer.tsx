@@ -28,9 +28,8 @@ class RoomContainer extends Component<Props> {
   onClickStart = async (): Promise<void> => {
     try {
       await superagent
-        .post(`${backendUrl}/start`)
-        .set('Authorization', `Bearer ${this.props.user?.jwt}`)
-        .send({ gameId: this.props.game.id });
+        .post(`${backendUrl}/start/${this.props.game.id}`)
+        .set('Authorization', `Bearer ${this.props.user?.jwt}`);
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'onClickStart'));
     }
@@ -38,9 +37,8 @@ class RoomContainer extends Component<Props> {
   onClickJoin = async (): Promise<void> => {
     try {
       await superagent
-        .put(`${backendUrl}/join`)
-        .set('Authorization', `Bearer ${this.props.user?.jwt}`)
-        .send({ gameId: this.props.game.id });
+        .put(`${backendUrl}/join/${this.props.game.id}`)
+        .set('Authorization', `Bearer ${this.props.user?.jwt}`);
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'onClickJoin'));
     }
