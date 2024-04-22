@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import superagent from 'superagent';
-import { History } from 'history';
 
 import './Game.css';
 import { ThunkDispatch } from 'redux-thunk';
@@ -86,7 +85,7 @@ type State = {
 
 interface OwnProps {
   game: GameType;
-  history: History;
+  history: any;
 }
 
 interface DispatchProps {
