@@ -61,7 +61,7 @@ export default function SignIn(props: OwnProps) {
             id="name"
             label={<TranslationContainer translationKey="name" />}
             name="name"
-            autoComplete="name"
+            autoComplete="username"
             autoFocus
             onChange={props.onChange}
             value={props.values.name}
