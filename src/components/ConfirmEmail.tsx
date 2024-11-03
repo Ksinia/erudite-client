@@ -1,4 +1,4 @@
-import { History } from 'history';
+import { RouteComponentProps } from 'react-router-dom';
 import superagent from 'superagent';
 import React, { useEffect } from 'react';
 import { ThunkDispatch } from 'redux-thunk';
@@ -9,9 +9,6 @@ import { ErrorLoadedAction, LogOutAction } from '../reducer/auth';
 import { LoginOrSignupErrorAction } from '../reducer/error';
 import TranslationContainer from './Translation/TranslationContainer';
 
-interface OwnProps {
-  history: History;
-}
 interface DispatchProps {
   dispatch: ThunkDispatch<
     RootState,
@@ -20,7 +17,7 @@ interface DispatchProps {
   >;
 }
 
-type Props = OwnProps & DispatchProps;
+type Props = RouteComponentProps & DispatchProps;
 
 export default function ConfirmEmail({ history, dispatch }: Props) {
   const jwtFromUrl = new URL(window.location.href).searchParams.get('jwt');

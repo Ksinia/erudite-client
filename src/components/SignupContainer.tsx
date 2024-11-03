@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { History } from 'history';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { ThunkDispatch } from 'redux-thunk';
 import { loginSignupFunction } from '../thunkActions/authorization';
@@ -14,14 +14,13 @@ interface StateProps {
 
 interface OwnProps {
   type: string;
-  history: History;
 }
 
 interface DispatchProps {
   dispatch: ThunkDispatch<RootState, unknown, ClearErrorAction>;
 }
 
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps & OwnProps & RouteComponentProps;
 
 interface State {
   name: string;

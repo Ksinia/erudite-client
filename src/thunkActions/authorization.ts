@@ -1,5 +1,5 @@
 import superagent from 'superagent';
-import { History } from 'history';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { backendUrl as baseUrl } from '../runtime';
 import { MyThunkAction } from '../reducer/types';
@@ -14,7 +14,7 @@ export const loginSignupFunction =
     type: string,
     name: string,
     password: string,
-    history: History,
+    history: RouteComponentProps['history'],
     email?: string
   ): MyThunkAction<LoginSuccessAction> =>
   async (dispatch) => {
