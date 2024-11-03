@@ -6,10 +6,6 @@
   display: initial;
 }
 
-button {
-  margin: 0.5em;
-}
-
-input {
+.collapse button {
   margin: 0.5em;
 }
