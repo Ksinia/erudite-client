@@ -5,8 +5,8 @@ import { InternalMessageTypes } from '../../constants/internalMessageTypes';
 const defaultLocale: string = localStorage.locale
   ? localStorage.locale
   : window.navigator.language.slice(0, 2) === 'ru'
-  ? 'ru_RU'
-  : 'en_US';
+    ? 'ru_RU'
+    : 'en_US';
 const initialState = {
   locale: defaultLocale,
 };

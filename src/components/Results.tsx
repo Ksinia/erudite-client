@@ -18,14 +18,17 @@ function transformResults(game: Game) {
     ]);
   }
   if (game.result.longestWord.length > 0) {
-    const longestWord = game.result.longestWord.reduce((acc, el) => {
-      if (el.user in acc) {
-        acc[el.user].push(el.word);
-      } else {
-        acc[el.user] = [el.word];
-      }
-      return acc;
-    }, {} as { [id: number]: string[] });
+    const longestWord = game.result.longestWord.reduce(
+      (acc, el) => {
+        if (el.user in acc) {
+          acc[el.user].push(el.word);
+        } else {
+          acc[el.user] = [el.word];
+        }
+        return acc;
+      },
+      {} as { [id: number]: string[] }
+    );
     results.push([
       'longest_word',
       Object.keys(longestWord)
@@ -39,14 +42,17 @@ function transformResults(game: Game) {
     ]);
   }
   if (game.result.maxScoreWord.length > 0) {
-    const maxScoreWord = game.result.maxScoreWord.reduce((acc, el) => {
-      if (el.user in acc) {
-        acc[el.user].push(el.word);
-      } else {
-        acc[el.user] = [el.word];
-      }
-      return acc;
-    }, {} as { [id: number]: string[] });
+    const maxScoreWord = game.result.maxScoreWord.reduce(
+      (acc, el) => {
+        if (el.user in acc) {
+          acc[el.user].push(el.word);
+        } else {
+          acc[el.user] = [el.word];
+        }
+        return acc;
+      },
+      {} as { [id: number]: string[] }
+    );
     results.push([
       'valuable_word',
       Object.keys(maxScoreWord)
@@ -66,13 +72,16 @@ function transformResults(game: Game) {
     results.push([
       'max_words',
       `${game.result.bestTurnByCount
-        .reduce((acc, el) => {
-          const name = game.users.find((user) => user.id === el.user)?.name;
-          if (!acc.includes(name)) {
-            acc.push(name);
-          }
-          return acc;
-        }, [] as (string | undefined)[])
+        .reduce(
+          (acc, el) => {
+            const name = game.users.find((user) => user.id === el.user)?.name;
+            if (!acc.includes(name)) {
+              acc.push(name);
+            }
+            return acc;
+          },
+          [] as (string | undefined)[]
+        )
         .join(', ')} (${game.result.bestTurnByCount[0].qty})`,
     ]);
   }
@@ -83,13 +92,16 @@ function transformResults(game: Game) {
     results.push([
       'valuable_turn',
       `${game.result.bestTurnByValue
-        .reduce((acc, el) => {
-          const name = game.users.find((user) => user.id === el.user)?.name;
-          if (!acc.includes(name)) {
-            acc.push(name);
-          }
-          return acc;
-        }, [] as (string | undefined)[])
+        .reduce(
+          (acc, el) => {
+            const name = game.users.find((user) => user.id === el.user)?.name;
+            if (!acc.includes(name)) {
+              acc.push(name);
+            }
+            return acc;
+          },
+          [] as (string | undefined)[]
+        )
         .join(', ')} (${game.result.bestTurnByValue[0].score})`,
     ]);
   }
