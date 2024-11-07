@@ -13,6 +13,7 @@ import {
   LoginOrSignupErrorAction,
 } from '../../reducer/error';
 import { ErrorLoadedAction, LogOutAction } from '../../reducer/auth';
+import styles from './UserPage.module.css';
 
 interface StateProps {
   user: User | null;
@@ -110,6 +111,7 @@ class ChangePassword extends Component<Props, State> {
             <TranslationContainer translationKey="enter_new_password" />
           </label>
           <input
+            className={styles.input}
             type="password"
             name="password"
             onChange={this.onChange}

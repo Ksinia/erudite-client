@@ -24,7 +24,10 @@ class Collapsible extends Component<Props, State> {
   render() {
     return (
       <div>
-        <button onClick={this.toggle.bind(this)}>
+        <button
+          className={styles.collapseButton}
+          onClick={this.toggle.bind(this)}
+        >
           <TranslationContainer
             translationKey={
               this.state.open
@@ -35,7 +38,7 @@ class Collapsible extends Component<Props, State> {
         </button>
         <div
           id="demo"
-          className={styles.collapse + (this.state.open ? ' in' : '')}
+          className={styles.collapse + (this.state.open ? ' ' + styles.in : '')}
         >
           {this.props.component}
         </div>

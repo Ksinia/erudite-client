@@ -53,3 +53,7 @@
     gap: 8px;
     margin: 12px auto;
 }
+
+.links > a {
+    margin: auto;
+}
