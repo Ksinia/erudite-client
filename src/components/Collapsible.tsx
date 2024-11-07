@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import './Collapsible.css';
+import styles from './Collapsible.module.css';
 import TranslationContainer from './Translation/TranslationContainer';
 
 type Props = {
@@ -23,8 +23,11 @@ class Collapsible extends Component<Props, State> {
   }
   render() {
     return (
-      <div className="cart">
-        <button className="btn btn-block" onClick={this.toggle.bind(this)}>
+      <div>
+        <button
+          className={styles.collapseButton}
+          onClick={this.toggle.bind(this)}
+        >
           <TranslationContainer
             translationKey={
               this.state.open
@@ -33,7 +36,10 @@ class Collapsible extends Component<Props, State> {
             }
           />
         </button>
-        <div id="demo" className={'collapse' + (this.state.open ? ' in' : '')}>
+        <div
+          id="demo"
+          className={styles.collapse + (this.state.open ? ' ' + styles.in : '')}
+        >
           {this.props.component}
         </div>
       </div>

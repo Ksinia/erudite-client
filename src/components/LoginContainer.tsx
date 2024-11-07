@@ -6,7 +6,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { loginSignupFunction } from '../thunkActions/authorization';
 import { RootState } from '../reducer';
 import { clearError, ClearErrorAction } from '../reducer/error';
-import Login from './Login';
+import LoginSignup from './LoginSignup';
 
 interface StateProps {
   error: string | null;
@@ -58,11 +58,12 @@ class LoginContainer extends Component<Props, State> {
 
   render() {
     return (
-      <Login
+      <LoginSignup
         onChange={this.onChange}
         onSubmit={this.onSubmit}
         values={this.state}
         error={this.props.error}
+        isSignUp={false}
       />
     );
   }

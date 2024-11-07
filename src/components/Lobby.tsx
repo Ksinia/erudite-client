@@ -55,7 +55,10 @@ function Lobby(props: OwnProps) {
             <option value="en">en</option>
           </select>
 
-          <button disabled={!props.sendingFormEnabled}>
+          <button
+            style={{ margin: '20px' }}
+            disabled={!props.sendingFormEnabled}
+          >
             <TranslationContainer translationKey="submit" />
           </button>
         </form>

@@ -6,10 +6,7 @@
   display: initial;
 }
 
-button {
+.collapseButton {
   margin: 0.5em;
-}
-
-input {
-  margin: 0.5em;
+  min-width: 400px;
 }
