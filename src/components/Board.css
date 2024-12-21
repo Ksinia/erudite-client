@@ -110,27 +110,6 @@
     font-size: 1.1rem;
   }
   .multiply {
-    font-size: 0.9rem;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .unit {
-    font-size: 0.09rem;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .value-on-board {
-    font-weight: 300;
-    top: -0.7rem;
-    right: -0.05rem;
-  }
-}
-
-/* Specific adjustments for Safari iOS */
-@supports (-webkit-touch-callout: none) {
-  .multiply {
     font-size: 1.1rem;
     text-align: center;
     margin-left: auto;
@@ -139,8 +118,12 @@
   .unit {
     font-size: 0.48rem;
     text-align: center;
-    text-align: center;
     margin-left: auto;
     margin-right: auto;
+  }
+  .value-on-board {
+    font-weight: 300;
+    top: -0.7rem;
+    right: -0.05rem;
   }
 }
