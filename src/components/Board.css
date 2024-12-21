@@ -78,6 +78,11 @@
   left: 0.2rem;
   z-index: -2;
   font-weight: lighter;
+  text-align: center; /* center text horizontally */
+  display: flex; /* added flexbox */
+  justify-content: center; /* center text horizontally */
+  width: 100%;
+  left: 0;
 }
 .unit {
   position: absolute;
@@ -85,6 +90,11 @@
   color: whitesmoke;
   bottom: -1em;
   z-index: -3;
+  text-align: center; /* center text horizontally */
+  display: flex; /* added flexbox */
+  justify-content: center; /* center text horizontally */
+  width: 100%;
+  left: 0;
 }
 @media screen and (max-width: 31.5em) {
   .table-board {
@@ -101,9 +111,15 @@
   }
   .multiply {
     font-size: 0.9rem;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
   .unit {
     font-size: 0.09rem;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
   .value-on-board {
     font-weight: 300;
@@ -116,10 +132,15 @@
 @supports (-webkit-touch-callout: none) {
   .multiply {
     font-size: 1.1rem;
-
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
   .unit {
     font-size: 0.48rem;
     text-align: center;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
