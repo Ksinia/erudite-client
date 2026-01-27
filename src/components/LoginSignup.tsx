@@ -58,7 +58,7 @@ export default function LoginSignup(props: OwnProps) {
             id="password"
             name="password"
             required
-            autoComplete="current-password"
+            autoComplete={props.isSignUp ? 'new-password' : 'current-password'}
             onChange={props.onChange}
             value={props.values.password}
             className={styles.input}
