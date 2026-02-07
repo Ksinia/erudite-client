@@ -23,6 +23,20 @@ const socketIoMiddleware = createSocketIoMiddleware(
   outgoingSocketActions,
   {
     eventName: 'message',
+    execute: (action: any, emit: any, next: any, dispatch: any) => {
+      // Log outgoing socket messages
+      console.log('🔴 OUTGOING SOCKET MESSAGE:', {
+        type: action.type,
+        payload: action.payload,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Send the message
+      emit('message', action);
+
+      // Continue with Redux dispatch
+      next(action);
+    },
   }
 );
 
@@ -34,12 +48,23 @@ const store = configureStore({
 });
 
 socket.on('connect', () => {
+  console.log('🔵 SOCKET CONNECTED', {
+    timestamp: new Date().toISOString(),
+  });
   store.dispatch(socketConnected());
 });
+
 socket.on('disconnect', () => {
+  console.log('🔵 SOCKET DISCONNECTED', {
+    timestamp: new Date().toISOString(),
+  });
   store.dispatch(socketDisconnected());
 });
+
 socket.on('reconnect', () => {
+  console.log('🔵 SOCKET RECONNECTED', {
+    timestamp: new Date().toISOString(),
+  });
   const user = store.getState().user;
   if (user) {
     store.dispatch(addUserToSocket(user.jwt));
@@ -53,6 +78,47 @@ socket.on('reconnect', () => {
   store.dispatch(socketConnected());
 });
 
+// Add comprehensive logging for incoming socket messages
+socket.on('message', (message: any) => {
+  console.log('🟢 INCOMING SOCKET MESSAGE:', {
+    type: message?.type,
+    payload: message?.payload,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Log socket errors
+socket.on('error', (error: unknown) => {
+  console.error('🔥 SOCKET ERROR:', {
+    error: error,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Log connection state changes
+socket.on('connect_error', (error: any) => {
+  console.error('🔥 SOCKET CONNECTION ERROR:', {
+    error: error.message,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Log when socket is connecting
+socket.on('connecting', () => {
+  console.log('🔵 SOCKET CONNECTING...', {
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Log reconnection attempts
+socket.on('reconnect_attempt', (attemptNumber: number) => {
+  console.log('🔵 SOCKET RECONNECT ATTEMPT:', {
+    attempt: attemptNumber,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 export type RootState = ReturnType<typeof store.getState>;
 
+export { socket };
 export default store;

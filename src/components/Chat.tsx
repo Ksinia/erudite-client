@@ -5,12 +5,8 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducer';
 import { User, Message } from '../reducer/types';
 import './Chat.css';
-import { errorFromServer } from '../thunkActions/errorHandling';
 import { clearMessages, ClearMessagesAction } from '../reducer/chat';
-import {
-  sendChatMessage,
-  SendChatMessageAction,
-} from '../reducer/outgoingMessages';
+import { sendChatMessageWithAck } from '../thunkActions/chat';
 
 interface OwnProps {
   gameId: number;
@@ -18,41 +14,64 @@ interface OwnProps {
   gamePhase: string;
 }
 interface DispatchProps {
-  dispatch: ThunkDispatch<
-    RootState,
-    unknown,
-    SendChatMessageAction | ClearMessagesAction
-  >;
+  dispatch: ThunkDispatch<RootState, unknown, ClearMessagesAction>;
 }
 interface StateProps {
   user: User | null;
   chat: Message[];
+  isConnected: boolean;
 }
 type Props = StateProps & DispatchProps & OwnProps;
 
 type State = {
   message: string;
+  isSending: boolean;
+  sendError: string | null;
 };
 
 class Chat extends Component<Props, State> {
   readonly state: State = {
     message: '',
+    isSending: false,
+    sendError: null,
   };
 
   onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       ...this.state,
       [event.currentTarget.name]: event.currentTarget.value,
+      sendError: null,
     });
   };
 
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
+
+    if (!this.state.message.trim() || this.state.isSending) return;
+
+    if (!this.props.isConnected) {
+      this.setState({ sendError: 'No connection to server' });
+      return;
+    }
+
+    const messageToSend = this.state.message;
+    this.setState({ isSending: true, sendError: null });
+
     try {
-      this.props.dispatch(sendChatMessage(this.state.message));
-      this.setState({ ...this.state, message: '' });
-    } catch (error) {
-      this.props.dispatch(errorFromServer(error, 'chat'));
+      const response = await sendChatMessageWithAck(messageToSend);
+      if (response.success) {
+        this.setState({ message: '', isSending: false });
+      } else {
+        this.setState({
+          isSending: false,
+          sendError: response.error || 'Failed to send message',
+        });
+      }
+    } catch {
+      this.setState({
+        isSending: false,
+        sendError: 'Failed to send message',
+      });
     }
   };
 
@@ -73,13 +92,21 @@ class Chat extends Component<Props, State> {
               (player) => player.id === this.props.user?.id
             ) && (
               <form onSubmit={this.onSubmit}>
+                {this.state.sendError && (
+                  <p className="chat-error">{this.state.sendError}</p>
+                )}
                 <input
                   autoComplete="off"
                   name="message"
                   onChange={this.onChange}
                   value={this.state.message}
-                ></input>
-                <button disabled={!this.state.message}>↑</button>
+                  disabled={this.state.isSending}
+                />
+                <button
+                  disabled={!this.state.message.trim() || this.state.isSending}
+                >
+                  {this.state.isSending ? '...' : '↑'}
+                </button>
               </form>
             )}
           {this.props.chat.map((message, index) => (
@@ -98,6 +125,7 @@ function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
     chat: state.chat,
+    isConnected: state.socketConnectionState,
   };
 }
 
