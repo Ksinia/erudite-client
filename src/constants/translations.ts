@@ -85,6 +85,8 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     change_password: 'Password change',
     password_changed: 'Password successfully changed',
     email: 'Email',
+    no_connection: 'No connection to server',
+    send_failed: 'Failed to send message',
     rules: `Rules of the Game
     
       Between 2 to 8 players can participate in the game. 
@@ -197,6 +199,8 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     change_password: 'Смена пароля',
     password_changed: 'Пароль успешно изменен',
     email: 'Почта',
+    no_connection: 'Нет соединения с сервером',
+    send_failed: 'Не удалось отправить сообщение',
     rules: `Правила игры
     
       В игре принимают участие от 2 до 8 человек. 

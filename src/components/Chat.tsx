@@ -7,6 +7,7 @@ import { User, Message } from '../reducer/types';
 import './Chat.css';
 import { clearMessages, ClearMessagesAction } from '../reducer/chat';
 import { sendChatMessageWithAck } from '../thunkActions/chat';
+import TranslationContainer from './Translation/TranslationContainer';
 
 interface OwnProps {
   gameId: number;
@@ -26,21 +27,21 @@ type Props = StateProps & DispatchProps & OwnProps;
 type State = {
   message: string;
   isSending: boolean;
-  sendError: string | null;
+  sendErrorKey: string | null;
 };
 
 class Chat extends Component<Props, State> {
   readonly state: State = {
     message: '',
     isSending: false,
-    sendError: null,
+    sendErrorKey: null,
   };
 
   onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       ...this.state,
       [event.currentTarget.name]: event.currentTarget.value,
-      sendError: null,
+      sendErrorKey: null,
     });
   };
 
@@ -50,12 +51,12 @@ class Chat extends Component<Props, State> {
     if (!this.state.message.trim() || this.state.isSending) return;
 
     if (!this.props.isConnected) {
-      this.setState({ sendError: 'No connection to server' });
+      this.setState({ sendErrorKey: 'no_connection' });
       return;
     }
 
     const messageToSend = this.state.message;
-    this.setState({ isSending: true, sendError: null });
+    this.setState({ isSending: true, sendErrorKey: null });
 
     try {
       const response = await sendChatMessageWithAck(messageToSend);
@@ -64,13 +65,13 @@ class Chat extends Component<Props, State> {
       } else {
         this.setState({
           isSending: false,
-          sendError: response.error || 'Failed to send message',
+          sendErrorKey: 'send_failed',
         });
       }
     } catch {
       this.setState({
         isSending: false,
-        sendError: 'Failed to send message',
+        sendErrorKey: 'send_failed',
       });
     }
   };
@@ -87,14 +88,16 @@ class Chat extends Component<Props, State> {
     ) {
       return (
         <div className="chat">
+          {this.state.sendErrorKey && (
+            <div className="chat-error-container">
+              <TranslationContainer translationKey={this.state.sendErrorKey} />
+            </div>
+          )}
           {this.props.user &&
             this.props.players.find(
               (player) => player.id === this.props.user?.id
             ) && (
               <form onSubmit={this.onSubmit}>
-                {this.state.sendError && (
-                  <p className="chat-error">{this.state.sendError}</p>
-                )}
                 <input
                   autoComplete="off"
                   name="message"

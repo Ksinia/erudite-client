@@ -45,10 +45,14 @@
   background-color: #f0f0f0;
 }
 
-.chat-error {
+.chat-error-container {
+  background-color: #ffebee;
+  padding: 0.5em 1em;
+  text-align: center;
   color: #d32f2f;
   font-size: 12px;
-  margin: 0 0 0.5em 0;
+  margin-bottom: 0.5em;
+  border-radius: 5px;
 }
 
 .chat form button {
