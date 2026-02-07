@@ -47,11 +47,26 @@ const store = configureStore({
   },
 });
 
+let hasConnectedBefore = false;
+
 socket.on('connect', () => {
-  console.log('🔵 SOCKET CONNECTED', {
-    timestamp: new Date().toISOString(),
-  });
+  console.log('🔵 SOCKET CONNECTED, hasConnectedBefore:', hasConnectedBefore);
   store.dispatch(socketConnected());
+
+  if (hasConnectedBefore) {
+    const user = store.getState().user;
+    if (user) {
+      store.dispatch(addUserToSocket(user.jwt));
+    }
+    const locationArray = window.location.pathname.split('/');
+    if (locationArray[1] === 'game') {
+      store.dispatch(addGameToSocket(parseInt(locationArray[2])));
+    } else if (locationArray[1] === '') {
+      store.dispatch(enterLobby());
+    }
+  }
+
+  hasConnectedBefore = true;
 });
 
 socket.on('disconnect', () => {
@@ -59,23 +74,6 @@ socket.on('disconnect', () => {
     timestamp: new Date().toISOString(),
   });
   store.dispatch(socketDisconnected());
-});
-
-socket.on('reconnect', () => {
-  console.log('🔵 SOCKET RECONNECTED', {
-    timestamp: new Date().toISOString(),
-  });
-  const user = store.getState().user;
-  if (user) {
-    store.dispatch(addUserToSocket(user.jwt));
-  }
-  const locationArray = window.location.pathname.split('/');
-  if (locationArray[1] === 'game') {
-    store.dispatch(addGameToSocket(parseInt(locationArray[2])));
-  } else if (locationArray[1] === '') {
-    store.dispatch(enterLobby());
-  }
-  store.dispatch(socketConnected());
 });
 
 // Add comprehensive logging for incoming socket messages
