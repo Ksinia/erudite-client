@@ -41,7 +41,7 @@ function Game(props: OwnProps) {
         style={{ margin: 0, width: '100%', textAlign: 'center' }}
       >
         {props.game.id}
-        <ShareLink gameId={props.game.id} />
+        <ShareLink gameId={props.game.id} started />
       </p>
       <div className="board">
         <Board

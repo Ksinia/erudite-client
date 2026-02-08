@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../reducer';
+import { TRANSLATIONS } from '../constants/translations';
 import './ShareLink.css';
 
 interface Props {
   gameId: number;
+  started?: boolean;
 }
 
 const ShareIcon = () => (
@@ -22,15 +26,20 @@ const ShareIcon = () => (
   </svg>
 );
 
-function ShareLink({ gameId }: Props) {
+function ShareLink({ gameId, started }: Props) {
   const [copied, setCopied] = useState(false);
+  const locale = useSelector(
+    (state: RootState) => state.translation?.locale ?? 'en_US'
+  );
+  const messageKey = started ? 'share_message_started' : 'share_message';
+  const message = TRANSLATIONS[locale]?.[messageKey] ?? 'Join my Erudit game!';
 
   const handleShare = () => {
     const url = `${window.location.origin}/game/${gameId}`;
     if (navigator.share) {
-      navigator.share({ title: 'Erudit', url });
+      navigator.share({ title: 'Erudit', text: message, url });
     } else {
-      navigator.clipboard.writeText(url);
+      navigator.clipboard.writeText(`${message} ${url}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
