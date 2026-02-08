@@ -36,7 +36,10 @@ type OwnProps = {
 function Game(props: OwnProps) {
   return (
     <div key="game" className="game">
-      <p key="game-id" style={{ margin: 0 }}>
+      <p
+        key="game-id"
+        style={{ margin: 0, width: '100%', textAlign: 'center' }}
+      >
         {props.game.id}
         <ShareLink gameId={props.game.id} />
       </p>
