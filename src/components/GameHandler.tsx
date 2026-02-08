@@ -109,10 +109,9 @@ class GameHandler extends Component<Props, State> {
       (this.props.user.id === 1 || this.props.user.id === 2) && (
         <div className="app-banner" ref={this.bannerRef}>
           {this.state.bannerMode === 'open' ? (
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
+            <button
+              className="app-banner-link"
+              onClick={() => {
                 const appUrl = `erudit://game/${this.state.gameId}`;
                 let blurred = false;
                 const onBlur = () => {
@@ -129,7 +128,7 @@ class GameHandler extends Component<Props, State> {
               }}
             >
               <TranslationContainer translationKey="open_in_app" />
-            </a>
+            </button>
           ) : (
             <a
               href="https://apps.apple.com/app/erudit/idTODO"

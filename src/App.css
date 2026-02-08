@@ -102,10 +102,15 @@
   margin: 0.5rem 0;
 }
 
-.app-banner a {
+.app-banner a,
+.app-banner-link {
   color: rgb(60, 60, 60);
   text-decoration: underline;
   font-size: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
 .app-banner-close {
