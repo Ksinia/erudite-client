@@ -87,6 +87,8 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     email: 'Email',
     no_connection: 'No connection to server',
     send_failed: 'Failed to send message',
+    open_in_app: 'Open in Erudit app',
+    install_app: 'Install Erudit app',
     rules: `Rules of the Game
     
       Between 2 to 8 players can participate in the game. 
@@ -201,6 +203,8 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     email: 'Почта',
     no_connection: 'Нет соединения с сервером',
     send_failed: 'Не удалось отправить сообщение',
+    open_in_app: 'Открыть в приложении Эрудит',
+    install_app: 'Установить приложение Эрудит',
     rules: `Правила игры
     
       В игре принимают участие от 2 до 8 человек. 

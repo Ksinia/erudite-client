@@ -1,0 +1,9 @@
+.share-link {
+  cursor: pointer;
+  opacity: 0.5;
+  vertical-align: middle;
+}
+
+.share-link:hover {
+  opacity: 1;
+}

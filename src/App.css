@@ -90,3 +90,29 @@
   line-height: 1.5em;
   text-indent: 40%;
 }
+
+.app-banner {
+  background-color: rgba(154, 205, 50, 0.5);
+  padding: 4px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: small;
+  margin: 0.5rem 0;
+}
+
+.app-banner a {
+  color: rgb(60, 60, 60);
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.app-banner-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: rgb(60, 60, 60);
+  padding: 0 4px;
+}

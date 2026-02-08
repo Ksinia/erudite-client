@@ -2,6 +2,7 @@ import React from 'react';
 
 import { User, Game as GameType } from '../reducer/types';
 import TranslationContainer from './Translation/TranslationContainer';
+import ShareLink from './ShareLink';
 
 type Props = {
   room: GameType;
@@ -20,6 +21,7 @@ function Room(props: Props) {
           args={[String(props.room.id), String(props.room.maxPlayers)]}
         />{' '}
         ({props.room.language})
+        <ShareLink gameId={props.room.id} />
       </p>
       {props.room.users.length > 0 ? (
         [

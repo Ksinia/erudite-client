@@ -35,12 +35,20 @@ type Props = StateProps & DispatchProps & RouteComponentProps<MatchParams>;
 
 type State = {
   gameId: number;
+  bannerDismissed: boolean;
+  bannerMode: 'open' | 'install';
 };
+
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 class GameHandler extends Component<Props, State> {
   readonly state: State = {
     gameId: parseInt(this.props.match.params.game),
+    bannerDismissed: false,
+    bannerMode: 'open',
   };
+  bannerRef = React.createRef<HTMLDivElement>();
+  hasScrolledToBanner = false;
 
   componentDidMount() {
     document.title = `Game ${this.state.gameId} | Erudite`;
@@ -53,6 +61,14 @@ class GameHandler extends Component<Props, State> {
   componentDidUpdate(prevProps: Readonly<Props>) {
     if (!prevProps.socketConnectionState && this.props.socketConnectionState) {
       this.props.dispatch(addGameToSocket(this.state.gameId));
+    }
+    if (!this.hasScrolledToBanner && this.bannerRef.current) {
+      this.hasScrolledToBanner = true;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+        });
+      });
     }
     if (prevProps.match.params.game !== this.props.match.params.game) {
       this.setState({
@@ -87,8 +103,53 @@ class GameHandler extends Component<Props, State> {
       return <TranslationContainer translationKey="no_game" />;
     }
     const game = this.props.games[this.state.gameId];
+    const banner = isMobile &&
+      !this.state.bannerDismissed &&
+      this.props.user &&
+      (this.props.user.id === 1 || this.props.user.id === 2) && (
+        <div className="app-banner" ref={this.bannerRef}>
+          {this.state.bannerMode === 'open' ? (
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                const appUrl = `erudit://game/${this.state.gameId}`;
+                let blurred = false;
+                const onBlur = () => {
+                  blurred = true;
+                };
+                window.addEventListener('blur', onBlur);
+                window.location.href = appUrl;
+                setTimeout(() => {
+                  window.removeEventListener('blur', onBlur);
+                  if (!document.hidden && !blurred) {
+                    this.setState({ bannerMode: 'install' });
+                  }
+                }, 2000);
+              }}
+            >
+              <TranslationContainer translationKey="open_in_app" />
+            </a>
+          ) : (
+            <a
+              href="https://apps.apple.com/app/erudit/idTODO"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <TranslationContainer translationKey="install_app" />
+            </a>
+          )}
+          <button
+            className="app-banner-close"
+            onClick={() => this.setState({ bannerDismissed: true })}
+          >
+            ×
+          </button>
+        </div>
+      );
     return (
       <Fragment>
+        {banner}
         {game.phase === 'waiting' || game.phase === 'ready' ? (
           <RoomContainer key={this.state.gameId} game={game} />
         ) : (

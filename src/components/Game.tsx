@@ -4,6 +4,7 @@ import { letterValues } from '../constants/letterValues';
 import { Game as GameType, User } from '../reducer/types';
 import Board from './Board';
 import Results from './Results';
+import ShareLink from './ShareLink';
 import TranslationContainer from './Translation/TranslationContainer';
 import WildCardForm from './WildCardForm';
 
@@ -35,6 +36,10 @@ type OwnProps = {
 function Game(props: OwnProps) {
   return (
     <div key="game" className="game">
+      <p key="game-id" style={{ margin: 0 }}>
+        {props.game.id}
+        <ShareLink gameId={props.game.id} />
+      </p>
       <div className="board">
         <Board
           key="board"
