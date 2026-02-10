@@ -5,13 +5,11 @@ import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl as baseUrl } from '../runtime';
 import { RootState } from '../reducer';
 import { User } from '../reducer/types';
-import { errorFromServer } from '../thunkActions/errorHandling';
 import { clearError, ClearErrorAction } from '../reducer/error';
 import TranslationContainer from './Translation/TranslationContainer';
 
 interface StateProps {
   user: User | null;
-  error: string | null;
 }
 
 interface DispatchProps {
@@ -23,12 +21,18 @@ type Props = StateProps & DispatchProps;
 interface State {
   name: string;
   result: string;
+  errorKey: string;
+}
+
+interface ResponseError {
+  response?: { body?: { message?: string } };
 }
 
 class ForgotPassword extends Component<Props, State> {
   readonly state: State = {
     name: '',
     result: '',
+    errorKey: '',
   };
 
   onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,8 +41,7 @@ class ForgotPassword extends Component<Props, State> {
 
   onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    this.setState({ ...this.state, result: '' });
-    this.props.dispatch(clearError());
+    this.setState({ ...this.state, result: '', errorKey: '' });
     const url = `${baseUrl}/generate-link`;
     try {
       const response = await superagent
@@ -47,9 +50,12 @@ class ForgotPassword extends Component<Props, State> {
       this.setState({
         name: '',
         result: response.text,
+        errorKey: '',
       });
     } catch (error) {
-      this.props.dispatch(errorFromServer(error, 'generate link'));
+      const responseError = error as ResponseError;
+      const key = responseError?.response?.body?.message || 'send_failed';
+      this.setState({ errorKey: key });
     }
   };
 
@@ -60,10 +66,10 @@ class ForgotPassword extends Component<Props, State> {
   render() {
     return (
       <div>
-        <TranslationContainer translationKey="enter_name" />
+        <TranslationContainer translationKey="enter_login_or_email" />
         <form onSubmit={this.onSubmit}>
           <label>
-            <TranslationContainer translationKey="name" />:
+            <TranslationContainer translationKey="login_or_email" />:
           </label>
           <input
             name="name"
@@ -80,7 +86,11 @@ class ForgotPassword extends Component<Props, State> {
         {this.state.result === 'Link sent' && (
           <TranslationContainer translationKey="link_sent" />
         )}
-        {this.props.error && <p>{this.props.error}</p>}
+        {this.state.errorKey && (
+          <p style={{ color: 'red' }}>
+            <TranslationContainer translationKey={this.state.errorKey} />
+          </p>
+        )}
       </div>
     );
   }
@@ -88,7 +98,6 @@ class ForgotPassword extends Component<Props, State> {
 function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
-    error: state.error,
   };
 }
 

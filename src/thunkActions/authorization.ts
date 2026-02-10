@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { backendUrl as baseUrl } from '../runtime';
 import { MyThunkAction } from '../reducer/types';
+import { TRANSLATIONS } from '../constants/translations';
 
 import { LoginSuccessAction } from '../reducer/auth';
 import { errorFromServer } from './errorHandling';
@@ -17,7 +18,7 @@ export const loginSignupFunction =
     history: RouteComponentProps['history'],
     email?: string
   ): MyThunkAction<LoginSuccessAction> =>
-  async (dispatch) => {
+  async (dispatch, getState) => {
     const url = `${baseUrl}/${type}`;
     try {
       let response = { text: '' };
@@ -29,6 +30,15 @@ export const loginSignupFunction =
       const action: LoginSuccessAction = JSON.parse(response.text);
       localStorage.setItem('jwt', action.payload.jwt);
       dispatch(action);
+
+      if (type === 'signup') {
+        const locale = getState().translation?.locale ?? 'en_US';
+        const message =
+          TRANSLATIONS[locale]?.signup_success ??
+          'You have signed up successfully!';
+        window.alert(message);
+      }
+
       const prevPageUrl = new URL(window.location.href).searchParams.get(
         'prev'
       );

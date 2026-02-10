@@ -53,6 +53,7 @@ class SignupContainer extends Component<Props, State> {
 
   componentDidMount() {
     document.title = 'Sign up | Erudite';
+    this.props.dispatch(clearError());
   }
 
   componentWillUnmount() {

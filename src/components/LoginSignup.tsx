@@ -22,7 +22,9 @@ export default function LoginSignup(props: OwnProps) {
       </h1>
       <form onSubmit={props.onSubmit} noValidate>
         <label>
-          <TranslationContainer translationKey="name" />
+          <TranslationContainer
+            translationKey={props.isSignUp ? 'login' : 'login_or_email'}
+          />
           <input
             type="text"
             id="name"
@@ -44,7 +46,6 @@ export default function LoginSignup(props: OwnProps) {
               name="email"
               required
               autoComplete="email"
-              autoFocus
               onChange={props.onChange}
               value={props.values.email}
               className={styles.input}
@@ -64,7 +65,11 @@ export default function LoginSignup(props: OwnProps) {
             className={styles.input}
           />
         </label>
-        <p className={styles.errorMessage}>{props.error}</p>
+        {props.error && (
+          <p className={styles.errorMessage}>
+            <TranslationContainer translationKey={props.error} />
+          </p>
+        )}
         <button type="submit" className={styles.submitButton}>
           <TranslationContainer
             translationKey={props.isSignUp ? 'sign_up' : 'log_in'}

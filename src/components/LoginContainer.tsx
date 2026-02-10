@@ -50,6 +50,7 @@ class LoginContainer extends Component<Props, State> {
 
   componentDidMount() {
     document.title = 'Log in | Erudite';
+    this.props.dispatch(clearError());
   }
 
   componentWillUnmount() {
