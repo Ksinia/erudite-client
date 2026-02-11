@@ -1,14 +1,67 @@
+.container {
+    padding: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #333;
+}
+
 .input {
-    padding: 12px;
-    margin: 24px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 10px;
+    margin: 10px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
-    background-color: inherit;
+    background-color: #fff;
+    width: 400px;
+    max-width: 100%;
+    display: block;
 }
 
 .input:focus {
     border-color: #3f51b5;
     outline: none;
+}
+
+.confirmButton {
+    background-color: #3f51b5;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 400px;
+    max-width: 100%;
+    margin: 10px auto;
+    display: block;
+}
+
+.confirmButton:hover {
+    background-color: #303f9f;
+}
+
+.logoutButton {
+    background-color: #3f51b5;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px auto;
+    display: block;
+    width: 400px;
+    max-width: 100%;
+}
+
+.logoutButton:hover {
+    background-color: #303f9f;
 }

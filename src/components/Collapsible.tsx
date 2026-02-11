@@ -34,7 +34,8 @@ class Collapsible extends Component<Props, State> {
                 ? this.props.translationKeyCollapse
                 : this.props.translationKeyExpand
             }
-          />
+          />{' '}
+          {this.state.open ? '\u25B2' : '\u25BC'}
         </button>
         <div
           id="demo"

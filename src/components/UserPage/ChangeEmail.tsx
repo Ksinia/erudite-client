@@ -87,7 +87,7 @@ export default function ChangeEmail() {
           onChange={(e) => setEmail(e.currentTarget.value)}
           value={email}
         />
-        <button>
+        <button className={styles.confirmButton}>
           <TranslationContainer translationKey="confirm" />
         </button>
       </form>

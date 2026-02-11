@@ -117,7 +117,7 @@ class ChangePassword extends Component<Props, State> {
             onChange={this.onChange}
             value={this.state.password}
           ></input>
-          <button>
+          <button className={styles.confirmButton}>
             <TranslationContainer translationKey="confirm" />
           </button>
         </form>
