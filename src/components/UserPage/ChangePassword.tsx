@@ -126,7 +126,11 @@ class ChangePassword extends Component<Props, State> {
             <TranslationContainer translationKey="password_changed" />
           </p>
         )}
-        {this.props.error && <p>{this.props.error}</p>}
+        {this.props.error && (
+          <p style={{ color: 'red' }}>
+            <TranslationContainer translationKey={this.props.error} />
+          </p>
+        )}
       </div>
     );
   }
