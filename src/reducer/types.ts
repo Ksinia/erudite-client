@@ -22,6 +22,7 @@ export interface Room {
 export type User = {
   id: number;
   name: string;
+  email?: string;
   jwt: string;
   finishedGamesIds?: number[];
 };

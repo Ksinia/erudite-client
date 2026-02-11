@@ -22,6 +22,13 @@ export const logOut = createAction<void, InternalMessageTypes.LOGOUT>(
 
 export type LogOutAction = ReturnType<typeof logOut>;
 
+export const updateEmail = createAction<
+  string,
+  InternalMessageTypes.UPDATE_EMAIL
+>(InternalMessageTypes.UPDATE_EMAIL);
+
+export type UpdateEmailAction = ReturnType<typeof updateEmail>;
+
 export default createReducer<User | null>(null, (builder) =>
   builder
     .addCase(loginSuccess, (_, action) => action.payload)
@@ -30,4 +37,9 @@ export default createReducer<User | null>(null, (builder) =>
       return null;
     })
     .addCase(errorLoaded, () => null)
+    .addCase(updateEmail, (state, action) => {
+      if (state) {
+        state.email = action.payload;
+      }
+    })
 );

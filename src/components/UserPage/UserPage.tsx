@@ -6,6 +6,7 @@ import { User } from '../../reducer/types';
 import Collapsible from '../Collapsible';
 import TranslationContainer from '../Translation/TranslationContainer';
 import ArchivedGamesContainer from './ArchivedGamesContainer';
+import ChangeEmail from './ChangeEmail';
 import ChangePassword from './ChangePassword';
 import FinishedGamesContainer from './FinishedGamesContainer';
 
@@ -50,6 +51,13 @@ class UserPage extends Component<Props> {
               component={<ArchivedGamesContainer jwt={jwt} />}
             />
           </>
+        )}
+        {jwt && (
+          <Collapsible
+            translationKeyExpand="expand_change_email"
+            translationKeyCollapse="collapse_change_email"
+            component={<ChangeEmail />}
+          />
         )}
         {(jwt || jwtFromUrl) && <ChangePassword jwtFromUrl={jwtFromUrl} />}
       </>
