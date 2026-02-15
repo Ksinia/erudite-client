@@ -16,6 +16,7 @@ import './App.css';
 import { User } from './reducer/types';
 import { saveSubscriptionForUser } from './thunkActions/api-call';
 import Rules from './components/Rules';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import {
   addUserToSocket,
   AddUserToSocketAction,
@@ -84,6 +85,7 @@ class App extends Component<Props> {
           <Route path="/game/:game" component={GameHandler} />
           <Route path="/confirm-email" component={ConfirmEmail} />
           <Route path="/rules" component={Rules} />
+          <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/" component={LobbyContainer} />
         </Switch>
       </div>,
