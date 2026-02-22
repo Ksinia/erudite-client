@@ -81,21 +81,11 @@ function Game(props: OwnProps) {
             })}
           </div>
         )}
-        {props.user && props.userLetters.length > 1 && (
-          <button onClick={props.shuffleLetters}>
-            <TranslationContainer translationKey="shuffle" />
-          </button>
-        )}
         <WildCardForm
           onChange={props.onChangeWildCard}
           wildCardLetters={props.wildCardLetters}
           alphabet={Object.keys(letterValues[props.game.language])}
         />
-        {props.game.phase === 'finished' && props.user && (
-          <button key="again" onClick={props.playAgainWithSamePlayers}>
-            <TranslationContainer translationKey="play_again" />
-          </button>
-        )}
         {props.duplicatedWords && props.duplicatedWords.length > 0 && (
           <p style={{ color: 'red' }}>
             <TranslationContainer
@@ -104,39 +94,6 @@ function Game(props: OwnProps) {
             />
           </p>
         )}
-        {props.user &&
-          props.game.turnOrder[props.game.turn] === props.user.id &&
-          props.game.phase === 'turn' && (
-            <button
-              key="confirm"
-              onClick={props.confirmTurn}
-              disabled={props.wildCardLetters.some(
-                (letterObject) => letterObject.letter === ''
-              )}
-            >
-              {props.userBoardEmpty ? (
-                <TranslationContainer translationKey="pass" />
-              ) : (
-                <TranslationContainer translationKey="confirm" />
-              )}
-            </button>
-          )}
-        {props.user &&
-          props.game.turnOrder.includes(props.user.id) &&
-          props.game.phase !== 'finished' &&
-          !props.userBoardEmpty && (
-            <button key="return" onClick={props.returnLetters}>
-              <TranslationContainer translationKey="return" />
-            </button>
-          )}
-        {props.user &&
-          props.game.turnOrder[props.game.turn] === props.user.id &&
-          props.game.phase === 'turn' &&
-          props.game.letters.pot.length > 0 && [
-            <button key="change" onClick={props.change}>
-              <TranslationContainer translationKey="change" />
-            </button>,
-          ]}
         {props.game.phase === 'validation' &&
           props.game.wordsForValidation.length > 0 && (
             <p>
@@ -146,35 +103,82 @@ function Game(props: OwnProps) {
               />
             </p>
           )}
-        {/* next player validates: */}
         {props.user &&
           props.game.turnOrder.includes(props.user.id) &&
           props.user.id ===
             props.game.turnOrder[props.getNextTurn(props.game)] &&
-          props.game.phase === 'validation' && [
-            <button key="yes" name="yes" onClick={props.validateTurn}>
-              <TranslationContainer
-                translationKey="i_confirm"
-                args={[
-                  props.findTurnUser(
-                    props.game,
-                    props.game.turnOrder[props.game.turn]
-                  ).name,
-                ]}
-              />
-            </button>,
-            <button key="no" name="no" onClick={props.validateTurn}>
-              <TranslationContainer
-                translationKey="no"
-                args={[
-                  props.findTurnUser(
-                    props.game,
-                    props.game.turnOrder[props.game.turn]
-                  ).name,
-                ]}
-              />
-            </button>,
-          ]}
+          props.game.phase === 'validation' && (
+            <div className="button-row">
+              <button key="yes" name="yes" onClick={props.validateTurn}>
+                <TranslationContainer
+                  translationKey="i_confirm"
+                  args={[
+                    props.findTurnUser(
+                      props.game,
+                      props.game.turnOrder[props.game.turn]
+                    ).name,
+                  ]}
+                />
+              </button>
+              <button key="no" name="no" onClick={props.validateTurn}>
+                <TranslationContainer
+                  translationKey="no"
+                  args={[
+                    props.findTurnUser(
+                      props.game,
+                      props.game.turnOrder[props.game.turn]
+                    ).name,
+                  ]}
+                />
+              </button>
+            </div>
+          )}
+        {props.user &&
+          props.game.turnOrder.includes(props.user.id) &&
+          props.game.phase !== 'finished' && (
+            <div className="button-grid">
+              <button onClick={props.shuffleLetters}>
+                <TranslationContainer translationKey="shuffle" />
+              </button>
+              <button
+                onClick={props.returnLetters}
+                disabled={props.userBoardEmpty}
+              >
+                <TranslationContainer translationKey="return" />
+              </button>
+              <button
+                onClick={props.confirmTurn}
+                disabled={
+                  props.game.phase !== 'turn' ||
+                  props.game.turnOrder[props.game.turn] !== props.user.id ||
+                  props.wildCardLetters.some(
+                    (letterObject) => letterObject.letter === ''
+                  )
+                }
+              >
+                {props.userBoardEmpty ? (
+                  <TranslationContainer translationKey="pass" />
+                ) : (
+                  <TranslationContainer translationKey="confirm" />
+                )}
+              </button>
+              <button
+                onClick={props.change}
+                disabled={
+                  props.game.phase !== 'turn' ||
+                  props.game.turnOrder[props.game.turn] !== props.user.id ||
+                  props.game.letters.pot.length === 0
+                }
+              >
+                <TranslationContainer translationKey="change" />
+              </button>
+            </div>
+          )}
+        {props.game.phase === 'finished' && props.user && (
+          <button key="again" onClick={props.playAgainWithSamePlayers}>
+            <TranslationContainer translationKey="play_again" />
+          </button>
+        )}
         {props.game.phase === 'validation' &&
           props.game.validated === 'no' && [
             <p key="disagree">
