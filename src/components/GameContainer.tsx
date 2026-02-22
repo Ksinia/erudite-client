@@ -9,6 +9,7 @@ import { RootState } from '../reducer';
 import { User, Game as GameType } from '../reducer/types';
 import { sendTurn } from '../thunkActions/turn';
 import { errorFromServer } from '../thunkActions/errorHandling';
+import { TRANSLATIONS } from '../constants/translations';
 import {
   NoDuplicationAction,
   noDuplications,
@@ -254,6 +255,13 @@ class GameContainer extends Component<Props, State> {
   };
 
   confirmTurn = async () => {
+    const userBoardEmpty = !this.state.userBoard.some(
+      (row: string[]) => !!row.join('')
+    );
+    if (userBoardEmpty) {
+      const locale = localStorage.getItem('locale') || 'en_US';
+      if (!window.confirm(TRANSLATIONS[locale].confirm_pass)) return;
+    }
     // TODO: move this constant transformation logic to backend
     const userBoardToSend = this.state.userBoard.map((row) =>
       row.map((cell) => {
@@ -308,6 +316,8 @@ class GameContainer extends Component<Props, State> {
   };
 
   change = async () => {
+    const locale = localStorage.getItem('locale') || 'en_US';
+    if (!window.confirm(TRANSLATIONS[locale].confirm_change)) return;
     const user = this.props.user;
     if (!user) {
       return;
