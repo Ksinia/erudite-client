@@ -9,24 +9,19 @@ type Props = {
 };
 
 export default class LangSwitch extends Component<Props> {
+  handleToggle = () => {
+    const nextLang = LANG_NAMES.find((l) => l.locale !== this.props.locale);
+    if (nextLang) {
+      this.props.setLanguage({ locale: nextLang.locale });
+      localStorage.setItem('locale', nextLang.locale);
+    }
+  };
+
   render() {
+    const nextLang = LANG_NAMES.find((l) => l.locale !== this.props.locale);
     return (
       <div className="lang">
-        {LANG_NAMES.map((language, i) => (
-          <button
-            key={i}
-            style={{
-              fontWeight:
-                this.props.locale === language.locale ? 'bold' : undefined,
-            }}
-            onClick={() => {
-              this.props.setLanguage({ locale: language.locale });
-              localStorage.setItem('locale', language.locale);
-            }}
-          >
-            {language.name}
-          </button>
-        ))}
+        <button onClick={this.handleToggle}>{nextLang?.name}</button>
       </div>
     );
   }

@@ -81,20 +81,20 @@ footer a {
 .table-score,
 .table-result {
   margin: auto;
-  border: 0.5px solid lightgrey;
+  border: 1px solid lightgrey;
   border-collapse: collapse;
 }
 .table-score tr td {
-  border: 0.5px solid lightgrey;
+  border: 1px solid lightgrey;
   padding: 0.2em 1em;
 }
 .table-result tr td {
-  border: 0.5px solid lightgrey;
+  border: 1px solid lightgrey;
   padding: 0.2em 1em;
   text-align: left;
 }
 .table-score thead tr th {
-  border: 0.5px solid lightgrey;
+  border: 1px solid lightgrey;
   padding: 0.2em 1em;
   font-weight: normal;
 }
@@ -119,14 +119,14 @@ footer a {
 }
 .table-turns {
   margin: auto;
-  border: 0.5px solid lightgrey;
+  border: 1px solid lightgrey;
   border-collapse: collapse;
   max-width: 31.5rem;
 }
 .table-turns tr td {
-  border: 0.5px solid lightgrey;
+  border: 1px solid lightgrey;
 }
 .table-turns thead tr th {
-  border: 0.5px solid lightgrey;
+  border: 1px solid lightgrey;
   font-weight: normal;
 }

@@ -1,20 +1,44 @@
+.toolbar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+
 .toolbar {
   display: flex;
   width: 100%;
   background-color: whitesmoke;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   justify-content: space-around;
+  align-items: center;
   padding: 0.1rem 0;
-  position: fixed;
-  top: 0px;
-  z-index: 999;
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 }
 
 .toolbar > * {
   margin: auto;
   padding: 0.1rem;
+}
+
+.toolbar-sizer {
+  display: flex;
+  flex-flow: row nowrap;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+}
+
+.toolbar-sizer > * {
+  padding: 0.1rem;
+  margin: 0 0.3rem;
+  white-space: nowrap;
 }
 
 a {
@@ -23,8 +47,10 @@ a {
 .logout {
   cursor: pointer;
 }
-.toolbar a {
+.toolbar a,
+.toolbar-menu a {
   cursor: pointer;
+  text-decoration: none;
 }
 .lang button {
   padding: 0.2em;
@@ -37,8 +63,30 @@ a {
   text-align: "center";
 }
 
+.burger {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  color: rgb(60, 60, 60);
+}
+
+.toolbar-menu {
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3rem 0;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toolbar-menu > * {
+  padding: 0.4rem;
+}
+
 @media screen and (max-width: 670px) {
-  .toolbar {
+  .toolbar-wrapper {
     font-size: small;
   }
 }

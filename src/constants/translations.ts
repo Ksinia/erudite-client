@@ -145,7 +145,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     welcome: 'Привет,',
     log_in: 'Войти',
     log_out: 'Выйти',
-    sign_up: 'Зарегистрироваться',
+    sign_up: 'Регистрация',
     qty: 'Пожалуйста, укажите количество игроков: ',
     submit: 'Создать',
     your_turn_games: 'Ваш ход',
