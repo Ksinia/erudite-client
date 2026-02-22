@@ -31,6 +31,7 @@ type OwnProps = {
   wildCardLetters: { letter: string; x: number; y: number }[];
   wildCardOnBoard: { [y: number]: { [x: number]: string } };
   duplicatedWords: string[];
+  shuffleLetters: () => void;
 };
 
 function Game(props: OwnProps) {
@@ -79,6 +80,11 @@ function Game(props: OwnProps) {
               );
             })}
           </div>
+        )}
+        {props.user && props.userLetters.length > 1 && (
+          <button onClick={props.shuffleLetters}>
+            <TranslationContainer translationKey="shuffle" />
+          </button>
         )}
         <WildCardForm
           onChange={props.onChangeWildCard}

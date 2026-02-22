@@ -334,6 +334,15 @@ class GameContainer extends Component<Props, State> {
     }
   };
 
+  shuffleLetters = () => {
+    const letters = [...this.state.userLetters];
+    for (let i = letters.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [letters[i], letters[j]] = [letters[j], letters[i]];
+    }
+    this.setState({ userLetters: letters, chosenLetterIndex: null });
+  };
+
   findTurnUser = (game: GameType, id: number): User => {
     const user = game.users.find((user) => user.id === id);
     if (user !== undefined) {
@@ -484,6 +493,7 @@ class GameContainer extends Component<Props, State> {
           onChangeWildCard={this.onChangeWildCard}
           wildCardLetters={this.state.wildCardLetters}
           wildCardOnBoard={this.state.wildCardOnBoard}
+          shuffleLetters={this.shuffleLetters}
           duplicatedWords={this.props.duplicatedWords}
           userBoardEmpty={
             !this.state.userBoard.some((row: string[]) => !!row.join(''))
