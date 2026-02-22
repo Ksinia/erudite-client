@@ -18,9 +18,14 @@ export const clearMessages = createAction<
 
 export type ClearMessagesAction = ReturnType<typeof clearMessages>;
 
+const isBotTrigger = (m: Message) =>
+  m.userId === 1 && m.text.trim().toLowerCase() === 'бот ходи';
+
 export default createReducer<Message[]>([], (builder) =>
   builder
-    .addCase(allMessages, (_, action) => action.payload)
-    .addCase(newMessage, (state, action) => [action.payload, ...state])
-    .addCase(clearMessages, () => [])
+    .addCase(allMessages, (_, action) => action.payload.filter((m) => !isBotTrigger(m)))
+    .addCase(newMessage, (state, action) =>
+      isBotTrigger(action.payload) ? state : [action.payload, ...state],
+    )
+    .addCase(clearMessages, () => []),
 );
