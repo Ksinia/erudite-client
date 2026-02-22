@@ -116,6 +116,24 @@ socket.on('reconnect_attempt', (attemptNumber: number) => {
   });
 });
 
+// When PWA returns from background, iOS may have killed the WebSocket silently.
+// Force a disconnect+reconnect to restore the connection and re-join rooms.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && hasConnectedBefore) {
+    console.log('🔵 PAGE VISIBLE — checking socket state:', {
+      connected: socket.connected,
+      timestamp: new Date().toISOString(),
+    });
+    if (!socket.connected) {
+      socket.connect();
+    } else {
+      // Socket thinks it's connected but may be stale — disconnect and reconnect
+      socket.disconnect();
+      socket.connect();
+    }
+  }
+});
+
 export type RootState = ReturnType<typeof store.getState>;
 
 export { socket };
