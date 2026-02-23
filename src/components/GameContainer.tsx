@@ -496,7 +496,8 @@ class GameContainer extends Component<Props, State> {
           shuffleLetters={this.shuffleLetters}
           duplicatedWords={this.props.duplicatedWords}
           userBoardEmpty={
-            !this.state.userBoard.some((row: string[]) => !!row.join(''))
+            !this.state.userBoard.some((row: string[]) => !!row.join('')) &&
+            Object.keys(this.state.wildCardOnBoard).length === 0
           }
         />
       </div>
