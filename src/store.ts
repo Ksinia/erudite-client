@@ -59,8 +59,9 @@ socket.on('connect', () => {
       store.dispatch(addUserToSocket(user.jwt));
     }
     const locationArray = window.location.pathname.split('/');
-    if (locationArray[1] === 'game') {
-      store.dispatch(addGameToSocket(parseInt(locationArray[2])));
+    const gameId = parseInt(locationArray[2]);
+    if (locationArray[1] === 'game' && !isNaN(gameId)) {
+      store.dispatch(addGameToSocket(gameId));
     } else if (locationArray[1] === '') {
       store.dispatch(enterLobby());
     }
