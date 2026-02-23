@@ -23,9 +23,11 @@ const isBotTrigger = (m: Message) =>
 
 export default createReducer<Message[]>([], (builder) =>
   builder
-    .addCase(allMessages, (_, action) => action.payload.filter((m) => !isBotTrigger(m)))
-    .addCase(newMessage, (state, action) =>
-      isBotTrigger(action.payload) ? state : [action.payload, ...state],
+    .addCase(allMessages, (_, action) =>
+      action.payload.filter((m) => !isBotTrigger(m))
     )
-    .addCase(clearMessages, () => []),
+    .addCase(newMessage, (state, action) =>
+      isBotTrigger(action.payload) ? state : [action.payload, ...state]
+    )
+    .addCase(clearMessages, () => [])
 );
