@@ -116,6 +116,12 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     install_app: 'Install Erudit app',
     share_message: 'Join my Erudit game!',
     share_message_started: 'Check out my Erudit game!',
+    expand_delete_account: 'Delete account',
+    collapse_delete_account: 'Cancel account deletion',
+    confirm_delete_account:
+      'This action is permanent. All your personal data will be deleted. Your game history will be preserved anonymously. Are you sure?',
+    enter_password_to_delete: 'Enter your password to confirm account deletion',
+    account_deleted: 'Account deleted',
     rules: `Rules of the Game
     
       Between 2 to 8 players can participate in the game. 
@@ -259,6 +265,13 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     install_app: 'Установить приложение Эрудит',
     share_message: 'Присоединяйся к моей игре в Эрудит!',
     share_message_started: 'Смотри мою игру в Эрудит!',
+    expand_delete_account: 'Удалить аккаунт',
+    collapse_delete_account: 'Отменить удаление аккаунта',
+    confirm_delete_account:
+      'Это действие необратимо. Все ваши персональные данные будут удалены. История игр будет сохранена анонимно. Вы уверены?',
+    enter_password_to_delete:
+      'Введите пароль для подтверждения удаления аккаунта',
+    account_deleted: 'Аккаунт удалён',
     rules: `Правила игры
     
       В игре принимают участие от 2 до 8 человек. 

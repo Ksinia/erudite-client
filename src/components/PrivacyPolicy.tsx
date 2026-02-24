@@ -62,8 +62,10 @@ const PrivacyPolicy: FunctionComponent = () => {
 
       <h2>Your rights</h2>
       <p>
-        You can change your email address and password in the app. If you would
-        like to delete your account, please contact us.
+        You can change your email address and password in the app. You can also
+        delete your account from the profile page in the app. When you delete
+        your account, all your personal data (email, password) is permanently
+        removed. Your game history is preserved anonymously.
       </p>
 
       <h2>Contact</h2>
@@ -123,8 +125,10 @@ const PrivacyPolicy: FunctionComponent = () => {
 
       <h2>Ваши права</h2>
       <p>
-        Вы можете изменить адрес электронной почты и пароль в приложении. Если
-        вы хотите удалить свой аккаунт, свяжитесь с нами.
+        Вы можете изменить адрес электронной почты и пароль в приложении. Вы
+        также можете удалить свой аккаунт на странице профиля. При удалении
+        аккаунта все ваши персональные данные (почта, пароль) удаляются
+        безвозвратно. История игр сохраняется анонимно.
       </p>
 
       <h2>Контакты</h2>

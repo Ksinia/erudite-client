@@ -9,6 +9,7 @@ import TranslationContainer from '../Translation/TranslationContainer';
 import ArchivedGamesContainer from './ArchivedGamesContainer';
 import ChangeEmail from './ChangeEmail';
 import ChangePassword from './ChangePassword';
+import DeleteAccount from './DeleteAccount';
 import FinishedGamesContainer from './FinishedGamesContainer';
 import styles from './UserPage.module.css';
 
@@ -72,6 +73,11 @@ class UserPage extends Component<Props> {
               translationKeyExpand="expand_change_password"
               translationKeyCollapse="collapse_change_password"
               component={<ChangePassword jwtFromUrl="" />}
+            />
+            <Collapsible
+              translationKeyExpand="expand_delete_account"
+              translationKeyCollapse="collapse_delete_account"
+              component={<DeleteAccount />}
             />
           </>
         )}
