@@ -13,7 +13,7 @@ function GamesTilesList(props: OwnProps) {
   return (
     <React.Fragment>
       {props.gamesList ? (
-        props.gamesList.length > 0 && (
+        props.gamesList.length > 0 ? (
           <React.Fragment>
             <h3>
               <TranslationContainer translationKey={props.category} />
@@ -24,6 +24,12 @@ function GamesTilesList(props: OwnProps) {
               ))}
             </div>
           </React.Fragment>
+        ) : (
+          <p>
+            <TranslationContainer
+              translationKey={`no_${props.category}_games`}
+            />
+          </p>
         )
       ) : (
         <TranslationContainer translationKey="loading" />
