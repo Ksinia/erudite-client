@@ -234,28 +234,19 @@ function Game(props: OwnProps) {
             <TranslationContainer translationKey="game_over" />
           </p>
         )}
-        <table className="table-score">
-          <thead>
-            <tr>
-              <th key="player">
-                <TranslationContainer translationKey="player" />
-              </th>
-              <th key="score">
-                <TranslationContainer translationKey="score" />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {props.game.turnOrder.map((key) => (
-              <tr key={key}>
-                <td>
-                  {props.game.users.find((user) => user.id === key)?.name}
-                </td>
-                <td>{props.game.score[key]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <p className="section-title">
+          <TranslationContainer translationKey="score" />
+        </p>
+        <div className="score-list">
+          {props.game.turnOrder.map((key) => (
+            <div key={key} className="score-row">
+              <span className="score-name">
+                {props.game.users.find((user) => user.id === key)?.name}
+              </span>
+              <span className="score-value">{props.game.score[key]}</span>
+            </div>
+          ))}
+        </div>
         {props.game.phase === 'finished' && 'result' in props.game && (
           <Results game={props.game} />
         )}
@@ -265,66 +256,44 @@ function Game(props: OwnProps) {
         </p>
         {props.game.turns && props.game.turns.length > 0 && (
           <div className="turns">
-            <p>
+            <p className="section-title">
               <TranslationContainer translationKey="turns" />
             </p>
-            <table className="table-turns">
-              <thead>
-                <tr>
-                  <th key="player">
-                    <TranslationContainer translationKey="player" />
-                  </th>
-                  <th key="turn">
-                    <TranslationContainer translationKey="turn" />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {props.game.turns
-                  .slice()
-                  .reverse()
-                  .map((turn, index: number) => (
-                    <tr key={index}>
-                      <td key="1">
-                        {
-                          props.game.users.find((user) => user.id === turn.user)
-                            ?.name
-                        }
-                      </td>
-                      <td key="2">
-                        {turn.words.length > 0 ? (
-                          <div key={index} className="turn">
-                            <p>
-                              {turn.score}
-                              {': '}
-                              {turn.words
-                                .map(
-                                  (word) =>
-                                    `${Object.keys(word)[0]} ${
-                                      word[Object.keys(word)[0]]
-                                    }`
-                                )
-                                .join(', ')}
-                            </p>
-                          </div>
-                        ) : (
-                          <div key={index} className="turn">
-                            {turn.changedLetters ? (
-                              <p>
-                                <TranslationContainer translationKey="changed" />
-                              </p>
-                            ) : (
-                              <p>
-                                <TranslationContainer translationKey="passed" />
-                              </p>
-                            )}
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+            <div className="turns-list">
+              {props.game.turns
+                .slice()
+                .reverse()
+                .map((turn, index: number) => (
+                  <div key={index} className="turn-row">
+                    <span className="turn-player">
+                      {
+                        props.game.users.find((user) => user.id === turn.user)
+                          ?.name
+                      }
+                    </span>
+                    <span className="turn-details">
+                      {turn.words.length > 0 ? (
+                        <>
+                          {turn.score}
+                          {': '}
+                          {turn.words
+                            .map(
+                              (word) =>
+                                `${Object.keys(word)[0]} ${
+                                  word[Object.keys(word)[0]]
+                                }`
+                            )
+                            .join(', ')}
+                        </>
+                      ) : turn.changedLetters ? (
+                        <TranslationContainer translationKey="changed" />
+                      ) : (
+                        <TranslationContainer translationKey="passed" />
+                      )}
+                    </span>
+                  </div>
+                ))}
+            </div>
           </div>
         )}
       </div>
