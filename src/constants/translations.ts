@@ -126,6 +126,10 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
       'This action is permanent. All your personal data will be deleted. Your game history will be preserved anonymously. Are you sure?',
     enter_password_to_delete: 'Enter your password to confirm account deletion',
     account_deleted: 'Account deleted',
+    report_message: 'Report message',
+    block_user: 'Block user',
+    message_reported: 'Message reported',
+    user_blocked: 'User blocked',
     rules: `Rules of the Game
     
       Between 2 to 8 players can participate in the game. 
@@ -280,6 +284,10 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     enter_password_to_delete:
       'Введите пароль для подтверждения удаления аккаунта',
     account_deleted: 'Аккаунт удалён',
+    report_message: 'Пожаловаться на сообщение',
+    block_user: 'Заблокировать пользователя',
+    message_reported: 'Жалоба отправлена',
+    user_blocked: 'Пользователь заблокирован',
     rules: `Правила игры
     
       В игре принимают участие от 2 до 8 человек. 
