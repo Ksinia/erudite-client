@@ -41,6 +41,7 @@ export default function DeleteAccount() {
 
       if (response.ok) {
         dispatch(logOut());
+        window.location.href = '/';
       } else {
         try {
           const data = await response.json();
