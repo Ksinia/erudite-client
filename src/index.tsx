@@ -25,6 +25,15 @@ ReactDOM.render(
 // Learn more about service workers: https://cra.link/PWA
 serviceWorker.register({
   onSuccess: syncSubscription,
-  onUpdate: syncSubscription,
+  onUpdate: (registration) => {
+    syncSubscription(registration);
+    if (registration.waiting) {
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+  },
   onLoad: syncSubscription,
+});
+
+navigator.serviceWorker?.addEventListener('controllerchange', () => {
+  window.location.reload();
 });
