@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './LoginSignup.module.css';
 
 import TranslationContainer from './Translation/TranslationContainer';
+import AppleSignInButton from './AppleSignInButton';
 
 type OwnProps = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -75,6 +76,14 @@ export default function LoginSignup(props: OwnProps) {
             translationKey={props.isSignUp ? 'sign_up' : 'log_in'}
           />
         </button>
+        <div className={styles.divider}>
+          <div className={styles.dividerLine} />
+          <span className={styles.dividerText}>
+            <TranslationContainer translationKey="or" />
+          </span>
+          <div className={styles.dividerLine} />
+        </div>
+        <AppleSignInButton />
         <div className={styles.links}>
           {props.isSignUp ? (
             <Link to="/login">

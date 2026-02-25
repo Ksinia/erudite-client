@@ -10,6 +10,28 @@ import { errorFromServer } from './errorHandling';
 
 export const loginSignupFunctionErrorCtx = 'loginSignupFunction';
 
+declare global {
+  interface Window {
+    AppleID?: {
+      auth: {
+        init: (config: {
+          clientId: string;
+          scope: string;
+          redirectURI: string;
+          usePopup: boolean;
+        }) => void;
+        signIn: () => Promise<{
+          authorization: { id_token: string; code: string };
+          user?: {
+            name?: { firstName?: string; lastName?: string };
+            email?: string;
+          };
+        }>;
+      };
+    };
+  }
+}
+
 export const loginSignupFunction =
   (
     type: string,
@@ -73,5 +95,70 @@ export const getProfileFetch =
         // TODO: check if it is needed
         localStorage.removeItem('jwt');
       }
+    }
+  };
+
+export const appleSignIn =
+  (
+    history: RouteComponentProps['history']
+  ): MyThunkAction<LoginSuccessAction> =>
+  async (dispatch) => {
+    try {
+      if (!window.AppleID) {
+        throw new Error('apple_signin_failed');
+      }
+
+      window.AppleID.auth.init({
+        clientId: process.env.REACT_APP_APPLE_SERVICE_ID || '',
+        scope: 'name email',
+        redirectURI: window.location.origin,
+        usePopup: true,
+      });
+
+      const result = await window.AppleID.auth.signIn();
+
+      const response = await fetch(`${baseUrl}/auth/apple`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          identityToken: result.authorization.id_token,
+          fullName: result.user?.name
+            ? {
+                givenName: result.user.name.firstName,
+                familyName: result.user.name.lastName,
+              }
+            : null,
+          email: result.user?.email || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data?.message) throw new Error(data.message);
+        throw new Error(`${response.status}: ${response.statusText}`);
+      }
+
+      const action: LoginSuccessAction = data;
+      localStorage.setItem('jwt', action.payload.jwt);
+      dispatch(action);
+
+      const prevPageUrl = new URL(window.location.href).searchParams.get(
+        'prev'
+      );
+      if (
+        prevPageUrl &&
+        prevPageUrl !== '/login' &&
+        prevPageUrl !== '/signup'
+      ) {
+        history.push(prevPageUrl);
+      } else {
+        history.push('/');
+      }
+    } catch (error) {
+      if ((error as { code?: number })?.code === -1) {
+        return;
+      }
+      dispatch(errorFromServer(error, loginSignupFunctionErrorCtx));
     }
   };

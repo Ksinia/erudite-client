@@ -130,6 +130,9 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     block_user: 'Block user',
     message_reported: 'Message reported',
     user_blocked: 'User blocked',
+    or: 'or',
+    apple_signin_failed: 'Apple Sign In failed. Please try again.',
+    confirm_delete_apple: 'Please confirm with Apple to delete your account',
     terms_of_service: 'Terms of Service',
     privacy_policy: 'Privacy Policy',
     rules: `Rules of the Game
@@ -290,6 +293,9 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     block_user: 'Заблокировать пользователя',
     message_reported: 'Жалоба отправлена',
     user_blocked: 'Пользователь заблокирован',
+    or: 'или',
+    apple_signin_failed: 'Не удалось войти через Apple. Попробуйте ещё раз.',
+    confirm_delete_apple: 'Подтвердите через Apple для удаления аккаунта',
     terms_of_service: 'Условия использования',
     privacy_policy: 'Политика конфиденциальности',
     rules: `Правила игры

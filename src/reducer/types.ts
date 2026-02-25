@@ -25,6 +25,7 @@ export type User = {
   email?: string;
   jwt: string;
   finishedGamesIds?: number[];
+  authMethod?: 'apple' | 'password';
 };
 
 type Turn = {

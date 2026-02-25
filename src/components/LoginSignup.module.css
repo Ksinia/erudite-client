@@ -47,6 +47,24 @@
     background-color: #303f9f;
 }
 
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 16px 0;
+}
+
+.dividerLine {
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.dividerText {
+    padding: 0 10px;
+    color: #999;
+    font-size: 14px;
+}
+
 .links {
     display: flex;
     justify-content: space-between;
