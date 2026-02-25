@@ -130,6 +130,8 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     block_user: 'Block user',
     message_reported: 'Message reported',
     user_blocked: 'User blocked',
+    terms_of_service: 'Terms of Service',
+    privacy_policy: 'Privacy Policy',
     rules: `Rules of the Game
     
       Between 2 to 8 players can participate in the game. 
@@ -288,6 +290,8 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     block_user: 'Заблокировать пользователя',
     message_reported: 'Жалоба отправлена',
     user_blocked: 'Пользователь заблокирован',
+    terms_of_service: 'Условия использования',
+    privacy_policy: 'Политика конфиденциальности',
     rules: `Правила игры
     
       В игре принимают участие от 2 до 8 человек. 

@@ -17,6 +17,7 @@ import { User } from './reducer/types';
 import { saveSubscriptionForUser } from './thunkActions/api-call';
 import Rules from './components/Rules';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
 import {
   addUserToSocket,
   AddUserToSocketAction,
@@ -86,6 +87,7 @@ class App extends Component<Props> {
           <Route path="/confirm-email" component={ConfirmEmail} />
           <Route path="/rules" component={Rules} />
           <Route path="/privacy" component={PrivacyPolicy} />
+          <Route path="/terms" component={TermsOfService} />
           <Route path="/" component={LobbyContainer} />
         </Switch>
       </div>,
@@ -94,6 +96,10 @@ class App extends Component<Props> {
         <a href="https://ksinia.net/cv/">Ksenia Gulyaeva</a>{' '}
         {new Date().getFullYear()},{' '}
         <a href="https://github.com/Ksinia/erudite-client">Source Code</a>
+        {' | '}
+        <a href="/privacy">Privacy</a>
+        {' | '}
+        <a href="/terms">Terms</a>
       </footer>,
     ];
   }

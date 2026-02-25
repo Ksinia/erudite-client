@@ -91,6 +91,17 @@ export default function LoginSignup(props: OwnProps) {
             </>
           )}
         </div>
+        {props.isSignUp && (
+          <div className={styles.legalLinks}>
+            <Link to="/terms">
+              <TranslationContainer translationKey="terms_of_service" />
+            </Link>
+            {' | '}
+            <Link to="/privacy">
+              <TranslationContainer translationKey="privacy_policy" />
+            </Link>
+          </div>
+        )}
       </form>
     </div>
   );
