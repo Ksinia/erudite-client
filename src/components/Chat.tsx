@@ -8,7 +8,10 @@ import './Chat.css';
 import { backendUrl } from '../runtime';
 import { clearMessages, ClearMessagesAction } from '../reducer/chat';
 import { sendChatMessageWithAck } from '../thunkActions/chat';
-import { addGameToSocket } from '../reducer/outgoingMessages';
+import {
+  addGameToSocket,
+  AddGameToSocketAction,
+} from '../reducer/outgoingMessages';
 import TranslationContainer from './Translation/TranslationContainer';
 
 interface OwnProps {
@@ -17,7 +20,11 @@ interface OwnProps {
   gamePhase: string;
 }
 interface DispatchProps {
-  dispatch: ThunkDispatch<RootState, unknown, ClearMessagesAction>;
+  dispatch: ThunkDispatch<
+    RootState,
+    unknown,
+    ClearMessagesAction | AddGameToSocketAction
+  >;
 }
 interface StateProps {
   user: User | null;

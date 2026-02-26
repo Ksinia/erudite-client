@@ -1,10 +1,13 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { RootState } from '../reducer';
 import { appleSignIn } from '../thunkActions/authorization';
 
 export default function AppleSignInButton() {
-  const dispatch = useDispatch();
+  const dispatch: ThunkDispatch<RootState, unknown, AnyAction> = useDispatch();
   const history = useHistory();
 
   if (!window.AppleID) return null;
