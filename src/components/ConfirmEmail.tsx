@@ -8,6 +8,7 @@ import { RootState } from '../store';
 import { ErrorLoadedAction, LogOutAction } from '../reducer/auth';
 import { LoginOrSignupErrorAction } from '../reducer/error';
 import TranslationContainer from './Translation/TranslationContainer';
+import styles from './LoginSignup.module.css';
 
 interface DispatchProps {
   dispatch: ThunkDispatch<
@@ -36,5 +37,11 @@ export default function ConfirmEmail({ history, dispatch }: Props) {
     };
     confirmEmail();
   }, [jwtFromUrl, history, dispatch]);
-  return <TranslationContainer translationKey="loading" />;
+  return (
+    <div className={styles.container}>
+      <p className={styles.title}>
+        <TranslationContainer translationKey="loading" />
+      </p>
+    </div>
+  );
 }

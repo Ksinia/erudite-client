@@ -7,6 +7,7 @@ import { RootState } from '../reducer';
 import { User } from '../reducer/types';
 import { clearError, ClearErrorAction } from '../reducer/error';
 import TranslationContainer from './Translation/TranslationContainer';
+import styles from './LoginSignup.module.css';
 
 interface StateProps {
   user: User | null;
@@ -65,32 +66,40 @@ class ForgotPassword extends Component<Props, State> {
 
   render() {
     return (
-      <div>
-        <TranslationContainer translationKey="enter_login_or_email" />
-        <form onSubmit={this.onSubmit}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>
+          <TranslationContainer translationKey="enter_login_or_email" />
+        </h1>
+        <form onSubmit={this.onSubmit} noValidate>
           <label>
-            <TranslationContainer translationKey="login_or_email" />:
+            <TranslationContainer translationKey="login_or_email" />
+            <input
+              className={styles.input}
+              name="name"
+              autoFocus
+              onChange={this.onChange}
+              value={this.state.name}
+            />
           </label>
-          <input
-            name="name"
-            onChange={this.onChange}
-            value={this.state.name}
-          ></input>
-          <button>
+          {this.state.errorKey && (
+            <p className={styles.errorMessage}>
+              <TranslationContainer translationKey={this.state.errorKey} />
+            </p>
+          )}
+          {this.state.result === 'Link generated' && (
+            <p>
+              <TranslationContainer translationKey="link_generated" />
+            </p>
+          )}
+          {this.state.result === 'Link sent' && (
+            <p>
+              <TranslationContainer translationKey="link_sent" />
+            </p>
+          )}
+          <button type="submit" className={styles.submitButton}>
             <TranslationContainer translationKey="confirm" />
           </button>
         </form>
-        {this.state.result === 'Link generated' && (
-          <TranslationContainer translationKey="link_generated" />
-        )}
-        {this.state.result === 'Link sent' && (
-          <TranslationContainer translationKey="link_sent" />
-        )}
-        {this.state.errorKey && (
-          <p style={{ color: 'red' }}>
-            <TranslationContainer translationKey={this.state.errorKey} />
-          </p>
-        )}
       </div>
     );
   }
