@@ -108,8 +108,14 @@ export const appleSignIn =
         throw new Error('apple_signin_failed');
       }
 
+      const clientId = process.env.REACT_APP_APPLE_SERVICE_ID;
+      if (!clientId) {
+        console.error('REACT_APP_APPLE_SERVICE_ID is not configured');
+        throw new Error('apple_signin_failed');
+      }
+
       window.AppleID.auth.init({
-        clientId: process.env.REACT_APP_APPLE_SERVICE_ID || '',
+        clientId,
         scope: 'name email',
         redirectURI: window.location.origin,
         usePopup: true,
@@ -156,9 +162,11 @@ export const appleSignIn =
         history.push('/');
       }
     } catch (error) {
-      if ((error as { code?: number })?.code === -1) {
+      const appleError = error as { error?: string };
+      if (appleError?.error === 'popup_closed_by_user') {
         return;
       }
+      console.error('Apple sign-in error:', error);
       dispatch(errorFromServer(error, loginSignupFunctionErrorCtx));
     }
   };
