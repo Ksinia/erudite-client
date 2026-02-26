@@ -5,6 +5,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../reducer';
 import { appleSignIn } from '../thunkActions/authorization';
+import TranslationContainer from './Translation/TranslationContainer';
 
 export default function AppleSignInButton() {
   const dispatch: ThunkDispatch<RootState, unknown, AnyAction> = useDispatch();
@@ -37,7 +38,7 @@ export default function AppleSignInButton() {
           fill="white"
         />
       </svg>
-      Sign in with Apple
+      <TranslationContainer translationKey="sign_in_with_apple" />
     </button>
   );
 }
