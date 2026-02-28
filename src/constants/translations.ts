@@ -121,7 +121,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     share_message: 'Join my Erudit game!',
     share_message_started: 'Check out my Erudit game!',
     expand_delete_account: 'Delete account',
-    collapse_delete_account: 'Cancel account deletion',
+    collapse_delete_account: 'Hide account deletion',
     confirm_delete_account:
       'This action is permanent. All your personal data will be deleted. Your game history will be preserved anonymously. Are you sure?',
     enter_password_to_delete: 'Enter your password to confirm account deletion',
@@ -284,7 +284,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     share_message: 'Присоединяйся к моей игре в Эрудит!',
     share_message_started: 'Смотри мою игру в Эрудит!',
     expand_delete_account: 'Удалить аккаунт',
-    collapse_delete_account: 'Отменить удаление аккаунта',
+    collapse_delete_account: 'Скрыть удаление аккаунта',
     confirm_delete_account:
       'Это действие необратимо. Все ваши персональные данные будут удалены. История игр будет сохранена анонимно. Вы уверены?',
     enter_password_to_delete:
