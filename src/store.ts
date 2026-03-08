@@ -14,6 +14,7 @@ import {
   addUserToSocket,
   enterLobby,
 } from './reducer/outgoingMessages';
+import { refreshTokens } from './thunkActions/authorization';
 
 const socket = io(backendUrl, {
   path: '/socket',
@@ -77,13 +78,28 @@ socket.on('disconnect', () => {
   store.dispatch(socketDisconnected());
 });
 
-// Add comprehensive logging for incoming socket messages
+let isRefreshing = false;
+
 socket.on('message', (message: any) => {
   console.log('🟢 INCOMING SOCKET MESSAGE:', {
     type: message?.type,
     payload: message?.payload,
     timestamp: new Date().toISOString(),
   });
+
+  if (message?.type === 'TOKEN_EXPIRED' && !isRefreshing) {
+    isRefreshing = true;
+    refreshTokens().then((result) => {
+      isRefreshing = false;
+      if (result) {
+        localStorage.setItem('jwt', result.jwt);
+        store.dispatch(addUserToSocket(result.jwt));
+      } else {
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('refreshToken');
+      }
+    });
+  }
 });
 
 // Log socket errors

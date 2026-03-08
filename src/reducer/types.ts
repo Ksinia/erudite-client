@@ -24,6 +24,7 @@ export type User = {
   name: string;
   email?: string;
   jwt: string;
+  refreshToken?: string;
   finishedGamesIds?: number[];
   authMethod?: 'apple' | 'password';
 };

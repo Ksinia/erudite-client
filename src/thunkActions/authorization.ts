@@ -51,6 +51,9 @@ export const loginSignupFunction =
       }
       const action: LoginSuccessAction = JSON.parse(response.text);
       localStorage.setItem('jwt', action.payload.jwt);
+      if (action.payload.refreshToken) {
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+      }
       dispatch(action);
 
       if (type === 'signup') {
@@ -79,6 +82,28 @@ export const loginSignupFunction =
     }
   };
 
+export async function refreshTokens(): Promise<{
+  jwt: string;
+  refreshToken: string;
+} | null> {
+  const refreshToken = localStorage.getItem('refreshToken');
+  if (!refreshToken) return null;
+  try {
+    const response = await fetch(`${baseUrl}/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    localStorage.setItem('jwt', data.payload.jwt);
+    localStorage.setItem('refreshToken', data.payload.refreshToken);
+    return { jwt: data.payload.jwt, refreshToken: data.payload.refreshToken };
+  } catch {
+    return null;
+  }
+}
+
 export const getProfileFetch =
   (jwt: string): MyThunkAction<LoginSuccessAction> =>
   async (dispatch) => {
@@ -90,10 +115,26 @@ export const getProfileFetch =
           .set('Authorization', `Bearer ${jwt}`);
         const action: LoginSuccessAction = JSON.parse(response.text);
         dispatch(action);
-      } catch (error) {
-        dispatch(errorFromServer(error, 'getProfileFetch'));
-        // TODO: check if it is needed
+      } catch (error: any) {
+        if (error?.status === 401) {
+          const refreshed = await refreshTokens();
+          if (refreshed) {
+            try {
+              const retryResponse = await superagent
+                .get(url)
+                .set('Authorization', `Bearer ${refreshed.jwt}`);
+              const action: LoginSuccessAction = JSON.parse(retryResponse.text);
+              dispatch(action);
+              return;
+            } catch (retryError) {
+              dispatch(errorFromServer(retryError, 'getProfileFetch'));
+            }
+          }
+        } else {
+          dispatch(errorFromServer(error, 'getProfileFetch'));
+        }
         localStorage.removeItem('jwt');
+        localStorage.removeItem('refreshToken');
       }
     }
   };
@@ -147,6 +188,9 @@ export const appleSignIn =
 
       const action: LoginSuccessAction = data;
       localStorage.setItem('jwt', action.payload.jwt);
+      if (action.payload.refreshToken) {
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+      }
       dispatch(action);
 
       const prevPageUrl = new URL(window.location.href).searchParams.get(

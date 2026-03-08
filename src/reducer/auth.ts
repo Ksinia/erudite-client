@@ -34,6 +34,7 @@ export default createReducer<User | null>(null, (builder) =>
     .addCase(loginSuccess, (_, action) => action.payload)
     .addCase(logOut, () => {
       localStorage.removeItem('jwt');
+      localStorage.removeItem('refreshToken');
       return null;
     })
     .addCase(errorLoaded, () => null)
