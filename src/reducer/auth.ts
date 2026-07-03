@@ -29,6 +29,13 @@ export const updateEmail = createAction<
 
 export type UpdateEmailAction = ReturnType<typeof updateEmail>;
 
+export const tokenRefreshed = createAction<
+  string,
+  InternalMessageTypes.TOKEN_REFRESHED
+>(InternalMessageTypes.TOKEN_REFRESHED);
+
+export type TokenRefreshedAction = ReturnType<typeof tokenRefreshed>;
+
 export default createReducer<User | null>(null, (builder) =>
   builder
     .addCase(loginSuccess, (_, action) => action.payload)
@@ -45,6 +52,11 @@ export default createReducer<User | null>(null, (builder) =>
     .addCase(updateEmail, (state, action) => {
       if (state) {
         state.email = action.payload;
+      }
+    })
+    .addCase(tokenRefreshed, (state, action) => {
+      if (state) {
+        state.jwt = action.payload;
       }
     })
 );
