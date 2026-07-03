@@ -37,7 +37,6 @@ export default createReducer<User | null>(null, (builder) =>
       localStorage.removeItem('refreshToken');
       return null;
     })
-    .addCase(errorLoaded, () => null)
     .addCase(InternalMessageTypes.LOGIN_OR_SIGNUP_ERROR, () => {
       localStorage.removeItem('jwt');
       return null;
