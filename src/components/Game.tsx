@@ -53,6 +53,8 @@ function Game(props: OwnProps) {
           userBoard={props.userBoard}
           values={letterValues[props.game.language]}
           wildCardOnBoard={props.wildCardOnBoard}
+          boardType={props.game.boardType}
+          boardOrigin={props.game.boardOrigin}
         />
       </div>
 

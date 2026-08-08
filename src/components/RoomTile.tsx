@@ -86,6 +86,7 @@ class RoomTile extends Component<Props> {
             </p>
             <p className="language">
               {language.toUpperCase()}
+              {this.props.room.boardType === 'infinite' && ' ∞'}
               <br />
               {maxPlayers}
             </p>

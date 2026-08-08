@@ -16,12 +16,14 @@ interface StateProps {
   lobby: GameType[];
   user: User | null;
   socketConnectionState: boolean;
+  locale: string;
 }
 
 type State = {
   formFields: {
     maxPlayers: number;
     language: string;
+    boardType: string;
   };
   sendingFormEnabled: boolean;
 };
@@ -47,6 +49,7 @@ class LobbyContainer extends Component<Props, State> {
     formFields: {
       maxPlayers: 2,
       language: this.getLanguage(),
+      boardType: 'classic',
     },
     sendingFormEnabled: true,
   };
@@ -133,6 +136,7 @@ class LobbyContainer extends Component<Props, State> {
         onChange={this.onChange}
         onSubmit={this.onSubmit}
         values={this.state.formFields}
+        locale={this.props.locale}
         userTurnGames={games.userTurn}
         otherTurnGames={games.otherTurn}
         userWaitingGames={games.userWaiting}
@@ -152,6 +156,7 @@ function mapStateToProps(state: RootState): StateProps {
     lobby: state.lobby,
     user: state.user,
     socketConnectionState: state.socketConnectionState,
+    locale: state.translation.locale,
   };
 }
 export default connect(mapStateToProps)(LobbyContainer);

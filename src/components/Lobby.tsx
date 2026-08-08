@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { User, Game } from '../reducer/types';
+import { TRANSLATIONS } from '../constants/translations';
 import RoomTile from './RoomTile';
 import TranslationContainer from './Translation/TranslationContainer';
 
@@ -11,7 +12,8 @@ type OwnProps = {
       | React.ChangeEvent<HTMLInputElement>
   ) => void;
   onSubmit: (event: React.SyntheticEvent) => Promise<void>;
-  values: { maxPlayers: number; language: string };
+  values: { maxPlayers: number; language: string; boardType: string };
+  locale: string;
   userTurnGames: Game[];
   otherTurnGames: Game[];
   userWaitingGames: Game[];
@@ -54,6 +56,27 @@ function Lobby(props: OwnProps) {
             <option value="ru">ru</option>
             <option value="en">en</option>
           </select>
+          {props.user.infiniteBoardEnabled && (
+            <>
+              <label htmlFor="boardType">
+                {' '}
+                <TranslationContainer translationKey="board_type" />
+              </label>
+              <select
+                id="boardType"
+                name="boardType"
+                onChange={props.onChange}
+                value={props.values.boardType}
+              >
+                <option value="classic">
+                  {TRANSLATIONS[props.locale].board_classic}
+                </option>
+                <option value="infinite">
+                  {TRANSLATIONS[props.locale].board_infinite}
+                </option>
+              </select>
+            </>
+          )}
 
           <button
             style={{ margin: '20px' }}

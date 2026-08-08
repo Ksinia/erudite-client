@@ -103,14 +103,21 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & OwnProps;
 
 class GameContainer extends Component<Props, State> {
-  emptyUserBoard = Array(15)
-    .fill(null)
-    .map((_) => Array(15).fill(''));
+  // the empty overlay must match the server board dimensions,
+  // which can change between turns on an infinite board
+  makeEmptyUserBoard = (): string[][] => {
+    const board = this.props.game && this.props.game.board;
+    const height = (board && board.length) || 15;
+    const width = (board && board[0] && board[0].length) || 15;
+    return Array(height)
+      .fill(null)
+      .map((_) => Array(width).fill(''));
+  };
 
   readonly state: State = {
     chosenLetterIndex: null,
     userLetters: [],
-    userBoard: this.emptyUserBoard.map((row) => row.slice()),
+    userBoard: this.makeEmptyUserBoard(),
     wildCardLetters: [],
     wildCardOnBoard: {},
   };
@@ -243,7 +250,7 @@ class GameContainer extends Component<Props, State> {
   returnLetters = () => {
     this.setState({
       ...this.state,
-      userBoard: this.emptyUserBoard.map((row) => row.slice()),
+      userBoard: this.makeEmptyUserBoard(),
       userLetters: getPreviousLetters(
         this.state.userBoard,
         this.state.wildCardOnBoard,
@@ -373,6 +380,7 @@ class GameContainer extends Component<Props, State> {
           maxPlayers: this.props.game.maxPlayers,
           language: this.props.game.language,
           players: this.props.game.turnOrder,
+          boardType: this.props.game.boardType,
         });
       this.props.history.push(`/game/${response.body.id}`);
     } catch (error) {
@@ -389,13 +397,13 @@ class GameContainer extends Component<Props, State> {
       this.setState({
         ...this.state,
         userLetters,
-        userBoard: this.emptyUserBoard.map((row) => row.slice()),
+        userBoard: this.makeEmptyUserBoard(),
         wildCardLetters: [],
         wildCardOnBoard: {},
       });
     }
   }
-  componentDidUpdate(prevProps: StateProps) {
+  componentDidUpdate(prevProps: Props) {
     if (
       this.props !== prevProps &&
       this.props.user &&
@@ -405,7 +413,52 @@ class GameContainer extends Component<Props, State> {
       // depending on the length of the updated user hand and other conditions
 
       const game = this.props.game;
-      const { userBoard, wildCardOnBoard, userLetters } = this.state;
+      let { userBoard, wildCardOnBoard } = this.state;
+      let wildCardLettersInState = this.state.wildCardLetters;
+      const { userLetters } = this.state;
+
+      // when an infinite board grows, the overlay must be resized and
+      // in-progress letters shifted by the origin delta to stay on their cells
+      if (
+        game.board &&
+        (userBoard.length !== game.board.length ||
+          (userBoard[0] || []).length !== game.board[0].length)
+      ) {
+        const dy =
+          ((game.boardOrigin && game.boardOrigin.y) || 0) -
+          ((prevProps.game.boardOrigin && prevProps.game.boardOrigin.y) || 0);
+        const dx =
+          ((game.boardOrigin && game.boardOrigin.x) || 0) -
+          ((prevProps.game.boardOrigin && prevProps.game.boardOrigin.x) || 0);
+        const resized = this.makeEmptyUserBoard();
+        userBoard.forEach((row, y) =>
+          row.forEach((cell, x) => {
+            if (
+              cell !== '' &&
+              resized[y + dy] &&
+              resized[y + dy][x + dx] !== undefined
+            ) {
+              resized[y + dy][x + dx] = cell;
+            }
+          })
+        );
+        const movedWildCards: WildCardOnBoard = {};
+        Object.keys(wildCardOnBoard).forEach((yKey) => {
+          const y = parseInt(yKey);
+          Object.keys(wildCardOnBoard[y]).forEach((xKey) => {
+            const x = parseInt(xKey);
+            movedWildCards[y + dy] = movedWildCards[y + dy] || {};
+            movedWildCards[y + dy][x + dx] = wildCardOnBoard[y][x];
+          });
+        });
+        userBoard = resized;
+        wildCardOnBoard = movedWildCards;
+        wildCardLettersInState = wildCardLettersInState.map((letterObject) => ({
+          ...letterObject,
+          y: letterObject.y + dy,
+          x: letterObject.x + dx,
+        }));
+      }
 
       // if player has fewer letters than on server, just add letters from server
       const prevLetters = getPreviousLetters(
@@ -423,19 +476,22 @@ class GameContainer extends Component<Props, State> {
         this.setState({
           ...this.state,
           userLetters: updatedUserLetters,
+          userBoard,
+          wildCardOnBoard,
+          wildCardLetters: wildCardLettersInState,
         });
         // if player's letters are same as on server, don't change anything except for collisions between user letters on the board and other letters on the board
       } else if (
         JSON.stringify(prevLetters.slice().sort()) ===
         JSON.stringify(game.letters[this.props.user.id].slice().sort())
       ) {
-        let wildCardLetters = this.state.wildCardLetters.slice();
+        let wildCardLetters = wildCardLettersInState.slice();
         const updatedUserBoard = userBoard.map((line, yIndex) =>
           line.map((cell, xIndex) => {
             if (cell && game.board[yIndex][xIndex] !== null) {
               userLetters.push(cell[0]);
               if (cell[0] === '*') {
-                wildCardLetters = this.state.wildCardLetters.filter(
+                wildCardLetters = wildCardLetters.filter(
                   (letterObject) =>
                     letterObject.x !== xIndex || letterObject.y !== yIndex
                 );
@@ -451,6 +507,7 @@ class GameContainer extends Component<Props, State> {
           userLetters,
           userBoard: updatedUserBoard,
           wildCardLetters,
+          wildCardOnBoard,
         });
       }
       // if player's letters are different (or more) than on server, update player's letters
@@ -459,7 +516,7 @@ class GameContainer extends Component<Props, State> {
         this.setState({
           ...this.state,
           userLetters,
-          userBoard: this.emptyUserBoard.map((row) => row.slice()),
+          userBoard: this.makeEmptyUserBoard(),
           wildCardLetters: [],
           wildCardOnBoard: {},
         });

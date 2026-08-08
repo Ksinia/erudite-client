@@ -24,6 +24,10 @@ If you want to install backend for this app:
 - Run npm install for the backend
 - Set up PostgreSQL database
 
+## Infinite board mode
+
+When the server enables the feature for the logged-in user, the new game form offers a board type selector: classic 15x15 or infinite. An infinite board grows as words approach its edges and is rendered in a scrollable viewport that keeps its position when the board expands. The bonus pattern repeats across the board and the start star marks the centre of the original field.
+
 ## Technologies used
 
 - react

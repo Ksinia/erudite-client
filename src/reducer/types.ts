@@ -27,6 +27,7 @@ export type User = {
   refreshToken?: string;
   finishedGamesIds?: number[];
   authMethod?: 'apple' | 'password';
+  infiniteBoardEnabled?: boolean;
 };
 
 type Turn = {
@@ -60,6 +61,8 @@ export interface Game {
   };
   board: (string | null)[][];
   previousBoard: (string | null)[][];
+  boardType?: 'classic' | 'infinite';
+  boardOrigin?: { x: number; y: number };
   putLetters: string[];
   lettersChanged: boolean;
   createdAt: string;
