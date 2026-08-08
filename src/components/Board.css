@@ -5,12 +5,25 @@
   height: 31.5em;
 }
 
+/*
+ * The window onto an infinite board keeps the footprint of a classic one,
+ * so the letters below it stay in view. The board scrolls inside it, so a
+ * larger window buys nothing but a longer reach to the rack.
+ */
 .board-viewport.infinite {
   overflow: auto;
-  max-width: 95vw;
-  max-height: 80vh;
+  width: min(90vmin, 31.5em);
+  height: min(90vmin, 31.5em);
   margin: 1em auto;
   border: 1px solid rgb(211, 211, 211);
+}
+
+/* a little more room where the screen can spare it */
+@media (min-width: 60em) and (min-height: 50em) {
+  .board-viewport.infinite {
+    width: min(90vmin, 38em);
+    height: min(90vmin, 38em);
+  }
 }
 
 .board-viewport.infinite .table-board {
