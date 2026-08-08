@@ -24,6 +24,13 @@ type OwnProps = {
 };
 
 function Lobby(props: OwnProps) {
+  // an <option> cannot hold a component, so these two are looked up directly;
+  // fall back the way TranslationContainer does when a locale is missing
+  const strings = TRANSLATIONS[props.locale] || TRANSLATIONS.en_US;
+  const boardTypeNames = {
+    classic: strings.board_classic,
+    infinite: strings.board_infinite,
+  };
   return (
     <div>
       <p>
@@ -68,12 +75,8 @@ function Lobby(props: OwnProps) {
                 onChange={props.onChange}
                 value={props.values.boardType}
               >
-                <option value="classic">
-                  {TRANSLATIONS[props.locale].board_classic}
-                </option>
-                <option value="infinite">
-                  {TRANSLATIONS[props.locale].board_infinite}
-                </option>
+                <option value="classic">{boardTypeNames.classic}</option>
+                <option value="infinite">{boardTypeNames.infinite}</option>
               </select>
             </>
           )}

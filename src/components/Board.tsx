@@ -159,14 +159,18 @@ class Board extends Component<Props> {
     const prevOrigin = prevProps.boardOrigin || { x: 0, y: 0 };
     const origin = this.props.boardOrigin || { x: 0, y: 0 };
     const columns = this.props.board && this.props.board[0].length;
+    const rows = this.props.board && this.props.board.length;
     if (
       viewport &&
       columns &&
+      rows &&
       (origin.x !== prevOrigin.x || origin.y !== prevOrigin.y)
     ) {
-      const cellPx = viewport.scrollWidth / columns;
-      viewport.scrollLeft += (origin.x - prevOrigin.x) * cellPx;
-      viewport.scrollTop += (origin.y - prevOrigin.y) * cellPx;
+      // each axis carries its own border overhead, so measure them apart
+      viewport.scrollLeft +=
+        ((origin.x - prevOrigin.x) * viewport.scrollWidth) / columns;
+      viewport.scrollTop +=
+        ((origin.y - prevOrigin.y) * viewport.scrollHeight) / rows;
     }
   }
 
@@ -220,7 +224,11 @@ class Board extends Component<Props> {
                             ${
                               bonus ? bonus[0] : 'ordinary'
                             } user-letter-${!!userLetter} new-letter-${
-                              !!boardLetter && !previousBoard[yIndex][xIndex]
+                              !!boardLetter &&
+                              !(
+                                previousBoard[yIndex] &&
+                                previousBoard[yIndex][xIndex]
+                              )
                             }`}
                           >
                             <p className="multiply">{bonus && bonus[1]}</p>

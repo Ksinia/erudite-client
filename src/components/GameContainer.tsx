@@ -134,6 +134,12 @@ class GameContainer extends Component<Props, State> {
     const x = parseInt(event.currentTarget.dataset.x);
     const y = parseInt(event.currentTarget.dataset.y);
 
+    // the rendered board can be one growth ahead of the local overlay,
+    // so a cell in the new rows or columns has nothing to place into yet
+    if (!this.state.userBoard[y] || this.state.userBoard[y][x] === undefined) {
+      return;
+    }
+
     let updatedUserBoard = this.state.userBoard.map((row) => row.slice());
     let updUserLetters = this.state.userLetters.slice();
     let wildCardLetters = this.state.wildCardLetters.slice();
@@ -403,12 +409,77 @@ class GameContainer extends Component<Props, State> {
       });
     }
   }
-  componentDidUpdate(prevProps: Props) {
+  /**
+   * Keeps the local overlay the same shape as the server board. When an
+   * infinite board grows, in-progress letters move by the origin delta so
+   * they stay on the cells they were placed on.
+   */
+  resizeUserBoard(prevProps: Props): {
+    userBoard: string[][];
+    wildCardOnBoard: WildCardOnBoard;
+    wildCardLetters: { letter: string; x: number; y: number }[];
+  } | null {
+    const game = this.props.game;
+    const { userBoard, wildCardOnBoard, wildCardLetters } = this.state;
     if (
-      this.props !== prevProps &&
-      this.props.user &&
-      this.props.game.turnOrder.includes(this.props.user.id)
+      !game.board ||
+      (userBoard.length === game.board.length &&
+        (userBoard[0] || []).length === game.board[0].length)
     ) {
+      return null;
+    }
+    const dy =
+      ((game.boardOrigin && game.boardOrigin.y) || 0) -
+      ((prevProps.game.boardOrigin && prevProps.game.boardOrigin.y) || 0);
+    const dx =
+      ((game.boardOrigin && game.boardOrigin.x) || 0) -
+      ((prevProps.game.boardOrigin && prevProps.game.boardOrigin.x) || 0);
+    const resized = this.makeEmptyUserBoard();
+    userBoard.forEach((row, y) =>
+      row.forEach((cell, x) => {
+        if (
+          cell !== '' &&
+          resized[y + dy] &&
+          resized[y + dy][x + dx] !== undefined
+        ) {
+          resized[y + dy][x + dx] = cell;
+        }
+      })
+    );
+    const movedWildCards: WildCardOnBoard = {};
+    Object.keys(wildCardOnBoard).forEach((yKey) => {
+      const y = parseInt(yKey);
+      Object.keys(wildCardOnBoard[y]).forEach((xKey) => {
+        const x = parseInt(xKey);
+        if (resized[y + dy] && resized[y + dy][x + dx] !== undefined) {
+          movedWildCards[y + dy] = movedWildCards[y + dy] || {};
+          movedWildCards[y + dy][x + dx] = wildCardOnBoard[y][x];
+        }
+      });
+    });
+    return {
+      userBoard: resized,
+      wildCardOnBoard: movedWildCards,
+      wildCardLetters: wildCardLetters.map((letterObject) => ({
+        ...letterObject,
+        y: letterObject.y + dy,
+        x: letterObject.x + dx,
+      })),
+    };
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    // the overlay follows the board for everyone, including players who only
+    // watch the game: their clicks would otherwise land outside it
+    const resizedState = this.resizeUserBoard(prevProps);
+    const isPlayer =
+      this.props.user && this.props.game.turnOrder.includes(this.props.user.id);
+    if (resizedState && !isPlayer) {
+      this.setState({ ...this.state, ...resizedState });
+      return;
+    }
+
+    if (this.props !== prevProps && isPlayer && this.props.user) {
       // update state of the component
       // depending on the length of the updated user hand and other conditions
 
@@ -417,47 +488,10 @@ class GameContainer extends Component<Props, State> {
       let wildCardLettersInState = this.state.wildCardLetters;
       const { userLetters } = this.state;
 
-      // when an infinite board grows, the overlay must be resized and
-      // in-progress letters shifted by the origin delta to stay on their cells
-      if (
-        game.board &&
-        (userBoard.length !== game.board.length ||
-          (userBoard[0] || []).length !== game.board[0].length)
-      ) {
-        const dy =
-          ((game.boardOrigin && game.boardOrigin.y) || 0) -
-          ((prevProps.game.boardOrigin && prevProps.game.boardOrigin.y) || 0);
-        const dx =
-          ((game.boardOrigin && game.boardOrigin.x) || 0) -
-          ((prevProps.game.boardOrigin && prevProps.game.boardOrigin.x) || 0);
-        const resized = this.makeEmptyUserBoard();
-        userBoard.forEach((row, y) =>
-          row.forEach((cell, x) => {
-            if (
-              cell !== '' &&
-              resized[y + dy] &&
-              resized[y + dy][x + dx] !== undefined
-            ) {
-              resized[y + dy][x + dx] = cell;
-            }
-          })
-        );
-        const movedWildCards: WildCardOnBoard = {};
-        Object.keys(wildCardOnBoard).forEach((yKey) => {
-          const y = parseInt(yKey);
-          Object.keys(wildCardOnBoard[y]).forEach((xKey) => {
-            const x = parseInt(xKey);
-            movedWildCards[y + dy] = movedWildCards[y + dy] || {};
-            movedWildCards[y + dy][x + dx] = wildCardOnBoard[y][x];
-          });
-        });
-        userBoard = resized;
-        wildCardOnBoard = movedWildCards;
-        wildCardLettersInState = wildCardLettersInState.map((letterObject) => ({
-          ...letterObject,
-          y: letterObject.y + dy,
-          x: letterObject.x + dx,
-        }));
+      if (resizedState) {
+        userBoard = resizedState.userBoard;
+        wildCardOnBoard = resizedState.wildCardOnBoard;
+        wildCardLettersInState = resizedState.wildCardLetters;
       }
 
       // if player has fewer letters than on server, just add letters from server
