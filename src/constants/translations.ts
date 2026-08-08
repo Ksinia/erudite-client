@@ -60,6 +60,8 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     waiting_for: 'Waiting for {} more players',
     no_room: 'No such room',
     no_game: 'No such game',
+    server_unavailable: 'Cannot reach the server. Check your connection.',
+    retry: 'Try again',
     letters: 'Letters left in the bag: ',
     already_signed_up: 'Already have an account? Log in',
     no_account: "Don't have an account? Sign Up",
@@ -225,6 +227,9 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     waiting_for: 'Ожидание еще {} игроков',
     no_room: 'Нет комнаты с таким номером',
     no_game: 'Нет игры с таким номером',
+    server_unavailable:
+      'Не удаётся связаться с сервером. Проверьте соединение.',
+    retry: 'Повторить',
     letters: 'Осталось букв: ',
     already_signed_up: 'Уже есть аккаунт? Войдите',
     no_account: 'Нет аккаунта? Зарегистрируйтесь',

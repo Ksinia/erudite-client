@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducer';
 import { Game, User } from '../reducer/types';
 import { fetchGame } from '../thunkActions/game';
+import { GameLoadFailure } from '../reducer/gameLoadState';
 import {
   addGameToSocket,
   AddGameToSocketAction,
@@ -28,6 +29,7 @@ interface DispatchProps {
 }
 interface StateProps {
   games: { [key: number]: Game };
+  gameLoadState: { [key: number]: GameLoadFailure };
   socketConnectionState: boolean;
   user: User | null;
 }
@@ -62,6 +64,15 @@ class GameHandler extends Component<Props, State> {
     if (!prevProps.socketConnectionState && this.props.socketConnectionState) {
       this.props.dispatch(addGameToSocket(this.state.gameId));
     }
+    // the session is restored asynchronously, so the first fetch on a direct
+    // page load can go out anonymously; repeat it once the token is there
+    const prevJwt = prevProps.user && prevProps.user.jwt;
+    const jwt = this.props.user && this.props.user.jwt;
+    if (jwt && jwt !== prevJwt) {
+      this.props.dispatch(fetchGame(this.state.gameId, jwt));
+      this.props.socketConnectionState &&
+        this.props.dispatch(addGameToSocket(this.state.gameId));
+    }
     if (!this.hasScrolledToBanner && this.bannerRef.current) {
       this.hasScrolledToBanner = true;
       requestAnimationFrame(() => {
@@ -92,15 +103,42 @@ class GameHandler extends Component<Props, State> {
     this.props.dispatch(removeGameFromSocket(this.state.gameId));
   }
 
+  retryFetch = () => {
+    const jwt = this.props.user && this.props.user.jwt;
+    this.props.dispatch(fetchGame(this.state.gameId, jwt));
+  };
+
   render() {
+    const loadFailure = this.props.gameLoadState[this.state.gameId];
+    if (loadFailure === 'unavailable') {
+      return (
+        <div className="page-message">
+          <p>
+            <TranslationContainer translationKey="server_unavailable" />
+          </p>
+          <button onClick={this.retryFetch}>
+            <TranslationContainer translationKey="retry" />
+          </button>
+        </div>
+      );
+    }
+    if (
+      loadFailure === 'not_found' ||
+      this.props.games[this.state.gameId] === null
+    ) {
+      return (
+        <div className="page-message">
+          <p>
+            <TranslationContainer translationKey="no_game" />
+          </p>
+        </div>
+      );
+    }
     if (
       !this.props.games ||
       this.props.games[this.state.gameId] === undefined
     ) {
       return <TranslationContainer translationKey="loading" />;
-    }
-    if (this.props.games[this.state.gameId] === null) {
-      return <TranslationContainer translationKey="no_game" />;
     }
     const game = this.props.games[this.state.gameId];
     const banner = isMobile &&
@@ -171,6 +209,7 @@ class GameHandler extends Component<Props, State> {
 function MapStateToProps(state: RootState): StateProps {
   return {
     games: state.games,
+    gameLoadState: state.gameLoadState,
     socketConnectionState: state.socketConnectionState,
     user: state.user,
   };

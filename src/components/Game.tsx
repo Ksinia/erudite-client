@@ -42,6 +42,11 @@ function Game(props: OwnProps) {
         style={{ margin: 0, width: '100%', textAlign: 'center' }}
       >
         {props.game.id}
+        {props.game.boardType === 'infinite' && (
+          <span className="board-type-label">
+            ∞ <TranslationContainer translationKey="board_infinite" />
+          </span>
+        )}
         <ShareLink gameId={props.game.id} started />
       </p>
       <div className="board">

@@ -21,6 +21,11 @@ function Room(props: Props) {
           args={[String(props.room.id), String(props.room.maxPlayers)]}
         />{' '}
         ({props.room.language})
+        {props.room.boardType === 'infinite' && (
+          <span className="board-type-label">
+            ∞ <TranslationContainer translationKey="board_infinite" />
+          </span>
+        )}
         <ShareLink gameId={props.room.id} />
       </p>
       {props.room.users.length > 0 ? (
