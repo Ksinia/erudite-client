@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import superagent from 'superagent';
 import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl } from '../runtime';
+import { clientFeaturesHeader } from '../constants/clientFeatures';
 import './Game.css';
 import { RootState } from '../reducer';
 import { User, Game } from '../reducer/types';
@@ -38,6 +39,7 @@ class RoomContainer extends Component<Props> {
     try {
       await superagent
         .put(`${backendUrl}/join/${this.props.game.id}`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${this.props.user?.jwt}`);
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'onClickJoin'));

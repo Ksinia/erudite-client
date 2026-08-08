@@ -4,6 +4,7 @@ import { backendUrl } from '../runtime';
 import { MyThunkAction } from '../reducer/types';
 import { GameUpdatedAction } from '../reducer/games';
 import { gameLoadFailed, GameLoadFailedAction } from '../reducer/gameLoadState';
+import { clientFeaturesHeader } from '../constants/clientFeatures';
 import { errorFromServer } from './errorHandling';
 
 export const fetchGame =
@@ -13,14 +14,13 @@ export const fetchGame =
   ): MyThunkAction<GameUpdatedAction | GameLoadFailedAction> =>
   async (dispatch) => {
     try {
-      let response;
+      const request = superagent
+        .get(`${backendUrl}/game/${gameId}`)
+        .set(clientFeaturesHeader());
       if (jwt) {
-        response = await superagent
-          .get(`${backendUrl}/game/${gameId}`)
-          .set('Authorization', `Bearer ${jwt}`);
-      } else {
-        response = await superagent.get(`${backendUrl}/game/${gameId}`);
+        request.set('Authorization', `Bearer ${jwt}`);
       }
+      const response = await request;
       const action: GameUpdatedAction = JSON.parse(response.text);
       dispatch(action);
     } catch (error) {

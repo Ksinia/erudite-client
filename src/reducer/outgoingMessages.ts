@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
+import { CLIENT_FEATURES } from '../constants/clientFeatures';
 import { OutgoingMessageTypes } from '../constants/outgoingMessageTypes';
 
 export const addGameToSocket = createAction<
@@ -14,10 +15,14 @@ export const enterLobby = createAction<void, OutgoingMessageTypes.ENTER_LOBBY>(
 
 export type EnterLobbyAction = ReturnType<typeof enterLobby>;
 
-export const addUserToSocket = createAction<
-  string,
-  OutgoingMessageTypes.ADD_USER_TO_SOCKET
->(OutgoingMessageTypes.ADD_USER_TO_SOCKET);
+export const addUserToSocket = createAction(
+  OutgoingMessageTypes.ADD_USER_TO_SOCKET,
+  (jwt: string) => ({
+    // the server withholds games this build could not draw, see
+    // CLIENT_FEATURES in constants/clientFeatures.ts
+    payload: { jwt, features: CLIENT_FEATURES },
+  })
+);
 
 export type AddUserToSocketAction = ReturnType<typeof addUserToSocket>;
 

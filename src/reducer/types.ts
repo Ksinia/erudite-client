@@ -37,6 +37,8 @@ type Turn = {
   changedLetters: boolean;
 };
 
+export type SparseCell = [number, number, string];
+
 export interface Game {
   id: number;
   phase: string;
@@ -63,6 +65,10 @@ export interface Game {
   previousBoard: (string | null)[][];
   boardType?: 'classic' | 'infinite';
   boardOrigin?: { x: number; y: number };
+  // an infinite board travels as its occupied cells, see reducer/games.ts
+  boardSize?: { rows: number; cols: number };
+  boardCells?: SparseCell[];
+  previousBoardCells?: SparseCell[];
   putLetters: string[];
   lettersChanged: boolean;
   createdAt: string;
