@@ -102,6 +102,13 @@
   height: 100%;
   font-weight: 600;
   font-size: x-large;
+  /* the letter is the only content in normal flow, so without this it sits
+     on the first line box at the top of the cell, which shows as soon as the
+     type is smaller than the cell: on a phone, or on an infinite board that
+     keeps full size cells while the media query shrinks the type */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .multiply {
