@@ -147,3 +147,10 @@
   color: rgb(110, 110, 110);
   vertical-align: middle;
 }
+
+.board-type-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  margin: 0 0.6em;
+}

@@ -17,7 +17,6 @@ interface StateProps {
   lobby: GameType[];
   user: User | null;
   socketConnectionState: boolean;
-  locale: string;
 }
 
 type State = {
@@ -78,11 +77,20 @@ class LobbyContainer extends Component<Props, State> {
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLInputElement>
   ): void => {
+    const target = event.target;
+    // the board type is a switch between two named boards rather than a
+    // value the control carries
+    const value =
+      target instanceof HTMLInputElement && target.type === 'checkbox'
+        ? target.checked
+          ? 'infinite'
+          : 'classic'
+        : target.value;
     this.setState({
       ...this.state,
       formFields: {
         ...this.state.formFields,
-        [event.target.name]: event.target.value,
+        [target.name]: value,
       },
     });
   };
@@ -143,7 +151,6 @@ class LobbyContainer extends Component<Props, State> {
         onChange={this.onChange}
         onSubmit={this.onSubmit}
         values={this.state.formFields}
-        locale={this.props.locale}
         userTurnGames={games.userTurn}
         otherTurnGames={games.otherTurn}
         userWaitingGames={games.userWaiting}
@@ -163,7 +170,6 @@ function mapStateToProps(state: RootState): StateProps {
     lobby: state.lobby,
     user: state.user,
     socketConnectionState: state.socketConnectionState,
-    locale: state.translation.locale,
   };
 }
 export default connect(mapStateToProps)(LobbyContainer);

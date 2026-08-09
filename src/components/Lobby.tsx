@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { User, Game } from '../reducer/types';
-import { TRANSLATIONS } from '../constants/translations';
 import RoomTile from './RoomTile';
 import TranslationContainer from './Translation/TranslationContainer';
 
@@ -13,7 +12,6 @@ type OwnProps = {
   ) => void;
   onSubmit: (event: React.SyntheticEvent) => Promise<void>;
   values: { maxPlayers: number; language: string; boardType: string };
-  locale: string;
   userTurnGames: Game[];
   otherTurnGames: Game[];
   userWaitingGames: Game[];
@@ -24,13 +22,6 @@ type OwnProps = {
 };
 
 function Lobby(props: OwnProps) {
-  // an <option> cannot hold a component, so these two are looked up directly;
-  // fall back the way TranslationContainer does when a locale is missing
-  const strings = TRANSLATIONS[props.locale] || TRANSLATIONS.en_US;
-  const boardTypeNames = {
-    classic: strings.board_classic,
-    infinite: strings.board_infinite,
-  };
   return (
     <div>
       <p>
@@ -64,21 +55,16 @@ function Lobby(props: OwnProps) {
             <option value="en">en</option>
           </select>
           {props.user.infiniteBoardEnabled && (
-            <>
-              <label htmlFor="boardType">
-                {' '}
-                <TranslationContainer translationKey="board_type" />
-              </label>
-              <select
+            <label htmlFor="boardType" className="board-type-choice">
+              <input
                 id="boardType"
+                type="checkbox"
                 name="boardType"
+                checked={props.values.boardType === 'infinite'}
                 onChange={props.onChange}
-                value={props.values.boardType}
-              >
-                <option value="classic">{boardTypeNames.classic}</option>
-                <option value="infinite">{boardTypeNames.infinite}</option>
-              </select>
-            </>
+              />
+              <TranslationContainer translationKey="board_infinite_option" />
+            </label>
           )}
 
           <button
