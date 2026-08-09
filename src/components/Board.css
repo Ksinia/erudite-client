@@ -1,3 +1,12 @@
+/*
+ * A cell is the same size in both modes: an infinite board shows more of
+ * them, it does not draw them bigger. The size lives here so the two modes
+ * cannot drift apart, and so the infinite table can be sized from it.
+ */
+.board-viewport {
+  --cell-size: 2.1rem;
+}
+
 .table-board {
   margin: 1em auto;
   border-collapse: collapse;
@@ -29,20 +38,21 @@
   }
 }
 
+/* the grid is as large as the board, and the viewport scrolls over it */
 .board-viewport.infinite .table-board {
   margin: 0;
   table-layout: fixed;
-}
-
-.board-viewport.infinite .board-table-cell {
-  width: 2.1rem;
-  height: 2.1rem;
+  width: calc(var(--cell-size) * var(--board-cols, 15));
+  height: calc(var(--cell-size) * var(--board-rows, 15));
 }
 
 .board-table-cell {
   border: 1px solid rgb(211, 211, 211);
-  width: 2.1rem;
-  height: 2.1rem;
+  /* the size is the footprint, borders included, so a cell measures the same
+     whether the table lays itself out from the size or divides a fixed width */
+  box-sizing: border-box;
+  width: var(--cell-size);
+  height: var(--cell-size);
   margin: 0;
   padding: 0;
   color: rgb(60, 60, 60);
@@ -138,14 +148,13 @@
   left: 0;
 }
 @media screen and (max-width: 31.5em) {
+  .board-viewport {
+    --cell-size: 6vmin;
+  }
   .table-board {
     width: 90vmin;
     height: 90vmin;
     table-layout: fixed;
-  }
-  .board-table-cell {
-    width: 6vmin;
-    height: 6vmin;
   }
   .cell {
     font-size: 1.1rem;

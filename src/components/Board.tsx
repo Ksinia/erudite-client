@@ -22,7 +22,6 @@ const PATTERN_SIZE = 15;
 // the pattern repeats every 14 cells: the outer x3 rows/columns are
 // identical, so adjacent tiles share one border row instead of doubling it
 const PATTERN_PERIOD = PATTERN_SIZE - 1;
-const CELL_SIZE_REM = 2.1;
 
 const mod = (n: number): number =>
   ((n % PATTERN_PERIOD) + PATTERN_PERIOD) % PATTERN_PERIOD;
@@ -158,10 +157,10 @@ class Board extends PureComponent<Props> {
             className="table-board"
             style={
               infinite
-                ? {
-                    width: `${board[0].length * CELL_SIZE_REM}rem`,
-                    height: `${board.length * CELL_SIZE_REM}rem`,
-                  }
+                ? ({
+                    '--board-cols': board[0].length,
+                    '--board-rows': board.length,
+                  } as React.CSSProperties)
                 : undefined
             }
           >
