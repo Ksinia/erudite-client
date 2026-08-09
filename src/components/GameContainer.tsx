@@ -141,7 +141,7 @@ class GameContainer extends Component<Props, State> {
     }
     const x = parseInt(event.currentTarget.dataset.x);
     const y = parseInt(event.currentTarget.dataset.y);
-    if (this.props.turnFeedback) {
+    if (this.props.turnFeedback[this.props.game.id]) {
       this.props.dispatch(turnFeedbackSeen(this.props.game.id));
     }
 
