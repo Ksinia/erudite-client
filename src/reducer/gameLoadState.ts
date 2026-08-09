@@ -4,11 +4,13 @@ import { gameUpdated } from './games';
 import { Game } from './types';
 
 /**
- * Why a game could not be loaded. 'not_found' also covers games the user
- * has no access to: the server answers 404 for those, without revealing
- * that they exist.
+ * Why a game could not be loaded. A game the user may not see is reported
+ * by the server as a missing one, so it arrives as a null game rather than
+ * through here; 'not_found' only covers endpoints that still answer 404.
+ * 'unavailable' means the request never reached the server, 'error' that
+ * the server answered with a failure.
  */
-export type GameLoadFailure = 'not_found' | 'unavailable';
+export type GameLoadFailure = 'not_found' | 'unavailable' | 'error';
 
 export const gameLoadFailed = createAction<
   { gameId: Game['id']; reason: GameLoadFailure },

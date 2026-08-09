@@ -24,13 +24,23 @@ export const fetchGame =
       const action: GameUpdatedAction = JSON.parse(response.text);
       dispatch(action);
     } catch (error) {
-      // a request that never reached the server has no status,
-      // 404 means the game does not exist or is not available to this user
+      // a request that never reached the server has no status at all;
+      // anything else is the server answering, and 404 means this game is
+      // not there for this user, which the reducer already renders from a
+      // null game, so it is only reachable on endpoints that still send it
       const status = (error as ResponseError).status;
+      if (!status) {
+        // errorFromServer clears the user, which would make a retry
+        // anonymous, and a connection that dropped says nothing about the
+        // session
+        dispatch(gameLoadFailed({ gameId, reason: 'unavailable' }));
+        console.debug('error on fetch game', error);
+        return;
+      }
       dispatch(
         gameLoadFailed({
           gameId,
-          reason: status === 404 ? 'not_found' : 'unavailable',
+          reason: status === 404 ? 'not_found' : 'error',
         })
       );
       dispatch(errorFromServer(error, 'fetch game'));

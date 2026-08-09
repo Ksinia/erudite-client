@@ -94,6 +94,11 @@ class LobbyContainer extends Component<Props, State> {
     if (!prevProps.socketConnectionState && this.props.socketConnectionState) {
       this.props.dispatch(enterLobby());
     }
+    // the list is built for whoever the socket knows about, and the session
+    // can arrive after the first request: ask again once it does
+    if (!prevProps.user && this.props.user) {
+      this.props.dispatch(enterLobby());
+    }
   }
 
   render() {

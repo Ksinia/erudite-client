@@ -52,10 +52,19 @@ class GameHandler extends Component<Props, State> {
   bannerRef = React.createRef<HTMLDivElement>();
   hasScrolledToBanner = false;
 
+  /**
+   * The store holds a user only once the session has been restored, which
+   * happens after this screen mounts. Reading the token straight from
+   * storage keeps the first request authenticated, so it cannot race the
+   * one that follows the restored session and answer as a stranger.
+   */
+  currentJwt(): string | null {
+    return (this.props.user && this.props.user.jwt) || localStorage.jwt || null;
+  }
+
   componentDidMount() {
     document.title = `Game ${this.state.gameId} | Erudite`;
-    const jwt = this.props.user && this.props.user.jwt;
-    this.props.dispatch(fetchGame(this.state.gameId, jwt));
+    this.props.dispatch(fetchGame(this.state.gameId, this.currentJwt()));
     this.props.socketConnectionState &&
       this.props.dispatch(addGameToSocket(this.state.gameId));
   }
@@ -64,12 +73,10 @@ class GameHandler extends Component<Props, State> {
     if (!prevProps.socketConnectionState && this.props.socketConnectionState) {
       this.props.dispatch(addGameToSocket(this.state.gameId));
     }
-    // the session is restored asynchronously, so the first fetch on a direct
-    // page load can go out anonymously; repeat it once the token is there
-    const prevJwt = prevProps.user && prevProps.user.jwt;
-    const jwt = this.props.user && this.props.user.jwt;
-    if (jwt && jwt !== prevJwt) {
-      this.props.dispatch(fetchGame(this.state.gameId, jwt));
+    // the mount fetch waits for the session, so this is the one that runs
+    // on a direct page load; a token merely rolling over changes nothing
+    if (!prevProps.user && this.props.user) {
+      this.props.dispatch(fetchGame(this.state.gameId, this.props.user.jwt));
       this.props.socketConnectionState &&
         this.props.dispatch(addGameToSocket(this.state.gameId));
     }
@@ -85,9 +92,8 @@ class GameHandler extends Component<Props, State> {
       this.setState({
         gameId: parseInt(this.props.match.params.game),
       });
-      const jwt = this.props.user && this.props.user.jwt;
       this.props.dispatch(
-        fetchGame(parseInt(this.props.match.params.game), jwt)
+        fetchGame(parseInt(this.props.match.params.game), this.currentJwt())
       );
       this.props.socketConnectionState &&
         this.props.dispatch(
@@ -104,17 +110,22 @@ class GameHandler extends Component<Props, State> {
   }
 
   retryFetch = () => {
-    const jwt = this.props.user && this.props.user.jwt;
-    this.props.dispatch(fetchGame(this.state.gameId, jwt));
+    this.props.dispatch(fetchGame(this.state.gameId, this.currentJwt()));
   };
 
   render() {
     const loadFailure = this.props.gameLoadState[this.state.gameId];
-    if (loadFailure === 'unavailable') {
+    if (loadFailure === 'unavailable' || loadFailure === 'error') {
       return (
         <div className="page-message">
           <p>
-            <TranslationContainer translationKey="server_unavailable" />
+            <TranslationContainer
+              translationKey={
+                loadFailure === 'unavailable'
+                  ? 'server_unavailable'
+                  : 'game_load_error'
+              }
+            />
           </p>
           <button onClick={this.retryFetch}>
             <TranslationContainer translationKey="retry" />

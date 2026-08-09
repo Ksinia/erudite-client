@@ -26,6 +26,41 @@ const CELL_SIZE_REM = 2.1;
 const mod = (n: number): number =>
   ((n % PATTERN_PERIOD) + PATTERN_PERIOD) % PATTERN_PERIOD;
 
+type BoardOrigin = { x: number; y: number };
+
+const DEFAULT_ORIGIN: BoardOrigin = { x: 0, y: 0 };
+
+/**
+ * Coordinates of the cell within the repeating bonus pattern. On a classic
+ * board they are the cell coordinates themselves; on an infinite board the
+ * pattern tiles the plane, anchored at boardOrigin.
+ */
+export const patternCoords = (
+  y: number,
+  x: number,
+  boardType?: string,
+  boardOrigin?: BoardOrigin
+): [number, number] => {
+  if (boardType === 'infinite') {
+    const origin = boardOrigin || DEFAULT_ORIGIN;
+    return [mod(y - origin.y), mod(x - origin.x)];
+  }
+  return [y, x];
+};
+
+// the start star marks only the centre of the original board,
+// it is not repeated on the tiled neighbours
+export const isCenterCell = (
+  y: number,
+  x: number,
+  boardType?: string,
+  boardOrigin?: BoardOrigin
+): boolean => {
+  const origin =
+    boardType === 'infinite' ? boardOrigin || DEFAULT_ORIGIN : DEFAULT_ORIGIN;
+  return y - origin.y === 7 && x - origin.x === 7;
+};
+
 class Board extends Component<Props> {
   viewportRef = React.createRef<HTMLDivElement>();
 
@@ -102,28 +137,11 @@ class Board extends Component<Props> {
     },
   };
 
-  /**
-   * Coordinates of the cell within the repeating 15x15 bonus pattern.
-   * On a classic board they are the cell coordinates themselves; on an
-   * infinite board the pattern tiles the plane, anchored at boardOrigin.
-   */
-  patternCoords = (y: number, x: number): [number, number] => {
-    if (this.props.boardType === 'infinite') {
-      const origin = this.props.boardOrigin || { x: 0, y: 0 };
-      return [mod(y - origin.y), mod(x - origin.x)];
-    }
-    return [y, x];
-  };
+  patternCoords = (y: number, x: number): [number, number] =>
+    patternCoords(y, x, this.props.boardType, this.props.boardOrigin);
 
-  // the start star marks only the centre of the original board,
-  // it is not repeated on the tiled neighbours
-  isCenterCell = (y: number, x: number): boolean => {
-    if (this.props.boardType === 'infinite') {
-      const origin = this.props.boardOrigin || { x: 0, y: 0 };
-      return y - origin.y === 7 && x - origin.x === 7;
-    }
-    return y === 7 && x === 7;
-  };
+  isCenterCell = (y: number, x: number): boolean =>
+    isCenterCell(y, x, this.props.boardType, this.props.boardOrigin);
 
   // the bonus map holds the top-left quadrant; the rest is mirrored
   bonusFor = (py: number, px: number): (string | JSX.Element)[] | undefined => {
