@@ -19,12 +19,24 @@ export const gameLoadFailed = createAction<
 
 export type GameLoadFailedAction = ReturnType<typeof gameLoadFailed>;
 
+export const gameLoadStarted = createAction<
+  Game['id'],
+  InternalMessageTypes.GAME_LOAD_STARTED
+>(InternalMessageTypes.GAME_LOAD_STARTED);
+
+export type GameLoadStartedAction = ReturnType<typeof gameLoadStarted>;
+
 export default createReducer<{ [key in Game['id']]: GameLoadFailure }>(
   {},
   (builder) =>
     builder
       .addCase(gameLoadFailed, (state, action) => {
         state[action.payload.gameId] = action.payload.reason;
+      })
+      // a failure belongs to one attempt: coming back to the game must show
+      // it loading again rather than the screen it ended with last time
+      .addCase(gameLoadStarted, (state, action) => {
+        delete state[action.payload];
       })
       // the game arrived after all, over a retry or the socket
       .addCase(gameUpdated, (state, action) => {

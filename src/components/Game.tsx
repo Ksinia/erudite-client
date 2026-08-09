@@ -37,10 +37,24 @@ type OwnProps = {
   turnFeedback: string | null;
 };
 
-// resolved once per render instead of by a component in every bonus cell
+/**
+ * Resolved once per locale instead of by a component in every bonus cell.
+ * The object has to keep its identity between renders, otherwise the board
+ * below compares its props, finds a new one every time and redraws anyway.
+ */
+const bonusLabelsByLocale: {
+  [locale: string]: { word: string; letter: string };
+} = {};
+
 const bonusLabels = (locale: string) => {
-  const strings = TRANSLATIONS[locale] || TRANSLATIONS.en_US;
-  return { word: strings.word, letter: strings.letter };
+  if (!bonusLabelsByLocale[locale]) {
+    const strings = TRANSLATIONS[locale] || TRANSLATIONS.en_US;
+    bonusLabelsByLocale[locale] = {
+      word: strings.word,
+      letter: strings.letter,
+    };
+  }
+  return bonusLabelsByLocale[locale];
 };
 
 function Game(props: OwnProps) {

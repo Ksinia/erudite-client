@@ -3,7 +3,12 @@ import superagent, { ResponseError } from 'superagent';
 import { backendUrl } from '../runtime';
 import { MyThunkAction } from '../reducer/types';
 import { GameUpdatedAction } from '../reducer/games';
-import { gameLoadFailed, GameLoadFailedAction } from '../reducer/gameLoadState';
+import {
+  gameLoadFailed,
+  GameLoadFailedAction,
+  gameLoadStarted,
+  GameLoadStartedAction,
+} from '../reducer/gameLoadState';
 import { clientFeaturesHeader } from '../constants/clientFeatures';
 import { errorFromServer } from './errorHandling';
 
@@ -11,8 +16,11 @@ export const fetchGame =
   (
     gameId: number,
     jwt: string | null
-  ): MyThunkAction<GameUpdatedAction | GameLoadFailedAction> =>
+  ): MyThunkAction<
+    GameUpdatedAction | GameLoadFailedAction | GameLoadStartedAction
+  > =>
   async (dispatch) => {
+    dispatch(gameLoadStarted(gameId));
     try {
       const request = superagent
         .get(`${backendUrl}/game/${gameId}`)

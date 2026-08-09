@@ -16,6 +16,10 @@ import {
 } from '../reducer/duplicatedWords';
 import { ErrorLoadedAction, LogOutAction } from '../reducer/auth';
 import { LoginOrSignupErrorAction } from '../reducer/error';
+import {
+  turnFeedbackSeen,
+  TurnFeedbackSeenAction,
+} from '../reducer/turnFeedback';
 import Game from './Game';
 
 /**
@@ -99,6 +103,7 @@ interface DispatchProps {
     | ErrorLoadedAction
     | LoginOrSignupErrorAction
     | NoDuplicationAction
+    | TurnFeedbackSeenAction
   >;
 }
 
@@ -135,6 +140,9 @@ class GameContainer extends Component<Props, State> {
     }
     const x = parseInt(event.currentTarget.dataset.x);
     const y = parseInt(event.currentTarget.dataset.y);
+    if (this.props.turnFeedback) {
+      this.props.dispatch(turnFeedbackSeen());
+    }
 
     // the rendered board can be one growth ahead of the local overlay,
     // so a cell in the new rows or columns has nothing to place into yet
@@ -374,6 +382,9 @@ class GameContainer extends Component<Props, State> {
       let wildCardLetters = this.state.wildCardLetters.slice();
       wildCardLetters[parseInt(event.target.name)].letter = event.target.value;
       let userBoard = this.state.userBoard.map((row) => row.slice());
+      if (!userBoard[y] || userBoard[y][x] === undefined) {
+        return;
+      }
       userBoard[y][x] = `*${event.target.value}`;
       this.setState({ ...this.state, wildCardLetters, userBoard });
     }

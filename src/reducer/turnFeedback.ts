@@ -1,6 +1,5 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
 import { InternalMessageTypes } from '../constants/internalMessageTypes';
-import { gameUpdated } from './games';
 
 /**
  * A translation key explaining why the last turn did not go through, shown
@@ -14,9 +13,18 @@ export const turnRejected = createAction<
 
 export type TurnRejectedAction = ReturnType<typeof turnRejected>;
 
+export const turnFeedbackSeen = createAction<
+  void,
+  InternalMessageTypes.TURN_FEEDBACK_SEEN
+>(InternalMessageTypes.TURN_FEEDBACK_SEEN);
+
+export type TurnFeedbackSeenAction = ReturnType<typeof turnFeedbackSeen>;
+
 export default createReducer<string | null>(null, (builder) =>
   builder
     .addCase(turnRejected, (_, action) => action.payload)
-    // any fresh view of the game means the player has moved on
-    .addCase(gameUpdated, () => null)
+    // the rejection is followed by a refetch of the game, so clearing on
+    // that would take the message away within one round trip; it goes when
+    // the player does something about it instead
+    .addCase(turnFeedbackSeen, () => null)
 );

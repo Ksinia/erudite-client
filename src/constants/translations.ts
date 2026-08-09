@@ -63,7 +63,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
     server_unavailable: 'Cannot reach the server. Check your connection.',
     game_load_error: 'Could not load the game.',
     board_out_of_date:
-      'The board changed while you were making your move. Your letters are back in your hand.',
+      'The board changed while you were making your move. Check it before confirming.',
     retry: 'Try again',
     letters: 'Letters left in the bag: ',
     already_signed_up: 'Already have an account? Log in',
@@ -234,7 +234,7 @@ export const TRANSLATIONS: { [key: string]: { [key: string]: string } } = {
       'Не удаётся связаться с сервером. Проверьте соединение.',
     game_load_error: 'Не удалось загрузить игру.',
     board_out_of_date:
-      'Поле изменилось, пока вы делали ход. Буквы вернулись к вам в руку.',
+      'Поле изменилось, пока вы делали ход. Проверьте его перед подтверждением.',
     retry: 'Повторить',
     letters: 'Осталось букв: ',
     already_signed_up: 'Уже есть аккаунт? Войдите',
