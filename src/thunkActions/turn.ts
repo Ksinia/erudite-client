@@ -6,7 +6,12 @@ import { MyThunkAction } from '../reducer/types';
 import { WildCardOnBoard } from '../components/GameContainer';
 import { GameUpdatedAction } from '../reducer/games';
 import { GameLoadFailedAction } from '../reducer/gameLoadState';
-import { turnRejected, TurnRejectedAction } from '../reducer/turnFeedback';
+import {
+  turnFeedbackSeen,
+  TurnFeedbackSeenAction,
+  turnRejected,
+  TurnRejectedAction,
+} from '../reducer/turnFeedback';
 import { fetchGame } from './game';
 import { errorFromServer } from './errorHandling';
 
@@ -17,9 +22,14 @@ export const sendTurn =
     userBoard: (string | null)[][],
     wildCardOnBoard: WildCardOnBoard
   ): MyThunkAction<
-    GameUpdatedAction | GameLoadFailedAction | TurnRejectedAction
+    | GameUpdatedAction
+    | GameLoadFailedAction
+    | TurnRejectedAction
+    | TurnFeedbackSeenAction
   > =>
   async (dispatch) => {
+    // a new attempt supersedes whatever the last one said
+    dispatch(turnFeedbackSeen(gameId));
     try {
       const response = await superagent
         .post(`${backendUrl}/game/${gameId}/turn`)
@@ -38,7 +48,7 @@ export const sendTurn =
         dispatch(fetchGame(gameId, jwt));
         // the letters stay on the board, so without a word the board would
         // simply twitch and the player would not know the turn was refused
-        dispatch(turnRejected('board_out_of_date'));
+        dispatch(turnRejected({ gameId, reason: 'board_out_of_date' }));
         return;
       }
       dispatch(errorFromServer(error, 'turn'));

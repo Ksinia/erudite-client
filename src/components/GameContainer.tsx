@@ -78,7 +78,7 @@ interface StateProps {
   user: User | null;
   duplicatedWords: string[];
   locale: string;
-  turnFeedback: string | null;
+  turnFeedback: { [key: number]: string };
 }
 
 export type WildCardOnBoard = { [key: number]: { [key: number]: string } };
@@ -142,7 +142,7 @@ class GameContainer extends Component<Props, State> {
     const x = parseInt(event.currentTarget.dataset.x);
     const y = parseInt(event.currentTarget.dataset.y);
     if (this.props.turnFeedback) {
-      this.props.dispatch(turnFeedbackSeen());
+      this.props.dispatch(turnFeedbackSeen(this.props.game.id));
     }
 
     // the rendered board can be one growth ahead of the local overlay,
@@ -609,7 +609,7 @@ class GameContainer extends Component<Props, State> {
           shuffleLetters={this.shuffleLetters}
           duplicatedWords={this.props.duplicatedWords}
           locale={this.props.locale}
-          turnFeedback={this.props.turnFeedback}
+          turnFeedback={this.props.turnFeedback[this.props.game.id] || null}
           userBoardEmpty={
             !this.state.userBoard.some((row: string[]) => !!row.join('')) &&
             Object.keys(this.state.wildCardOnBoard).length === 0
