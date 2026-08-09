@@ -5,6 +5,7 @@ import superagent from 'superagent';
 import './Game.css';
 import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl } from '../runtime';
+import { clientFeaturesHeader } from '../constants/clientFeatures';
 import { RootState } from '../reducer';
 import { User, Game as GameType } from '../reducer/types';
 import { sendTurn } from '../thunkActions/turn';
@@ -317,6 +318,7 @@ class GameContainer extends Component<Props, State> {
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/approve`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${user.jwt}`)
         .send({ validation: name });
     } catch (error) {
@@ -332,6 +334,7 @@ class GameContainer extends Component<Props, State> {
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/undo`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${this.props.user?.jwt}`);
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'undo'));
@@ -348,6 +351,7 @@ class GameContainer extends Component<Props, State> {
     try {
       await superagent
         .post(`${backendUrl}/game/${this.props.game.id}/change`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${user.jwt}`)
         .send({
           letters: this.props.game.letters[user.id],
@@ -394,6 +398,7 @@ class GameContainer extends Component<Props, State> {
     try {
       const response = await superagent
         .post(`${backendUrl}/create`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${this.props.user?.jwt}`)
         .send({
           maxPlayers: this.props.game.maxPlayers,

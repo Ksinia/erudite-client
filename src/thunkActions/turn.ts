@@ -1,6 +1,7 @@
 import superagent, { ResponseError } from 'superagent';
 
 import { backendUrl } from '../runtime';
+import { clientFeaturesHeader } from '../constants/clientFeatures';
 import { MyThunkAction } from '../reducer/types';
 import { WildCardOnBoard } from '../components/GameContainer';
 import { GameUpdatedAction } from '../reducer/games';
@@ -22,6 +23,7 @@ export const sendTurn =
     try {
       const response = await superagent
         .post(`${backendUrl}/game/${gameId}/turn`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${jwt}`)
         .send({
           userBoard,

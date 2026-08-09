@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducer';
 import { Game, User } from '../reducer/types';
 import { fetchGame } from '../thunkActions/game';
+import { getProfileFetch } from '../thunkActions/authorization';
 import { GameLoadFailure } from '../reducer/gameLoadState';
 import {
   addGameToSocket,
@@ -110,6 +111,11 @@ class GameHandler extends Component<Props, State> {
   }
 
   retryFetch = () => {
+    // the session may never have loaded, because the same outage stopped
+    // the profile request this screen mounted alongside
+    if (!this.props.user && localStorage.jwt) {
+      this.props.dispatch(getProfileFetch(localStorage.jwt));
+    }
     this.props.dispatch(fetchGame(this.state.gameId, this.currentJwt()));
   };
 

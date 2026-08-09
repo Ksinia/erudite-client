@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl } from '../runtime';
+import { clientFeaturesHeader } from '../constants/clientFeatures';
 import { RootState } from '../reducer';
 import { Game as GameType, User } from '../reducer/types';
 import { errorFromServer } from '../thunkActions/errorHandling';
@@ -61,6 +62,7 @@ class LobbyContainer extends Component<Props, State> {
       try {
         const response = await superagent
           .post(`${backendUrl}/create`)
+          .set(clientFeaturesHeader())
           .set('Authorization', `Bearer ${this.props.user.jwt}`)
           .send(this.state.formFields);
         localStorage.setItem('language', this.state.formFields.language);
