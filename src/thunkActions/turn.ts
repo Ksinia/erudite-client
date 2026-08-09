@@ -5,6 +5,7 @@ import { MyThunkAction } from '../reducer/types';
 import { WildCardOnBoard } from '../components/GameContainer';
 import { GameUpdatedAction } from '../reducer/games';
 import { GameLoadFailedAction } from '../reducer/gameLoadState';
+import { turnRejected, TurnRejectedAction } from '../reducer/turnFeedback';
 import { fetchGame } from './game';
 import { errorFromServer } from './errorHandling';
 
@@ -14,7 +15,9 @@ export const sendTurn =
     jwt: string,
     userBoard: (string | null)[][],
     wildCardOnBoard: WildCardOnBoard
-  ): MyThunkAction<GameUpdatedAction | GameLoadFailedAction> =>
+  ): MyThunkAction<
+    GameUpdatedAction | GameLoadFailedAction | TurnRejectedAction
+  > =>
   async (dispatch) => {
     try {
       const response = await superagent
@@ -31,6 +34,9 @@ export const sendTurn =
       // just sent no longer mean what the player saw: reload the game
       if ((error as ResponseError).status === 409) {
         dispatch(fetchGame(gameId, jwt));
+        // the letters stay on the board, so without a word the board would
+        // simply twitch and the player would not know the turn was refused
+        dispatch(turnRejected('board_out_of_date'));
         return;
       }
       dispatch(errorFromServer(error, 'turn'));

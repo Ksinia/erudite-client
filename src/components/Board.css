@@ -12,6 +12,9 @@
  */
 .board-viewport.infinite {
   overflow: auto;
+  /* the growth compensation below moves this container itself, and the
+     browser must not also move it on its own when rows appear on top */
+  overflow-anchor: none;
   width: min(90vmin, 31.5em);
   height: min(90vmin, 31.5em);
   margin: 1em auto;

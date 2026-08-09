@@ -6,6 +6,7 @@ import error from './error';
 import lobby from './lobby';
 import games from './games';
 import gameLoadState from './gameLoadState';
+import turnFeedback from './turnFeedback';
 import duplicatedWords from './duplicatedWords';
 import finishedGames from './finishedGames';
 import archivedGames from './archivedGames';
@@ -20,6 +21,7 @@ export const rootReducer = combineReducers({
   lobby,
   games,
   gameLoadState,
+  turnFeedback,
   translation,
   duplicatedWords,
   finishedGames,

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { letterValues } from '../constants/letterValues';
+import { TRANSLATIONS } from '../constants/translations';
 import { Game as GameType, User } from '../reducer/types';
 import Board from './Board';
 import Results from './Results';
@@ -32,6 +33,14 @@ type OwnProps = {
   wildCardOnBoard: { [y: number]: { [x: number]: string } };
   duplicatedWords: string[];
   shuffleLetters: () => void;
+  locale: string;
+  turnFeedback: string | null;
+};
+
+// resolved once per render instead of by a component in every bonus cell
+const bonusLabels = (locale: string) => {
+  const strings = TRANSLATIONS[locale] || TRANSLATIONS.en_US;
+  return { word: strings.word, letter: strings.letter };
 };
 
 function Game(props: OwnProps) {
@@ -60,6 +69,7 @@ function Game(props: OwnProps) {
           wildCardOnBoard={props.wildCardOnBoard}
           boardType={props.game.boardType}
           boardOrigin={props.game.boardOrigin}
+          bonusLabels={bonusLabels(props.locale)}
         />
       </div>
 
@@ -93,6 +103,11 @@ function Game(props: OwnProps) {
           wildCardLetters={props.wildCardLetters}
           alphabet={Object.keys(letterValues[props.game.language])}
         />
+        {props.turnFeedback && (
+          <p style={{ color: 'red' }}>
+            <TranslationContainer translationKey={props.turnFeedback} />
+          </p>
+        )}
         {props.duplicatedWords && props.duplicatedWords.length > 0 && (
           <p style={{ color: 'red' }}>
             <TranslationContainer

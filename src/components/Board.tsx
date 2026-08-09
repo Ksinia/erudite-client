@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import './Board.css';
 import TranslationContainer from './Translation/TranslationContainer';
@@ -15,6 +15,7 @@ type Props = {
   wildCardOnBoard: { [y: number]: { [x: number]: string } };
   boardType?: 'classic' | 'infinite';
   boardOrigin?: { x: number; y: number };
+  bonusLabels: { word: string; letter: string };
 };
 
 const PATTERN_SIZE = 15;
@@ -61,97 +62,48 @@ export const isCenterCell = (
   return y - origin.y === 7 && x - origin.x === 7;
 };
 
-class Board extends Component<Props> {
-  viewportRef = React.createRef<HTMLDivElement>();
+type Bonus = [className: string, multiply: string, unit: 'word' | 'letter'];
 
-  boardBonuses: {
-    [key: number]: { [key: number]: (string | JSX.Element)[] };
-  } = {
-    0: {
-      0: ['w3', 'x3', <TranslationContainer translationKey="word" key="00" />],
-      3: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="03" />,
-      ],
-      7: ['w3', 'x3', <TranslationContainer translationKey="word" key="07" />],
-    },
-    1: {
-      1: ['w2', 'x2', <TranslationContainer translationKey="word" key="11" />],
-      5: [
-        'l3',
-        'x3',
-        <TranslationContainer translationKey="letter" key="15" />,
-      ],
-    },
-    2: {
-      2: ['w2', 'x2', <TranslationContainer translationKey="word" key="22" />],
-      6: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="26" />,
-      ],
-    },
-    3: {
-      0: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="30" />,
-      ],
-      3: ['w2', 'x2', <TranslationContainer translationKey="word" key="33" />],
-      7: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="37" />,
-      ],
-    },
-    4: {
-      4: ['w2', 'x2', <TranslationContainer translationKey="word" key="44" />],
-    },
-    5: {
-      1: [
-        'l3',
-        'x3',
-        <TranslationContainer translationKey="letter" key="51" />,
-      ],
-    },
-    6: {
-      2: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="62" />,
-      ],
-      6: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="66" />,
-      ],
-    },
-    7: {
-      0: ['w3', 'x3', <TranslationContainer translationKey="word" key="70" />],
-      3: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="73" />,
-      ],
-    },
-  };
+// the top-left quadrant of the pattern; the rest is mirrored
+const boardBonuses: { [y: number]: { [x: number]: Bonus } } = {
+  0: {
+    0: ['w3', 'x3', 'word'],
+    3: ['l2', 'x2', 'letter'],
+    7: ['w3', 'x3', 'word'],
+  },
+  1: { 1: ['w2', 'x2', 'word'], 5: ['l3', 'x3', 'letter'] },
+  2: { 2: ['w2', 'x2', 'word'], 6: ['l2', 'x2', 'letter'] },
+  3: {
+    0: ['l2', 'x2', 'letter'],
+    3: ['w2', 'x2', 'word'],
+    7: ['l2', 'x2', 'letter'],
+  },
+  4: { 4: ['w2', 'x2', 'word'] },
+  5: { 1: ['l3', 'x3', 'letter'] },
+  6: { 2: ['l2', 'x2', 'letter'], 6: ['l2', 'x2', 'letter'] },
+  7: { 0: ['w3', 'x3', 'word'], 3: ['l2', 'x2', 'letter'] },
+};
+
+export const bonusFor = (py: number, px: number): Bonus | undefined => {
+  const row =
+    py in boardBonuses ? boardBonuses[py] : boardBonuses[PATTERN_SIZE - 1 - py];
+  if (!row) return undefined;
+  return px in row ? row[px] : row[PATTERN_SIZE - 1 - px];
+};
+
+/**
+ * Rendering a connected component in every bonus cell put thousands of
+ * store subscribers on a large board, so the two words a bonus can carry
+ * are resolved once and passed down as plain strings.
+ */
+class Board extends PureComponent<Props> {
+  viewportRef = React.createRef<HTMLDivElement>();
 
   patternCoords = (y: number, x: number): [number, number] =>
     patternCoords(y, x, this.props.boardType, this.props.boardOrigin);
 
   isCenterCell = (y: number, x: number): boolean =>
     isCenterCell(y, x, this.props.boardType, this.props.boardOrigin);
-
-  // the bonus map holds the top-left quadrant; the rest is mirrored
-  bonusFor = (py: number, px: number): (string | JSX.Element)[] | undefined => {
-    const row =
-      py in this.boardBonuses
-        ? this.boardBonuses[py]
-        : this.boardBonuses[PATTERN_SIZE - 1 - py];
-    if (!row) return undefined;
-    return px in row ? row[px] : row[PATTERN_SIZE - 1 - px];
-  };
 
   centerViewport = () => {
     const viewport = this.viewportRef.current;
@@ -201,7 +153,7 @@ class Board extends Component<Props> {
         className={`board-viewport${infinite ? ' infinite' : ''}`}
         ref={this.viewportRef}
       >
-        {board && previousBoard ? (
+        {board && board.length > 0 && previousBoard ? (
           <table
             className="table-board"
             style={
@@ -219,7 +171,7 @@ class Board extends Component<Props> {
                   <tr key={yIndex}>
                     {boardRow.map((boardLetter, xIndex) => {
                       const [py, px] = this.patternCoords(yIndex, xIndex);
-                      const bonus = this.bonusFor(py, px);
+                      const bonus = bonusFor(py, px);
                       const letter =
                         wildCardOnBoard[yIndex] &&
                         wildCardOnBoard[yIndex][xIndex]
@@ -233,7 +185,7 @@ class Board extends Component<Props> {
                           data-letter={letter}
                           data-x={xIndex}
                           data-y={yIndex}
-                          key={`${yIndex}_${xIndex}`}
+                          key={xIndex}
                           onClick={this.props.clickBoard}
                         >
                           <div
@@ -250,7 +202,9 @@ class Board extends Component<Props> {
                             }`}
                           >
                             <p className="multiply">{bonus && bonus[1]}</p>
-                            <p className="unit">{bonus && bonus[2]}</p>
+                            <p className="unit">
+                              {bonus && this.props.bonusLabels[bonus[2]]}
+                            </p>
                             <p className="value-on-board">
                               {letter && values[letter[0]]}{' '}
                               {/*change letter into letter[0] to show zero value for '*' */}

@@ -2,7 +2,7 @@ import superagent from 'superagent';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { backendUrl as baseUrl } from '../runtime';
-import { MyThunkAction } from '../reducer/types';
+import { MyThunkAction, User } from '../reducer/types';
 import { TRANSLATIONS } from '../constants/translations';
 
 import { LoginSuccessAction } from '../reducer/auth';

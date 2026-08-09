@@ -72,6 +72,8 @@ const getPreviousLetters = (
 interface StateProps {
   user: User | null;
   duplicatedWords: string[];
+  locale: string;
+  turnFeedback: string | null;
 }
 
 export type WildCardOnBoard = { [key: number]: { [key: number]: string } };
@@ -421,11 +423,15 @@ class GameContainer extends Component<Props, State> {
   } | null {
     const game = this.props.game;
     const { userBoard, wildCardOnBoard, wildCardLetters } = this.state;
-    if (
-      !game.board ||
-      (userBoard.length === game.board.length &&
-        (userBoard[0] || []).length === game.board[0].length)
-    ) {
+    const originMoved =
+      ((game.boardOrigin && game.boardOrigin.y) || 0) !==
+        ((prevProps.game.boardOrigin && prevProps.game.boardOrigin.y) || 0) ||
+      ((game.boardOrigin && game.boardOrigin.x) || 0) !==
+        ((prevProps.game.boardOrigin && prevProps.game.boardOrigin.x) || 0);
+    const sameSize =
+      userBoard.length === game.board?.length &&
+      (userBoard[0] || []).length === (game.board?.[0] || []).length;
+    if (!game.board || (sameSize && !originMoved)) {
       return null;
     }
     const dy =
@@ -586,6 +592,8 @@ class GameContainer extends Component<Props, State> {
           wildCardOnBoard={this.state.wildCardOnBoard}
           shuffleLetters={this.shuffleLetters}
           duplicatedWords={this.props.duplicatedWords}
+          locale={this.props.locale}
+          turnFeedback={this.props.turnFeedback}
           userBoardEmpty={
             !this.state.userBoard.some((row: string[]) => !!row.join('')) &&
             Object.keys(this.state.wildCardOnBoard).length === 0
@@ -600,6 +608,8 @@ function MapStateToProps(state: RootState): StateProps {
   return {
     user: state.user,
     duplicatedWords: state.duplicatedWords,
+    locale: state.translation.locale,
+    turnFeedback: state.turnFeedback,
   };
 }
 export default connect(MapStateToProps)(GameContainer);
