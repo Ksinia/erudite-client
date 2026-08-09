@@ -30,6 +30,7 @@ class RoomContainer extends Component<Props> {
     try {
       await superagent
         .post(`${backendUrl}/start/${this.props.game.id}`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${this.props.user?.jwt}`);
     } catch (error) {
       this.props.dispatch(errorFromServer(error, 'onClickStart'));
