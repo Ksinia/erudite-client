@@ -15,6 +15,7 @@ import {
   enterLobby,
 } from './reducer/outgoingMessages';
 import { refreshTokens } from './thunkActions/authorization';
+import { logOut, tokenRefreshed } from './reducer/auth';
 
 const socket = io(backendUrl, {
   path: '/socket',
@@ -93,10 +94,13 @@ socket.on('message', (message: any) => {
       isRefreshing = false;
       if (result) {
         localStorage.setItem('jwt', result.jwt);
+        // update state.user with the new jwt, otherwise REST calls keep
+        // sending the expired token until a full page reload
+        store.dispatch(tokenRefreshed(result.jwt));
         store.dispatch(addUserToSocket(result.jwt));
       } else {
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('refreshToken');
+        // logOut clears both tokens from localStorage and resets state.user
+        store.dispatch(logOut());
       }
     });
   }
