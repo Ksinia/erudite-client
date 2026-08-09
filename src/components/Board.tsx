@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import './Board.css';
 import TranslationContainer from './Translation/TranslationContainer';
@@ -13,166 +13,204 @@ type Props = {
   userBoard: string[][];
   values: { [key: string]: number };
   wildCardOnBoard: { [y: number]: { [x: number]: string } };
+  boardType?: 'classic' | 'infinite';
+  boardOrigin?: { x: number; y: number };
+  bonusLabels: { word: string; letter: string };
 };
 
-class Board extends Component<Props> {
-  cell = {
-    letter: {},
-    userLetter: {},
-    multiplyLetter: 1,
-    multiplyWord: 1,
-    className: 'ordinary',
-  };
-  emptyBoard = Array(15)
-    .fill(null)
-    .map((_) => Array(15).fill(this.cell));
-  boardBonuses: {
-    [key: number]: { [key: number]: (string | JSX.Element)[] };
-  } = {
-    0: {
-      0: ['w3', 'x3', <TranslationContainer translationKey="word" key="00" />],
-      3: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="03" />,
-      ],
-      7: ['w3', 'x3', <TranslationContainer translationKey="word" key="07" />],
-    },
-    1: {
-      1: ['w2', 'x2', <TranslationContainer translationKey="word" key="11" />],
-      5: [
-        'l3',
-        'x3',
-        <TranslationContainer translationKey="letter" key="15" />,
-      ],
-    },
-    2: {
-      2: ['w2', 'x2', <TranslationContainer translationKey="word" key="22" />],
-      6: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="26" />,
-      ],
-    },
-    3: {
-      0: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="30" />,
-      ],
-      3: ['w2', 'x2', <TranslationContainer translationKey="word" key="33" />],
-      7: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="37" />,
-      ],
-    },
-    4: {
-      4: ['w2', 'x2', <TranslationContainer translationKey="word" key="44" />],
-    },
-    5: {
-      1: [
-        'l3',
-        'x3',
-        <TranslationContainer translationKey="letter" key="51" />,
-      ],
-    },
-    6: {
-      2: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="62" />,
-      ],
-      6: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="66" />,
-      ],
-    },
-    7: {
-      0: ['w3', 'x3', <TranslationContainer translationKey="word" key="70" />],
-      3: [
-        'l2',
-        'x2',
-        <TranslationContainer translationKey="letter" key="73" />,
-      ],
-    },
-  };
-  boardWithBonuses = this.emptyBoard.map((row, y) => {
-    return row.map((cell, x) => {
-      const newCell = { ...cell };
-      if (y in this.boardBonuses) {
-        if (x in this.boardBonuses[y]) {
-          newCell.className = this.boardBonuses[y][x][0];
-          newCell.multiply = this.boardBonuses[y][x][1];
-          newCell.unit = this.boardBonuses[y][x][2];
-        } else if (14 - x in this.boardBonuses[y]) {
-          newCell.className = this.boardBonuses[y][14 - x][0];
-          newCell.multiply = this.boardBonuses[y][14 - x][1];
-          newCell.unit = this.boardBonuses[y][14 - x][2];
-        }
-      } else if (14 - y in this.boardBonuses) {
-        if (14 - x in this.boardBonuses[14 - y]) {
-          newCell.className = this.boardBonuses[14 - y][14 - x][0];
-          newCell.multiply = this.boardBonuses[14 - y][14 - x][1];
-          newCell.unit = this.boardBonuses[14 - y][14 - x][2];
-        } else if (x in this.boardBonuses[14 - y]) {
-          newCell.className = this.boardBonuses[14 - y][x][0];
-          newCell.multiply = this.boardBonuses[14 - y][x][1];
-          newCell.unit = this.boardBonuses[14 - y][x][2];
-        }
-      }
-      return newCell;
-    });
-  });
+const PATTERN_SIZE = 15;
+// the pattern repeats every 14 cells: the outer x3 rows/columns are
+// identical, so adjacent tiles share one border row instead of doubling it
+const PATTERN_PERIOD = PATTERN_SIZE - 1;
 
-  readonly state = { board: this.boardWithBonuses };
+const mod = (n: number): number =>
+  ((n % PATTERN_PERIOD) + PATTERN_PERIOD) % PATTERN_PERIOD;
+
+type BoardOrigin = { x: number; y: number };
+
+const DEFAULT_ORIGIN: BoardOrigin = { x: 0, y: 0 };
+
+/**
+ * Coordinates of the cell within the repeating bonus pattern. On a classic
+ * board they are the cell coordinates themselves; on an infinite board the
+ * pattern tiles the plane, anchored at boardOrigin.
+ */
+export const patternCoords = (
+  y: number,
+  x: number,
+  boardType?: string,
+  boardOrigin?: BoardOrigin
+): [number, number] => {
+  if (boardType === 'infinite') {
+    const origin = boardOrigin || DEFAULT_ORIGIN;
+    return [mod(y - origin.y), mod(x - origin.x)];
+  }
+  return [y, x];
+};
+
+// the start star marks only the centre of the original board,
+// it is not repeated on the tiled neighbours
+export const isCenterCell = (
+  y: number,
+  x: number,
+  boardType?: string,
+  boardOrigin?: BoardOrigin
+): boolean => {
+  const origin =
+    boardType === 'infinite' ? boardOrigin || DEFAULT_ORIGIN : DEFAULT_ORIGIN;
+  return y - origin.y === 7 && x - origin.x === 7;
+};
+
+type Bonus = [className: string, multiply: string, unit: 'word' | 'letter'];
+
+// the top-left quadrant of the pattern; the rest is mirrored
+const boardBonuses: { [y: number]: { [x: number]: Bonus } } = {
+  0: {
+    0: ['w3', 'x3', 'word'],
+    3: ['l2', 'x2', 'letter'],
+    7: ['w3', 'x3', 'word'],
+  },
+  1: { 1: ['w2', 'x2', 'word'], 5: ['l3', 'x3', 'letter'] },
+  2: { 2: ['w2', 'x2', 'word'], 6: ['l2', 'x2', 'letter'] },
+  3: {
+    0: ['l2', 'x2', 'letter'],
+    3: ['w2', 'x2', 'word'],
+    7: ['l2', 'x2', 'letter'],
+  },
+  4: { 4: ['w2', 'x2', 'word'] },
+  5: { 1: ['l3', 'x3', 'letter'] },
+  6: { 2: ['l2', 'x2', 'letter'], 6: ['l2', 'x2', 'letter'] },
+  7: { 0: ['w3', 'x3', 'word'], 3: ['l2', 'x2', 'letter'] },
+};
+
+export const bonusFor = (py: number, px: number): Bonus | undefined => {
+  const row =
+    py in boardBonuses ? boardBonuses[py] : boardBonuses[PATTERN_SIZE - 1 - py];
+  if (!row) return undefined;
+  return px in row ? row[px] : row[PATTERN_SIZE - 1 - px];
+};
+
+/**
+ * Rendering a connected component in every bonus cell put thousands of
+ * store subscribers on a large board, so the two words a bonus can carry
+ * are resolved once and passed down as plain strings.
+ */
+class Board extends PureComponent<Props> {
+  viewportRef = React.createRef<HTMLDivElement>();
+
+  patternCoords = (y: number, x: number): [number, number] =>
+    patternCoords(y, x, this.props.boardType, this.props.boardOrigin);
+
+  isCenterCell = (y: number, x: number): boolean =>
+    isCenterCell(y, x, this.props.boardType, this.props.boardOrigin);
+
+  centerViewport = () => {
+    const viewport = this.viewportRef.current;
+    if (viewport && this.props.boardType === 'infinite') {
+      viewport.scrollLeft = (viewport.scrollWidth - viewport.clientWidth) / 2;
+      viewport.scrollTop = (viewport.scrollHeight - viewport.clientHeight) / 2;
+    }
+  };
+
+  componentDidMount() {
+    this.centerViewport();
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.boardType !== 'infinite') return;
+    if (!prevProps.board && this.props.board) {
+      this.centerViewport();
+      return;
+    }
+    // when the board grows on the top/left the content shifts by the origin
+    // delta; compensate the scroll position so the view doesn't jump
+    const viewport = this.viewportRef.current;
+    const prevOrigin = prevProps.boardOrigin || { x: 0, y: 0 };
+    const origin = this.props.boardOrigin || { x: 0, y: 0 };
+    const columns = this.props.board && this.props.board[0].length;
+    const rows = this.props.board && this.props.board.length;
+    if (
+      viewport &&
+      columns &&
+      rows &&
+      (origin.x !== prevOrigin.x || origin.y !== prevOrigin.y)
+    ) {
+      // each axis carries its own border overhead, so measure them apart
+      viewport.scrollLeft +=
+        ((origin.x - prevOrigin.x) * viewport.scrollWidth) / columns;
+      viewport.scrollTop +=
+        ((origin.y - prevOrigin.y) * viewport.scrollHeight) / rows;
+    }
+  }
 
   render() {
+    const { board, previousBoard, userBoard, wildCardOnBoard, values } =
+      this.props;
+    const infinite = this.props.boardType === 'infinite';
     return (
-      <div>
-        {this.props.board && this.props.previousBoard ? (
-          <table className="table-board">
+      <div
+        className={`board-viewport${infinite ? ' infinite' : ''}`}
+        ref={this.viewportRef}
+      >
+        {board && board.length > 0 && previousBoard ? (
+          <table
+            className="table-board"
+            style={
+              infinite
+                ? ({
+                    '--board-cols': board[0].length,
+                    '--board-rows': board.length,
+                  } as React.CSSProperties)
+                : undefined
+            }
+          >
             <tbody>
-              {this.state.board.map((row, yIndex) => {
+              {board.map((boardRow, yIndex) => {
                 return (
                   <tr key={yIndex}>
-                    {row.map((cell, xIndex) => {
-                      cell.letter =
-                        this.props.wildCardOnBoard[yIndex] &&
-                        this.props.wildCardOnBoard[yIndex][xIndex]
-                          ? this.props.wildCardOnBoard[yIndex][xIndex]
-                          : this.props.board[yIndex][xIndex];
+                    {boardRow.map((boardLetter, xIndex) => {
+                      const [py, px] = this.patternCoords(yIndex, xIndex);
+                      const bonus = bonusFor(py, px);
+                      const letter =
+                        wildCardOnBoard[yIndex] &&
+                        wildCardOnBoard[yIndex][xIndex]
+                          ? wildCardOnBoard[yIndex][xIndex]
+                          : boardLetter;
+                      const userLetter =
+                        (userBoard[yIndex] && userBoard[yIndex][xIndex]) || '';
                       return (
                         <td
                           className={'board-table-cell'}
-                          data-letter={cell.letter}
+                          data-letter={letter}
                           data-x={xIndex}
                           data-y={yIndex}
-                          key={`${yIndex}_${xIndex}`}
+                          key={xIndex}
                           onClick={this.props.clickBoard}
                         >
                           <div
-                            className={`cell  
-                            center-${yIndex === 7 && xIndex === 7} 
-                            ${cell.className} user-letter-${!!this.props
-                              .userBoard[yIndex][xIndex]} new-letter-${
-                              !!this.props.board[yIndex][xIndex] &&
-                              !this.props.previousBoard[yIndex][xIndex]
+                            className={`cell
+                            center-${this.isCenterCell(yIndex, xIndex)}
+                            ${
+                              bonus ? bonus[0] : 'ordinary'
+                            } user-letter-${!!userLetter} new-letter-${
+                              !!boardLetter &&
+                              !(
+                                previousBoard[yIndex] &&
+                                previousBoard[yIndex][xIndex]
+                              )
                             }`}
                           >
-                            <p className="multiply">{cell.multiply}</p>
-                            <p className="unit">{cell.unit}</p>
-                            <p className="value-on-board">
-                              {cell.letter && this.props.values[cell.letter[0]]}{' '}
-                              {/*change letter into letter[0] to show zero value for '*' */}
-                              {this.props.userBoard[yIndex][xIndex] !== '' &&
-                                this.props.values[
-                                  this.props.userBoard[yIndex][xIndex]
-                                ]}
+                            <p className="multiply">{bonus && bonus[1]}</p>
+                            <p className="unit">
+                              {bonus && this.props.bonusLabels[bonus[2]]}
                             </p>
-                            {cell.letter}
-                            {this.props.userBoard[yIndex][xIndex]}
+                            <p className="value-on-board">
+                              {letter && values[letter[0]]}{' '}
+                              {/*change letter into letter[0] to show zero value for '*' */}
+                              {userLetter !== '' && values[userLetter]}
+                            </p>
+                            {letter}
+                            {userLetter}
                           </div>
                         </td>
                       );

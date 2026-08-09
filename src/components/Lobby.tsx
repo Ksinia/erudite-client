@@ -11,7 +11,7 @@ type OwnProps = {
       | React.ChangeEvent<HTMLInputElement>
   ) => void;
   onSubmit: (event: React.SyntheticEvent) => Promise<void>;
-  values: { maxPlayers: number; language: string };
+  values: { maxPlayers: number; language: string; boardType: string };
   userTurnGames: Game[];
   otherTurnGames: Game[];
   userWaitingGames: Game[];
@@ -54,6 +54,18 @@ function Lobby(props: OwnProps) {
             <option value="ru">ru</option>
             <option value="en">en</option>
           </select>
+          {props.user.infiniteBoardEnabled && (
+            <label htmlFor="boardType" className="board-type-choice">
+              <input
+                id="boardType"
+                type="checkbox"
+                name="boardType"
+                checked={props.values.boardType === 'infinite'}
+                onChange={props.onChange}
+              />
+              <TranslationContainer translationKey="board_infinite_option" />
+            </label>
+          )}
 
           <button
             style={{ margin: '20px' }}

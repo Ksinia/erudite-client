@@ -1,3 +1,12 @@
+/*
+ * A cell is the same size in both modes: an infinite board shows more of
+ * them, it does not draw them bigger. The size lives here so the two modes
+ * cannot drift apart, and so the infinite table can be sized from it.
+ */
+.board-viewport {
+  --cell-size: 2.1rem;
+}
+
 .table-board {
   margin: 1em auto;
   border-collapse: collapse;
@@ -5,10 +14,45 @@
   height: 31.5em;
 }
 
+/*
+ * The window onto an infinite board keeps the footprint of a classic one,
+ * so the letters below it stay in view. The board scrolls inside it, so a
+ * larger window buys nothing but a longer reach to the rack.
+ */
+.board-viewport.infinite {
+  overflow: auto;
+  /* the growth compensation below moves this container itself, and the
+     browser must not also move it on its own when rows appear on top */
+  overflow-anchor: none;
+  width: min(90vmin, 31.5em);
+  height: min(90vmin, 31.5em);
+  margin: 1em auto;
+  border: 1px solid rgb(211, 211, 211);
+}
+
+/* a little more room where the screen can spare it */
+@media (min-width: 60em) and (min-height: 50em) {
+  .board-viewport.infinite {
+    width: min(90vmin, 38em);
+    height: min(90vmin, 38em);
+  }
+}
+
+/* the grid is as large as the board, and the viewport scrolls over it */
+.board-viewport.infinite .table-board {
+  margin: 0;
+  table-layout: fixed;
+  width: calc(var(--cell-size) * var(--board-cols, 15));
+  height: calc(var(--cell-size) * var(--board-rows, 15));
+}
+
 .board-table-cell {
   border: 1px solid rgb(211, 211, 211);
-  width: 2.1rem;
-  height: 2.1rem;
+  /* the size is the footprint, borders included, so a cell measures the same
+     whether the table lays itself out from the size or divides a fixed width */
+  box-sizing: border-box;
+  width: var(--cell-size);
+  height: var(--cell-size);
   margin: 0;
   padding: 0;
   color: rgb(60, 60, 60);
@@ -68,6 +112,13 @@
   height: 100%;
   font-weight: 600;
   font-size: x-large;
+  /* the letter is the only content in normal flow, so without this it sits
+     on the first line box at the top of the cell, which shows as soon as the
+     type is smaller than the cell: on a phone, or on an infinite board that
+     keeps full size cells while the media query shrinks the type */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .multiply {
@@ -97,14 +148,13 @@
   left: 0;
 }
 @media screen and (max-width: 31.5em) {
+  .board-viewport {
+    --cell-size: 6vmin;
+  }
   .table-board {
     width: 90vmin;
     height: 90vmin;
     table-layout: fixed;
-  }
-  .board-table-cell {
-    width: 6vmin;
-    height: 6vmin;
   }
   .cell {
     font-size: 1.1rem;

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { ThunkDispatch } from 'redux-thunk';
 import { backendUrl } from '../runtime';
+import { clientFeaturesHeader } from '../constants/clientFeatures';
 import { RootState } from '../reducer';
 import { Game as GameType, User } from '../reducer/types';
 import { errorFromServer } from '../thunkActions/errorHandling';
@@ -22,6 +23,7 @@ type State = {
   formFields: {
     maxPlayers: number;
     language: string;
+    boardType: string;
   };
   sendingFormEnabled: boolean;
 };
@@ -47,6 +49,7 @@ class LobbyContainer extends Component<Props, State> {
     formFields: {
       maxPlayers: 2,
       language: this.getLanguage(),
+      boardType: 'classic',
     },
     sendingFormEnabled: true,
   };
@@ -58,6 +61,7 @@ class LobbyContainer extends Component<Props, State> {
       try {
         const response = await superagent
           .post(`${backendUrl}/create`)
+          .set(clientFeaturesHeader())
           .set('Authorization', `Bearer ${this.props.user.jwt}`)
           .send(this.state.formFields);
         localStorage.setItem('language', this.state.formFields.language);
@@ -73,11 +77,20 @@ class LobbyContainer extends Component<Props, State> {
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLInputElement>
   ): void => {
+    const target = event.target;
+    // the board type is a switch between two named boards rather than a
+    // value the control carries
+    const value =
+      target instanceof HTMLInputElement && target.type === 'checkbox'
+        ? target.checked
+          ? 'infinite'
+          : 'classic'
+        : target.value;
     this.setState({
       ...this.state,
       formFields: {
         ...this.state.formFields,
-        [event.target.name]: event.target.value,
+        [target.name]: value,
       },
     });
   };
@@ -89,6 +102,11 @@ class LobbyContainer extends Component<Props, State> {
 
   componentDidUpdate(prevProps: Readonly<Props>) {
     if (!prevProps.socketConnectionState && this.props.socketConnectionState) {
+      this.props.dispatch(enterLobby());
+    }
+    // the list is built for whoever the socket knows about, and the session
+    // can arrive after the first request: ask again once it does
+    if (!prevProps.user && this.props.user) {
       this.props.dispatch(enterLobby());
     }
   }

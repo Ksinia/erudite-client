@@ -30,7 +30,12 @@ export const errorFromServer =
     console.debug(`error on ${context}`, errorMessage);
     // token can expire on any page, so we need to show an error message on login page.
     // also show any error from login/signup function there
+    const status = isResponseError(error) ? error.status : undefined;
+    // the auth reducer no longer ends a session on any error, so the cases
+    // that really are about the session have to say so here: a 401 is the
+    // server refusing this token, whatever message came with it
     if (
+      status === 401 ||
       errorMessage.includes('TokenExpiredError') ||
       context === loginSignupFunctionErrorCtx
     ) {

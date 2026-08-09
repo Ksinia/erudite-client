@@ -27,6 +27,7 @@ export type User = {
   refreshToken?: string;
   finishedGamesIds?: number[];
   authMethod?: 'apple' | 'password';
+  infiniteBoardEnabled?: boolean;
 };
 
 type Turn = {
@@ -35,6 +36,8 @@ type Turn = {
   user: number;
   changedLetters: boolean;
 };
+
+export type SparseCell = [number, number, string];
 
 export interface Game {
   id: number;
@@ -60,6 +63,12 @@ export interface Game {
   };
   board: (string | null)[][];
   previousBoard: (string | null)[][];
+  boardType?: 'classic' | 'infinite';
+  boardOrigin?: { x: number; y: number };
+  // an infinite board travels as its occupied cells, see reducer/games.ts
+  boardSize?: { rows: number; cols: number };
+  boardCells?: SparseCell[];
+  previousBoardCells?: SparseCell[];
   putLetters: string[];
   lettersChanged: boolean;
   createdAt: string;

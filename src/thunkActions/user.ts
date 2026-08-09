@@ -10,6 +10,7 @@ import {
   finishedGamesLoaded,
   FinishedGamesLoadedAction,
 } from '../reducer/finishedGames';
+import { clientFeaturesHeader } from '../constants/clientFeatures';
 import { errorFromServer } from './errorHandling';
 
 export const loadFinishGames =
@@ -18,6 +19,7 @@ export const loadFinishGames =
     try {
       const response = await superagent
         .get(`${backendUrl}/my/finished-games`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${jwt}`);
 
       const action = finishedGamesLoaded(response.body);
@@ -33,6 +35,7 @@ export const loadArchivedGames =
     try {
       const response = await superagent
         .get(`${backendUrl}/my/archived-games`)
+        .set(clientFeaturesHeader())
         .set('Authorization', `Bearer ${jwt}`);
 
       dispatch(archivedGamesLoaded(response.body as Game[]));
